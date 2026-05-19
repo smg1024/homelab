@@ -1,1 +1,9 @@
-# TODO: Define Tailscale settings.
+{ ... }:
+
+{
+  services.tailscale.enable = true;
+
+  networking.firewall.trustedInterfaces = [
+    "tailscale0"
+  ];
+}
