@@ -42,6 +42,7 @@
           modules = [
             ./modules/base.nix
             ./modules/gc.nix
+            ./modules/swap.nix
             ./modules/users.nix
             ./modules/ssh.nix
             ./modules/tailscale.nix
