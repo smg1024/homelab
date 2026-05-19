@@ -1,1 +1,5 @@
-# TODO: Define the midgard disk layout.
+{ ... }:
+
+{
+  # TODO: Define the midgard disk layout.
+}

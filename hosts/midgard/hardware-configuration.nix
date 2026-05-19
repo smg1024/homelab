@@ -1,1 +1,5 @@
-# TODO: Replace with generated midgard hardware configuration.
+{ ... }:
+
+{
+  # TODO: Replace with generated midgard hardware configuration.
+}

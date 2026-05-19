@@ -1,1 +1,5 @@
-# TODO: Replace with generated yggdrasil hardware configuration.
+{ ... }:
+
+{
+  # TODO: Replace with generated yggdrasil hardware configuration.
+}
