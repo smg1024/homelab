@@ -53,7 +53,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.admin = import ./home/admin.nix;
+              home-manager.users.poby = import ./home/poby.nix;
             }
 
             hostModule
