@@ -1,11 +1,8 @@
-{ ... }:
-
-{
+{...}: {
   disko.devices = {
     disk.main = {
       type = "disk";
-      device = "/dev/disk/by-id/REPLACE_WITH_MIDGARD_DISK_ID";
-
+      device = "/dev/disk/by-id/ata-SSM28128GPTCB3B-S112611_DAAE0797167D10302215";
       content = {
         type = "gpt";
 

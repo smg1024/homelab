@@ -619,16 +619,16 @@ nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
   test \
   --fast \
   --flake .#<host> \
-  --build-host poby@<host> \
-  --target-host poby@<host> \
+  --build-host <host> \
+  --target-host <host> \
   --use-remote-sudo
 
 nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
   switch \
   --fast \
   --flake .#<host> \
-  --build-host poby@<host> \
-  --target-host poby@<host> \
+  --build-host <host> \
+  --target-host <host> \
   --use-remote-sudo
 
 git add .
