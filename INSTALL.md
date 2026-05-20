@@ -363,7 +363,7 @@ USB installer를 제거하고 내부 디스크로 부팅한다.
 LAN IP 또는 hostname이 잡혀 있으면:
 
 ```bash
-ssh poby@yggdrasil
+ssh yggdrasil
 ```
 
 IP로 먼저 확인해도 된다.
@@ -411,7 +411,7 @@ tailscale ip
 이후에는 Tailscale IP 또는 MagicDNS 이름으로 SSH 접속할 수 있다.
 
 ```bash
-ssh poby@yggdrasil
+ssh yggdrasil
 ```
 
 ## 11. 첫 remote rebuild 테스트
@@ -419,15 +419,17 @@ ssh poby@yggdrasil
 워크스테이션에서 실행한다.
 
 워크스테이션이 macOS일 수 있으므로 build도 Linux 대상 머신에서 수행하도록
-`--build-host`를 명시한다. `poby`는 `wheel`이고 Nix trusted user에 포함되므로
-remote build와 remote switch에 사용할 수 있다.
+`--build-host`를 명시한다. macOS에서 target config의 Linux용 `nixos-rebuild`를
+재실행하지 않도록 `--fast`도 함께 사용한다. `poby`는 `wheel`이고 Nix trusted
+user에 포함되므로 remote build와 remote switch에 사용할 수 있다.
 
 ```bash
 nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
   test \
+  --fast \
   --flake .#yggdrasil \
-  --build-host poby@yggdrasil \
-  --target-host poby@yggdrasil \
+  --build-host yggdrasil \
+  --target-host yggdrasil \
   --use-remote-sudo
 ```
 
@@ -436,9 +438,10 @@ nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
 ```bash
 nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
   switch \
+  --fast \
   --flake .#yggdrasil \
-  --build-host poby@yggdrasil \
-  --target-host poby@yggdrasil \
+  --build-host yggdrasil \
+  --target-host yggdrasil \
   --use-remote-sudo
 ```
 
@@ -514,6 +517,7 @@ remote rebuild 테스트:
 ```bash
 nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
   test \
+  --fast \
   --flake .#midgard \
   --build-host poby@midgard \
   --target-host poby@midgard \
@@ -525,6 +529,7 @@ nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
 ```bash
 nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
   switch \
+  --fast \
   --flake .#midgard \
   --build-host poby@midgard \
   --target-host poby@midgard \
@@ -573,7 +578,7 @@ zramctl -> zram device 표시
 워크스테이션에서 확인한다.
 
 ```bash
-ssh poby@yggdrasil
+ssh yggdrasil
 ssh poby@midgard
 ```
 
@@ -612,6 +617,7 @@ Caddy / DNS / apps
 ```bash
 nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
   test \
+  --fast \
   --flake .#<host> \
   --build-host poby@<host> \
   --target-host poby@<host> \
@@ -619,6 +625,7 @@ nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
 
 nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
   switch \
+  --fast \
   --flake .#<host> \
   --build-host poby@<host> \
   --target-host poby@<host> \
