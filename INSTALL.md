@@ -1,7 +1,7 @@
 # NixOS Homelab Install Guide
 
-이 문서는 `yggdrasil`, `midgard`를 NixOS installer USB에서 부팅한 뒤
-이 repo를 source of truth로 사용해 최초 설치하는 절차를 설명한다.
+이 문서는 `yggdrasil`, `midgard`를 NixOS installer USB에서 부팅한 뒤 이 repo를
+source of truth로 사용해 최초 설치하는 절차를 설명한다.
 
 기본 원칙:
 
@@ -85,8 +85,8 @@ installer shell이 뜨면 대상 머신 콘솔에서 root 비밀번호를 임시
 sudo passwd root
 ```
 
-이 비밀번호는 installer live environment에서만 쓰는 임시 비밀번호다.
-설치 후 재부팅하면 최종 NixOS 설정이 적용되고 root SSH login은 비활성화된다.
+이 비밀번호는 installer live environment에서만 쓰는 임시 비밀번호다. 설치 후
+재부팅하면 최종 NixOS 설정이 적용되고 root SSH login은 비활성화된다.
 
 SSH 서버를 시작한다.
 
@@ -224,7 +224,8 @@ ssh root@<YGGDRASIL_INSTALLER_IP> \
 
 - `hardware-configuration.nix`는 대상 머신에서 생성한 값을 사용한다.
 - yggdrasil에서 생성한 파일을 midgard에 재사용하지 않는다.
-- disko가 `/`와 `/boot` 파일시스템을 선언하므로 생성된 hardware config를 그대로 믿지 말고 검토한다.
+- disko가 `/`와 `/boot` 파일시스템을 선언하므로 생성된 hardware config를 그대로
+  믿지 말고 검토한다.
 
 `hardware-configuration.nix`에는 보통 이런 내용이 남으면 된다.
 
@@ -243,8 +244,8 @@ hardware.cpu.intel.updateMicrocode = ...;
 hardware.cpu.amd.updateMicrocode = ...;
 ```
 
-다음 항목은 `disko.nix`와 중복되거나 installer/live 환경의 값일 수 있으므로
-특히 확인한다.
+다음 항목은 `disko.nix`와 중복되거나 installer/live 환경의 값일 수 있으므로 특히
+확인한다.
 
 ```nix
 fileSystems."/"
@@ -252,9 +253,9 @@ fileSystems."/boot"
 swapDevices
 ```
 
-이 repo에서는 `/`와 `/boot`는 `disko.nix`가 담당한다. swap은 `modules/swap.nix`의
-zram swap이 담당한다. 따라서 hardware config에 위 항목이 들어 있다면 왜 필요한지
-확실할 때만 남긴다.
+이 repo에서는 `/`와 `/boot`는 `disko.nix`가 담당한다. swap은
+`modules/swap.nix`의 zram swap이 담당한다. 따라서 hardware config에 위 항목이
+들어 있다면 왜 필요한지 확실할 때만 남긴다.
 
 ## 6. host default.nix imports 활성화
 
@@ -321,16 +322,18 @@ nix-instantiate --parse hosts/yggdrasil/hardware-configuration.nix >/dev/null
 ```bash
 nix run github:nix-community/nixos-anywhere -- \
   --flake .#yggdrasil \
+  --build-on-remote \
   root@<YGGDRASIL_INSTALLER_IP>
 ```
 
-워크스테이션의 Nix에서 flakes가 꺼져 있다는 에러가 나면 같은 명령에
-experimental features를 명시한다.
+워크스테이션의 Nix에서 flakes가 꺼져 있다는 에러가 나면 같은 명령에 experimental
+features를 명시한다.
 
 ```bash
 nix --extra-experimental-features "nix-command flakes" \
   run github:nix-community/nixos-anywhere -- \
   --flake .#yggdrasil \
+  --build-on-remote \
   root@<YGGDRASIL_INSTALLER_IP>
 ```
 
@@ -583,7 +586,8 @@ ssh root@midgard
 
 ## 15. 롤백 기본
 
-NixOS 설정 변경 후 문제가 생기면 대상 머신에서 이전 generation으로 되돌릴 수 있다.
+NixOS 설정 변경 후 문제가 생기면 대상 머신에서 이전 generation으로 되돌릴 수
+있다.
 
 ```bash
 sudo nixos-rebuild switch --rollback

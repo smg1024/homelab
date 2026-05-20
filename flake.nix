@@ -20,51 +20,47 @@
     };
   };
 
-  outputs =
-    inputs@{
-      nixpkgs,
-      disko,
-      home-manager,
-      sops-nix,
-      ...
-    }:
-    let
-      system = "x86_64-linux";
+  outputs = inputs @ {
+    nixpkgs,
+    disko,
+    home-manager,
+    sops-nix,
+    ...
+  }: let
+    system = "x86_64-linux";
 
-      mkHost =
-        hostModule:
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit inputs;
-          };
-
-          modules = [
-            ./modules/base.nix
-            ./modules/gc.nix
-            ./modules/swap.nix
-            ./modules/users.nix
-            ./modules/ssh.nix
-            ./modules/tailscale.nix
-
-            disko.nixosModules.disko
-            sops-nix.nixosModules.sops
-            home-manager.nixosModules.home-manager
-
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.poby = import ./home/poby.nix;
-            }
-
-            hostModule
-          ];
+    mkHost = hostModule:
+      nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs;
         };
-    in
-    {
-      nixosConfigurations = {
-        yggdrasil = mkHost ./hosts/yggdrasil;
-        midgard = mkHost ./hosts/midgard;
+
+        modules = [
+          ./modules/base.nix
+          ./modules/gc.nix
+          ./modules/swap.nix
+          ./modules/users.nix
+          ./modules/ssh.nix
+          ./modules/tailscale.nix
+
+          disko.nixosModules.disko
+          sops-nix.nixosModules.sops
+          home-manager.nixosModules.home-manager
+
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.poby = import ./home/poby.nix;
+          }
+
+          hostModule
+        ];
       };
+  in {
+    nixosConfigurations = {
+      yggdrasil = mkHost ./hosts/yggdrasil;
+      midgard = mkHost ./hosts/midgard;
     };
+  };
 }

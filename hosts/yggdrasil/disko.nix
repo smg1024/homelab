@@ -1,10 +1,8 @@
-{ ... }:
-
-{
+{...}: {
   disko.devices = {
     disk.main = {
       type = "disk";
-      device = "/dev/disk/by-id/REPLACE_WITH_YGGDRASIL_DISK_ID";
+      device = "/dev/disk/by-id/ata-SAMSUNG_MZNLN128HCGR-000_S200NYAG700346";
 
       content = {
         type = "gpt";
