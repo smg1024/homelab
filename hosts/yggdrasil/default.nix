@@ -3,6 +3,7 @@
     ./hardware-configuration.nix
     ./disko.nix
     ../../services/ingress.nix
+    ../../services/cloudflared.nix
   ];
 
   networking.hostName = "yggdrasil";
