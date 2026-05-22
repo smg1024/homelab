@@ -5,6 +5,7 @@
     ./hardware-configuration.nix
     ./disko.nix
     ../../services/homepage.nix
+    ../../services/forgejo.nix
   ];
 
   networking.hostName = "midgard";

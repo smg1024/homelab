@@ -37,5 +37,9 @@
     virtualHosts."home.ridewithmin.com".extraConfig = ''
       reverse_proxy http://midgard.tail6fc192.ts.net:8082
     '';
+
+    virtualHosts."git.ridewithmin.com".extraConfig = ''
+      reverse_proxy http://midgard.tail6fc192.ts.net:3000
+    '';
   };
 }
