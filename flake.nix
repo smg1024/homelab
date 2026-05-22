@@ -43,6 +43,7 @@
           ./modules/users.nix
           ./modules/ssh.nix
           ./modules/tailscale.nix
+          ./modules/secrets.nix
 
           disko.nixosModules.disko
           sops-nix.nixosModules.sops

@@ -2,6 +2,7 @@
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
+    ../../services/ingress.nix
   ];
 
   networking.hostName = "yggdrasil";
