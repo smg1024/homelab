@@ -4,6 +4,7 @@
     ./disko.nix
     ../../services/ingress.nix
     ../../services/cloudflared.nix
+    ../../services/uptime-kuma.nix
   ];
 
   networking.hostName = "yggdrasil";

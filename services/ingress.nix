@@ -30,10 +30,6 @@
       acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
     '';
 
-    virtualHosts."http://yggdrasil.tail6fc192.ts.net:8080".extraConfig = ''
-      respond "yggdrasil caddy ingress ok"
-    '';
-
     virtualHosts."home.ridewithmin.com".extraConfig = ''
       reverse_proxy http://midgard.tail6fc192.ts.net:8082
     '';
@@ -44,6 +40,10 @@
 
     virtualHosts."vault.ridewithmin.com".extraConfig = ''
       reverse_proxy http://midgard.tail6fc192.ts.net:8222
+    '';
+
+    virtualHosts."status.ridewithmin.com".extraConfig = ''
+      reverse_proxy http://127.0.0.1:3001
     '';
   };
 }

@@ -36,6 +36,14 @@
           originServerName = "vault.ridewithmin.com";
         };
       };
+
+      ingress."status.ridewithmin.com" = {
+        service = "https://localhost:443";
+        originRequest = {
+          httpHostHeader = "status.ridewithmin.com";
+          originServerName = "status.ridewithmin.com";
+        };
+      };
     };
   };
 }
