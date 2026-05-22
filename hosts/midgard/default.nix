@@ -4,6 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
+    ../../services/homepage.nix
   ];
 
   networking.hostName = "midgard";

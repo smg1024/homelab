@@ -33,5 +33,9 @@
     virtualHosts."http://yggdrasil.tail6fc192.ts.net:8080".extraConfig = ''
       respond "yggdrasil caddy ingress ok"
     '';
+
+    virtualHosts."home.ridewithmin.com".extraConfig = ''
+      reverse_proxy http://midgard.tail6fc192.ts.net:8082
+    '';
   };
 }
