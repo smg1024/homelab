@@ -6,6 +6,7 @@
     ./disko.nix
     ../../services/homepage.nix
     ../../services/forgejo.nix
+    ../../services/vaultwarden.nix
   ];
 
   networking.hostName = "midgard";
