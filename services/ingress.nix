@@ -43,6 +43,20 @@
     '';
 
     virtualHosts."status.ridewithmin.com".extraConfig = ''
+      redir / /status 302
+
+      @publicStatus {
+        path /status* /api/status-page* /api/entry-page /assets/* /icon.svg /favicon.ico /apple-touch-icon.png /manifest.json /upload/*
+      }
+
+      handle @publicStatus {
+        reverse_proxy http://127.0.0.1:3001
+      }
+
+      respond 404
+    '';
+
+    virtualHosts."http://yggdrasil.tail6fc192.ts.net:3002".extraConfig = ''
       reverse_proxy http://127.0.0.1:3001
     '';
   };
