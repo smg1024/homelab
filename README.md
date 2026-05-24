@@ -1,12 +1,14 @@
 # Homelab
 
-이 repo는 두 대의 NixOS 머신으로 구성된 homelab의 source of truth다. 호스트
-설정, 디스크 레이아웃, 공통 시스템 모듈, 서비스, 사용자 설정, 암호화된 secret을
-모두 Nix flake 안에서 선언한다.
+English | [한국어](README-ko.md)
 
-## 전체 아키텍처
+This repo is the source of truth for a homelab made up of two NixOS machines.
+Host configuration, disk layout, shared system modules, services, user
+configuration, and encrypted secrets are all declared in a Nix flake.
 
-구성은 edge/infra 노드와 application 노드로 나뉜다.
+## Overall Architecture
+
+The setup is split into an edge/infra node and an application node.
 
 ```mermaid
 flowchart TD
@@ -44,29 +46,28 @@ flowchart TD
     midgardDns -.-> vaultwarden
 ```
 
-`flake.nix`는 NixOS 25.11을 pinning하고, 두 NixOS configuration을 노출한다.
+`flake.nix` pins NixOS 25.11 and exposes two NixOS configurations.
 
 - `yggdrasil`
 - `midgard`
 
-공통 시스템 설정은 `modules/`에서 로드되고, 각 호스트는
-`hosts/<host>/default.nix`에서 하드웨어, 디스크, 서비스 모듈을 추가로
-import한다.
+Shared system configuration is loaded from `modules/`, and each host imports
+additional hardware, disk, and service modules from `hosts/<host>/default.nix`.
 
-## 호스트 역할
+## Host Roles
 
 ### yggdrasil
 
-`yggdrasil`은 외부 진입점이자 경량 인프라 노드다.
+`yggdrasil` is the public entry point and lightweight infrastructure node.
 
-주요 역할:
+Main responsibilities:
 
-- Cloudflare Tunnel 유지
-- Caddy reverse proxy 운영
-- 공개 도메인을 내부 서비스로 라우팅
-- Uptime Kuma 상태 페이지 제공
+- Maintain the Cloudflare Tunnel
+- Run the Caddy reverse proxy
+- Route public domains to internal services
+- Serve the Uptime Kuma status page
 
-로드하는 서비스:
+Loaded services:
 
 - `services/ingress.nix`
 - `services/cloudflared.nix`
@@ -74,23 +75,23 @@ import한다.
 
 ### midgard
 
-`midgard`는 실제 application host다.
+`midgard` is the actual application host.
 
-주요 역할:
+Main responsibilities:
 
-- Homelab dashboard 운영
-- Forgejo 운영
-- Vaultwarden 운영
+- Run the Homelab dashboard
+- Run Forgejo
+- Run Vaultwarden
 
-로드하는 서비스:
+Loaded services:
 
 - `services/homepage.nix`
 - `services/forgejo.nix`
 - `services/vaultwarden.nix`
 
-## 공통 시스템 설정
+## Shared System Configuration
 
-모든 호스트는 `flake.nix`를 통해 같은 공통 모듈을 공유한다.
+All hosts share the same common modules through `flake.nix`.
 
 - `modules/base.nix`
 - `modules/gc.nix`
@@ -100,28 +101,28 @@ import한다.
 - `modules/tailscale.nix`
 - `modules/secrets.nix`
 
-공통 baseline:
+Common baseline:
 
-- Nix flakes와 `nix-command` 활성화
-- systemd-boot 사용
-- NetworkManager 사용
-- NixOS firewall 활성화
-- OpenSSH 활성화
-- SSH password login 비활성화
-- SSH root login 비활성화
-- Tailscale 활성화
-- zram swap 활성화
-- weekly Nix garbage collection
-- automatic Nix store optimisation
+- Enable Nix flakes and `nix-command`
+- Use systemd-boot
+- Use NetworkManager
+- Enable the NixOS firewall
+- Enable OpenSSH
+- Disable SSH password login
+- Disable SSH root login
+- Enable Tailscale
+- Enable zram swap
+- Run weekly Nix garbage collection
+- Run automatic Nix store optimisation
 
-관리 사용자는 `poby`다. `poby`는 `wheel`, `networkmanager` 그룹에 속하고,
-`wheel`에는 passwordless sudo가 허용된다.
+The administrative user is `poby`. `poby` belongs to the `wheel` and
+`networkmanager` groups, and passwordless sudo is allowed for `wheel`.
 
-## 스토리지
+## Storage
 
-디스크 레이아웃은 `disko`로 선언한다.
+Disk layout is declared with `disko`.
 
-두 호스트 모두 단일 디스크의 단순한 GPT 레이아웃을 사용한다.
+Both hosts use a simple single-disk GPT layout.
 
 ```text
 GPT partition table
@@ -129,42 +130,45 @@ GPT partition table
 remaining disk             -> /, ext4
 ```
 
-호스트별 디스크 설정:
+Host-specific disk configuration:
 
 - `hosts/yggdrasil/disko.nix`
 - `hosts/midgard/disko.nix`
 
-호스트별 hardware configuration:
+Host-specific hardware configuration:
 
 - `hosts/yggdrasil/hardware-configuration.nix`
 - `hosts/midgard/hardware-configuration.nix`
 
-별도 swap partition은 없고, `modules/swap.nix`에서 zram swap을 사용한다.
+There is no separate swap partition. zram swap is configured in
+`modules/swap.nix`.
 
-## 서비스 라우팅
+## Service Routing
 
 ### Cloudflare Tunnel
 
-`cloudflared`는 `yggdrasil`에서 실행된다.
+`cloudflared` runs on `yggdrasil`.
 
-Cloudflare Tunnel은 다음 public hostname을 `yggdrasil`의 local Caddy로 보낸다.
+Cloudflare Tunnel sends the following public hostnames to local Caddy on
+`yggdrasil`.
 
 - `home.ridewithmin.com`
 - `git.ridewithmin.com`
 - `vault.ridewithmin.com`
 - `status.ridewithmin.com`
 
-각 hostname은 다음 origin으로 전달된다.
+Each hostname is forwarded to the following origin.
 
 ```text
 https://localhost:443
 ```
 
-요청별 `Host` header와 TLS origin server name은 각 public hostname에 맞춰진다.
+The request `Host` header and TLS origin server name are set to match each
+public hostname.
 
 ### Caddy Ingress
 
-Caddy는 `yggdrasil`에서 실행되며, public hostname별로 내부 backend를 선택한다.
+Caddy runs on `yggdrasil` and selects the internal backend by public hostname.
 
 ```text
 home.ridewithmin.com   -> http://midgard.tail6fc192.ts.net:8082
@@ -173,79 +177,82 @@ vault.ridewithmin.com  -> http://midgard.tail6fc192.ts.net:8222
 status.ridewithmin.com -> http://127.0.0.1:3001
 ```
 
-Caddy는 Cloudflare DNS plugin을 사용해 ACME DNS challenge로 인증서를 발급받는다.
+Caddy uses the Cloudflare DNS plugin to issue certificates through ACME DNS
+challenges.
 
-`status.ridewithmin.com`은 Uptime Kuma의 status page 관련 path만 proxy하고, 그
-외 path는 `404`를 반환한다.
+`status.ridewithmin.com` proxies only Uptime Kuma status-page related paths and
+returns `404` for every other path.
 
 ### Application Services
 
-`midgard`에서 실행되는 application service:
+Application services running on `midgard`:
 
 - Homepage dashboard: `8082`
 - Forgejo: `3000`
 - Vaultwarden: `8222`
 
-공개 URL:
+Public URLs:
 
 - `https://home.ridewithmin.com`
 - `https://git.ridewithmin.com`
 - `https://vault.ridewithmin.com`
 
-Forgejo는 registration과 Forgejo SSH가 비활성화되어 있다. Vaultwarden은 SQLite를
-사용하고, public signup은 비활성화되어 있으며 invitation은 허용되어 있다.
+Forgejo registration and Forgejo SSH are disabled. Vaultwarden uses SQLite,
+disables public signup, and allows invitations.
 
-## Secret 관리
+## Secret Management
 
-Secret은 `sops-nix`로 관리한다.
+Secrets are managed with `sops-nix`.
 
-암호화된 secret 파일:
+Encrypted secret files:
 
 - `secrets/ingress.yaml`
 - `secrets/vaultwarden.yaml`
 
-암호화 정책은 `.sops.yaml`에 있다. `secrets/[^/]+\.yaml`에 매칭되는 파일은 다음
-age recipient들로 암호화된다.
+The encryption policy lives in `.sops.yaml`. Files matching
+`secrets/[^/]+\.yaml` are encrypted for the following age recipients.
 
 - `poby`
 - `yggdrasil`
 - `midgard`
 
-각 NixOS 호스트는 런타임에 자신의 SSH host key를 SOPS age identity로 사용한다.
+At runtime, each NixOS host uses its own SSH host key as the SOPS age identity.
 
 ```text
 /etc/ssh/ssh_host_ed25519_key
 ```
 
-즉, 호스트의 SSH host private key가 `.sops.yaml`에 등록된 recipient와 맞아야
-해당 호스트가 repo의 secret을 복호화할 수 있다.
+This means a host can decrypt the repo secrets only when its SSH host private
+key matches a recipient registered in `.sops.yaml`.
 
-평문 secret 값은 Nix store에 저장하지 않는다. `sops-nix`가 activation/runtime
-시점에 `/run/secrets` 계열의 파일이나 service-specific template로
-materialize하고, 각 파일에 owner, group, mode를 적용한다.
+Plaintext secret values are not stored in the Nix store. During
+activation/runtime, `sops-nix` materializes them as files under `/run/secrets`
+or as service-specific templates, then applies the owner, group, and mode to
+each file.
 
-현재 secret 사용처:
+Current secret consumers:
 
 - `cloudflare/caddy_env`
-  - Caddy가 사용한다.
-  - Cloudflare DNS challenge용 API token을 담는다.
-  - Caddy user/group 소유다.
-  - mode는 `0400`이다.
+  - Used by Caddy.
+  - Contains the Cloudflare API token for DNS challenges.
+  - Owned by the Caddy user/group.
+  - Mode is `0400`.
 
 - `cloudflare/cloudflared_tunnel_credentials`
-  - `cloudflared`가 사용한다.
-  - Cloudflare Tunnel credential을 담는다.
-  - mode는 `0400`이다.
+  - Used by `cloudflared`.
+  - Contains the Cloudflare Tunnel credential.
+  - Mode is `0400`.
 
 - `vaultwarden/admin_token`
-  - Vaultwarden admin token이다.
-  - `vaultwarden.env` runtime template 안에 `ADMIN_TOKEN`으로 렌더링된다.
-  - `vaultwarden:vaultwarden` 소유다.
-  - mode는 `0400`이다.
+  - Vaultwarden admin token.
+  - Rendered into the `vaultwarden.env` runtime template as `ADMIN_TOKEN`.
+  - Owned by `vaultwarden:vaultwarden`.
+  - Mode is `0400`.
 
-## 외부 접근 통제
+## External Access Control
 
-외부 인터넷 접근 경로는 직접 포트 노출이 아니라 Cloudflare Tunnel 중심이다.
+External Internet access is centered on Cloudflare Tunnel instead of directly
+exposed ports.
 
 ```mermaid
 flowchart LR
@@ -286,52 +293,52 @@ flowchart LR
     public -.-> blocked
 ```
 
-현재 구성에서 NixOS firewall은 모든 호스트에서 활성화되어 있고, 직접 허용되는
-TCP 포트는 SSH `22`다. `3000`, `3001`, `8082`, `8222` 같은 application port는
-일반 public firewall port로 열지 않는다.
+In the current configuration, the NixOS firewall is enabled on every host, and
+the directly allowed TCP port is SSH `22`. Application ports such as `3000`,
+`3001`, `8082`, and `8222` are not opened as general public firewall ports.
 
-`midgard`의 서비스들은 Caddy가 Tailscale MagicDNS 이름으로 접근한다.
+Services on `midgard` are reached by Caddy through the Tailscale MagicDNS name.
 
 ```text
 midgard.tail6fc192.ts.net
 ```
 
-두 호스트 모두 `tailscale0` interface를 trusted interface로 둔다. 따라서
-tailnet은 내부 네트워크 경계로 동작한다. public Internet 사용자는 Cloudflare에
-연결된 hostname으로만 접근하고, tailnet에 들어온 기기는 Tailscale 정책에 따라
-내부 서비스 포트에 더 직접적으로 접근할 수 있다.
+Both hosts mark the `tailscale0` interface as trusted. The tailnet therefore
+acts as the internal network boundary. Public Internet users can access only the
+hostnames connected through Cloudflare, while devices inside the tailnet may
+reach internal service ports more directly depending on Tailscale policy.
 
-이 repo에 선언된 접근 통제 범위:
+Access control declared in this repo:
 
-- public hostname은 Cloudflare Tunnel로만 `yggdrasil`에 들어온다.
-- Caddy가 hostname별 backend를 결정한다.
-- Uptime Kuma public route는 status page path만 허용한다.
-- application port는 일반 인터넷에 직접 열지 않는다.
-- tailnet 내부 접근 제어는 이 repo가 아니라 Tailscale ACL과 tailnet 멤버십에
-  의존한다.
+- Public hostnames enter `yggdrasil` only through Cloudflare Tunnel.
+- Caddy decides the backend for each hostname.
+- The public Uptime Kuma route allows only status-page paths.
+- Application ports are not directly opened to the general Internet.
+- Internal tailnet access control depends on Tailscale ACLs and tailnet
+  membership, not this repo.
 
-Cloudflare Access 정책이 있다면 그것은 Cloudflare 쪽 설정이며, 현재 이 repo에는
-선언되어 있지 않다.
+If Cloudflare Access policies exist, they are Cloudflare-side settings and are
+not declared in this repo.
 
-## 운영
+## Operations
 
-`Justfile`이 일반적인 배포 진입점이다.
+`Justfile` is the normal deployment entrypoint.
 
-새 설정을 boot default로 만들지 않고 적용 테스트:
+Apply a new configuration for testing without making it the boot default:
 
 ```bash
 just test yggdrasil
 just test midgard
 ```
 
-새 설정을 적용하고 boot default로 설정:
+Apply a new configuration and make it the boot default:
 
 ```bash
 just switch yggdrasil
 just switch midgard
 ```
 
-내부적으로는 대상 호스트를 build host와 target host로 사용한다.
+Internally, the target host is used as both the build host and the target host.
 
 ```text
 nixos-rebuild <test|switch>
@@ -342,19 +349,19 @@ nixos-rebuild <test|switch>
   --use-remote-sudo
 ```
 
-워크스테이션에서 명령을 실행하되, Linux system closure의 build와 activation은
-대상 NixOS 호스트에서 수행하는 모델이다.
+The command is run from the workstation, while the Linux system closure is built
+and activated on the target NixOS host.
 
-## 검증
+## Validation
 
-로컬에서 flake 평가 확인:
+Check flake evaluation locally:
 
 ```bash
 nix flake show --all-systems
 nix flake check --no-build
 ```
 
-각 호스트에서 기본 상태 확인:
+Check the basic state on each host:
 
 ```bash
 hostname
