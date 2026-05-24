@@ -11,6 +11,10 @@
 
   networking.hostName = "midgard";
 
+  home-manager.users.poby.imports = [
+    ../../home/poby/midgard.nix
+  ];
+
   services.logind.settings.Login = {
     HandleLidSwitch = "ignore";
     HandleLidSwitchExternalPower = "ignore";

@@ -9,6 +9,10 @@
 
   networking.hostName = "yggdrasil";
 
+  home-manager.users.poby.imports = [
+    ../../home/poby/yggdrasil.nix
+  ];
+
   services.logind.settings.Login = {
     HandleLidSwitch = "ignore";
     HandleLidSwitchExternalPower = "ignore";

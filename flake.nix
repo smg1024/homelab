@@ -52,7 +52,12 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.poby = import ./home/poby.nix;
+            home-manager.users.poby = {
+              imports = [
+                ./home/poby/base.nix
+                ./home/poby/ops.nix
+              ];
+            };
           }
 
           hostModule
