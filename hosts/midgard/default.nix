@@ -4,6 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
+    ../../modules/podman.nix
     ../../services/homepage.nix
     ../../services/forgejo.nix
     ../../services/vaultwarden.nix
