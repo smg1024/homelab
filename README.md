@@ -82,12 +82,17 @@ Main responsibilities:
 - Run the Homelab dashboard
 - Run Forgejo
 - Run Vaultwarden
+- Provide the Podman runtime for future containerized application services
 
 Loaded services:
 
 - `services/homepage.nix`
 - `services/forgejo.nix`
 - `services/vaultwarden.nix`
+
+Loaded host-specific modules:
+
+- `modules/podman.nix`
 
 ## Shared System Configuration
 
@@ -117,6 +122,35 @@ Common baseline:
 
 The administrative user is `poby`. `poby` belongs to the `wheel` and
 `networkmanager` groups, and passwordless sudo is allowed for `wheel`.
+
+## User Environment
+
+Home Manager is enabled through the NixOS module and is applied as part of each
+host switch. It is used only for the `poby` operator environment, not for
+long-running application services.
+
+Shared Home Manager profiles:
+
+- `home/poby/base.nix`
+  - Sets `home.stateVersion`.
+  - Manages basic Bash, Git, and tmux configuration.
+  - Sets common editor and pager environment variables.
+
+- `home/poby/ops.nix`
+  - Installs operator-only tools such as `age`, `sops`, and `just`.
+  - Defines common operational aliases for `journalctl`, `systemctl`, and
+    Tailscale.
+
+Host-specific Home Manager profiles:
+
+- `home/poby/yggdrasil.nix`
+  - Adds ingress-oriented aliases for Caddy, Cloudflare Tunnel, and Uptime
+    Kuma.
+
+- `home/poby/midgard.nix`
+  - Adds application-host aliases for Forgejo, Homepage, Vaultwarden, and
+    Podman.
+  - Installs `sqlite` for operator-side inspection tasks.
 
 ## Storage
 
@@ -199,6 +233,30 @@ Public URLs:
 
 Forgejo registration and Forgejo SSH are disabled. Vaultwarden uses SQLite,
 disables public signup, and allows invitations.
+
+## Container Runtime
+
+Podman is enabled only on `midgard` through `modules/podman.nix`. `yggdrasil`
+does not import the Podman module.
+
+Current Podman settings:
+
+- `virtualisation.podman.enable = true`
+- `virtualisation.oci-containers.backend = "podman"`
+- weekly Podman auto-prune through `podman-prune.timer`
+- registry search path limited to `docker.io` and `ghcr.io`
+- `podman-compose` installed in the system profile
+
+`virtualisation.podman.extraPackages` is intentionally left empty. The
+`podman-compose` CLI is exposed through `environment.systemPackages`; it is not
+added to the Podman wrapper environment. This keeps the container runtime
+configuration small while still allowing both `podman-compose` and
+`podman compose` to work on `midgard`.
+
+Long-running container services should normally be declared with
+`virtualisation.oci-containers.containers` instead of ad-hoc compose commands.
+Compose is kept available for temporary testing, upstream compose file
+inspection, and manual operator workflows.
 
 ## Secret Management
 
