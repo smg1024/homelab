@@ -1,4 +1,8 @@
 {pkgs, ...}: {
+  imports = [
+    ./hermes-agent.nix
+  ];
+
   home.packages = with pkgs; [
     sqlite
   ];
