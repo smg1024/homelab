@@ -151,6 +151,44 @@ Home Manager는 NixOS module로 활성화되어 있고, 각 호스트의 switch 
   - Forgejo, Homepage, Vaultwarden, Podman 확인을 위한 application host alias를
     추가한다.
   - 운영자 관점의 점검 작업을 위해 `sqlite`를 설치한다.
+  - Hermes Agent 설치를 위해 `home/poby/hermes-agent.nix`를 import한다.
+
+### Hermes Agent
+
+Hermes Agent는 `midgard`에서 NixOS system service가 아니라 `poby`의 Home
+Manager 환경으로 설치한다.
+
+선언된 패키지 모듈:
+
+- `home/poby/hermes-agent.nix`
+
+이 모듈은 upstream `hermes-agent` flake의 Hermes CLI를 설치하고, agent와 운영자가
+사용할 수 있는 보조 도구인 `tirith`, `git`, `ripgrep`, `fd`, `jq`, `yq`,
+`curl`, `wget`, `just`를 함께 설치한다.
+
+현재 의도는 Hermes를 충분히 테스트하는 동안 mutable하게 유지하는 것이다. Runtime
+state, OAuth credential, profile, memory, gateway 설정, `SOUL.md`/`USER.md`
+수정은 다음 경로 아래에 둔다.
+
+```text
+/home/poby/.hermes
+```
+
+초기 설정은 `midgard`에서 `poby` 사용자로 대화식으로 진행한다.
+
+```bash
+ssh midgard
+hermes auth add openai-codex
+hermes setup
+```
+
+Telegram 및 다른 gateway integration도 실험 단계에서는 `poby` 사용자로 설정한다.
+gateway를 SSH logout 이후에도 계속 실행해야 하면 `hermes gateway install`로 user
+service를 설치하고, `poby`에 linger를 활성화한다.
+
+현재 upstream NixOS module은 의도적으로 활성화하지 않는다. 원하는 Hermes profile,
+provider, gateway, memory 구성이 안정화되면 그때 mutable 설정을 declarative Nix
+설정으로 승격한다.
 
 ## 스토리지
 

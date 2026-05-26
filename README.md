@@ -151,6 +151,45 @@ Host-specific Home Manager profiles:
   - Adds application-host aliases for Forgejo, Homepage, Vaultwarden, and
     Podman.
   - Installs `sqlite` for operator-side inspection tasks.
+  - Imports `home/poby/hermes-agent.nix` for Hermes Agent.
+
+### Hermes Agent
+
+Hermes Agent is installed on `midgard` as part of `poby`'s Home Manager
+environment, not as a NixOS system service.
+
+Declared package module:
+
+- `home/poby/hermes-agent.nix`
+
+This module installs the Hermes CLI from the upstream `hermes-agent` flake and
+adds operator/agent helper tools such as `tirith`, `git`, `ripgrep`, `fd`,
+`jq`, `yq`, `curl`, `wget`, and `just`.
+
+The current intent is to keep Hermes mutable while it is being tested. Runtime
+state, OAuth credentials, profiles, memories, gateway settings, and
+`SOUL.md`/`USER.md` edits live under:
+
+```text
+/home/poby/.hermes
+```
+
+Initial setup is done interactively as `poby` on `midgard`.
+
+```bash
+ssh midgard
+hermes auth add openai-codex
+hermes setup
+```
+
+Telegram and other gateway integrations should also be configured as `poby`
+during this experimentation phase. If a gateway needs to keep running across
+SSH logouts, install it as a user service with `hermes gateway install` and
+enable linger for `poby`.
+
+The upstream NixOS module is intentionally not enabled right now. Once the
+desired Hermes profile, provider, gateway, and memory layout is stable, the
+mutable setup can be promoted into declarative Nix configuration.
 
 ## Storage
 
