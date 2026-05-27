@@ -2,9 +2,13 @@
   inputs,
   pkgs,
   ...
-}: {
+}: let
+  hermesPackages = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system};
+in {
   home.packages = [
-    inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default
+    # Use the Nix-built messaging variant so Telegram/Discord/Slack SDKs are
+    # available in the sealed Hermes Python environment.
+    hermesPackages.messaging
   ] ++ (with pkgs; [
     tirith
     git
