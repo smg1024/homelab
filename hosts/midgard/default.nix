@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   # Enable these imports after collecting disk IDs and generated hardware config
   # during the NixOS installer phase.
   imports = [
@@ -11,6 +11,21 @@
   ];
 
   networking.hostName = "midgard";
+
+  fonts = {
+    packages = with pkgs; [
+      pretendard
+      noto-fonts-cjk-sans
+    ];
+
+    fontconfig = {
+      enable = true;
+      defaultFonts.sansSerif = [
+        "Pretendard"
+        "Noto Sans CJK KR"
+      ];
+    };
+  };
 
   home-manager.users.poby.imports = [
     ../../home/poby/midgard.nix
