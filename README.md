@@ -19,6 +19,8 @@ flowchart TD
         cloudflared["cloudflared<br/>Cloudflare Tunnel client"]
         caddy["Caddy<br/>HTTPS ingress / reverse proxy"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
+        prometheus["Prometheus<br/>127.0.0.1:9090"]
+        yNodeExporter["node_exporter<br/>:9100"]
     end
 
     subgraph tailnet["Tailscale tailnet"]
@@ -28,6 +30,7 @@ flowchart TD
             homepage["Homepage dashboard<br/>:8082"]
             forgejo["Forgejo<br/>:3000"]
             vaultwarden["Vaultwarden<br/>:8222"]
+            mNodeExporter["node_exporter<br/>:9100"]
         end
     end
 
@@ -44,6 +47,9 @@ flowchart TD
     midgardDns -.-> homepage
     midgardDns -.-> forgejo
     midgardDns -.-> vaultwarden
+
+    prometheus --> yNodeExporter
+    prometheus -.->|scrape over Tailscale| mNodeExporter
 ```
 
 `flake.nix` pins NixOS 25.11 and exposes two NixOS configurations.
@@ -66,12 +72,14 @@ Main responsibilities:
 - Run the Caddy reverse proxy
 - Route public domains to internal services
 - Serve the Uptime Kuma status page
+- Run Prometheus for node-level monitoring and alert rule evaluation
 
 Loaded services:
 
 - `services/ingress.nix`
 - `services/cloudflared.nix`
 - `services/uptime-kuma.nix`
+- `services/prometheus`
 
 ### midgard
 
@@ -106,6 +114,10 @@ All hosts share the same common modules through `flake.nix`.
 - `modules/tailscale.nix`
 - `modules/secrets.nix`
 
+All hosts also load the shared node exporter service:
+
+- `services/node-exporter.nix`
+
 Common baseline:
 
 - Enable Nix flakes and `nix-command`
@@ -119,6 +131,7 @@ Common baseline:
 - Enable zram swap
 - Run weekly Nix garbage collection
 - Run automatic Nix store optimisation
+- Expose node-level metrics through `node_exporter`
 
 The administrative user is `poby`. `poby` belongs to the `wheel` and
 `networkmanager` groups, and passwordless sudo is allowed for `wheel`.
@@ -144,8 +157,7 @@ Shared Home Manager profiles:
 Host-specific Home Manager profiles:
 
 - `home/poby/yggdrasil.nix`
-  - Adds ingress-oriented aliases for Caddy, Cloudflare Tunnel, and Uptime
-    Kuma.
+  - Adds ingress-oriented aliases for Caddy, Cloudflare Tunnel, and Uptime Kuma.
 
 - `home/poby/midgard.nix`
   - Adds application-host aliases for Forgejo, Homepage, Vaultwarden, and
@@ -163,8 +175,8 @@ Declared package module:
 - `home/poby/hermes-agent.nix`
 
 This module installs the Hermes CLI from the upstream `hermes-agent` flake and
-adds operator/agent helper tools such as `tirith`, `git`, `ripgrep`, `fd`,
-`jq`, `yq`, `curl`, `wget`, and `just`.
+adds operator/agent helper tools such as `tirith`, `git`, `ripgrep`, `fd`, `jq`,
+`yq`, `curl`, `wget`, and `just`.
 
 The current intent is to keep Hermes mutable while it is being tested. Runtime
 state, OAuth credentials, profiles, memories, gateway settings, and
@@ -183,9 +195,9 @@ hermes setup
 ```
 
 Telegram and other gateway integrations should also be configured as `poby`
-during this experimentation phase. If a gateway needs to keep running across
-SSH logouts, install it as a user service with `hermes gateway install` and
-enable linger for `poby`.
+during this experimentation phase. If a gateway needs to keep running across SSH
+logouts, install it as a user service with `hermes gateway install` and enable
+linger for `poby`.
 
 The upstream NixOS module is intentionally not enabled right now. Once the
 desired Hermes profile, provider, gateway, and memory layout is stable, the
@@ -272,6 +284,49 @@ Public URLs:
 
 Forgejo registration and Forgejo SSH are disabled. Vaultwarden uses SQLite,
 disables public signup, and allows invitations.
+
+## Monitoring
+
+Prometheus runs on `yggdrasil` and collects node-level metrics from both NixOS
+hosts. Uptime Kuma remains responsible for public endpoint checks and the public
+status page.
+
+Monitoring services:
+
+- `services/prometheus`
+  - Enables Prometheus on `yggdrasil`.
+  - Binds the Prometheus UI/API to `127.0.0.1:9090`.
+  - Scrapes node metrics every `3m`.
+  - Retains metrics for `15d`.
+  - Loads alerting rules from `services/prometheus/node-health-alert-rule.yml`.
+
+- `services/node-exporter.nix`
+  - Runs `node_exporter` on both hosts.
+  - Listens on `:9100`.
+  - Does not open a general firewall port.
+  - Enables the systemd collector for all `.service` units.
+
+Prometheus scrape targets:
+
+```text
+127.0.0.1:9100                  -> yggdrasil node_exporter
+midgard.tail6fc192.ts.net:9100  -> midgard node_exporter
+```
+
+Current alert rules:
+
+- `NodeDown`
+- `CriticalServiceInactive`
+- `SystemdServiceFailed`
+- `RootDiskLow`
+- `RootInodesLow`
+- `RootFilesystemReadOnly`
+- `LowMemory`
+- `HighCpuUsage`
+- `HighLoad`
+
+Rules are visible in the Prometheus UI. External notification delivery through
+Alertmanager is not configured yet.
 
 ## Container Runtime
 
@@ -391,8 +446,9 @@ flowchart LR
 ```
 
 In the current configuration, the NixOS firewall is enabled on every host, and
-the directly allowed TCP port is SSH `22`. Application ports such as `3000`,
-`3001`, `8082`, and `8222` are not opened as general public firewall ports.
+the directly allowed TCP port is SSH `22`. Application and monitoring ports such
+as `3000`, `3001`, `8082`, `8222`, `9090`, and `9100` are not opened as general
+public firewall ports.
 
 Services on `midgard` are reached by Caddy through the Tailscale MagicDNS name.
 
@@ -410,6 +466,9 @@ Access control declared in this repo:
 - Public hostnames enter `yggdrasil` only through Cloudflare Tunnel.
 - Caddy decides the backend for each hostname.
 - The public Uptime Kuma route allows only status-page paths.
+- The Prometheus UI is bound to localhost on `yggdrasil`.
+- `node_exporter` is scraped internally and does not open a public firewall
+  port.
 - Application ports are not directly opened to the general Internet.
 - Internal tailnet access control depends on Tailscale ACLs and tailnet
   membership, not this repo.
@@ -449,6 +508,18 @@ nixos-rebuild <test|switch>
 The command is run from the workstation, while the Linux system closure is built
 and activated on the target NixOS host.
 
+Access the Prometheus UI through SSH port forwarding:
+
+```bash
+ssh -L 9090:127.0.0.1:9090 yggdrasil
+```
+
+Then open:
+
+```text
+http://127.0.0.1:9090
+```
+
 ## Validation
 
 Check flake evaluation locally:
@@ -468,4 +539,13 @@ tailscale status
 zramctl
 df -h
 bootctl status
+```
+
+Check Prometheus from `yggdrasil`:
+
+```bash
+systemctl is-active prometheus prometheus-node-exporter
+curl -fsS http://127.0.0.1:9090/-/ready
+curl -fsS http://127.0.0.1:9090/api/v1/targets | jq
+curl -fsS http://127.0.0.1:9090/api/v1/rules | jq
 ```
