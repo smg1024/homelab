@@ -49,6 +49,7 @@
           ./modules/ssh.nix
           ./modules/tailscale.nix
           ./modules/secrets.nix
+          ./services/node-exporter.nix
 
           disko.nixosModules.disko
           sops-nix.nixosModules.sops

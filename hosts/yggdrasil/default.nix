@@ -5,6 +5,7 @@
     ../../services/ingress.nix
     ../../services/cloudflared.nix
     ../../services/uptime-kuma.nix
+    ../../services/prometheus
   ];
 
   networking.hostName = "yggdrasil";
