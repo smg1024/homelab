@@ -19,8 +19,14 @@
           {
             targets = [
               "127.0.0.1:9100"
+            ];
+            labels.node = "yggdrasil";
+          }
+          {
+            targets = [
               "midgard.tail6fc192.ts.net:9100"
             ];
+            labels.node = "midgard";
           }
         ];
       }

@@ -56,6 +56,16 @@
       respond 404
     '';
 
+    virtualHosts."grafana.ridewithmin.com".extraConfig = ''
+      @tailnet remote_ip 100.64.0.0/10 fd7a:115c:a1e0::/48
+
+      handle @tailnet {
+        reverse_proxy http://127.0.0.1:3003
+      }
+
+      respond 404
+    '';
+
     virtualHosts."http://yggdrasil.tail6fc192.ts.net:3002".extraConfig = ''
       reverse_proxy http://127.0.0.1:3001
     '';
