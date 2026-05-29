@@ -435,7 +435,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "label_replace(node_systemd_unit_state{job=\"nodes\",node=~\"$node\",name=~\"caddy\\\\.service|grafana\\\\.service|prometheus\\\\.service|prometheus-node-exporter\\\\.service|uptime-kuma\\\\.service|forgejo\\\\.service|vaultwarden\\\\.service|homepage-dashboard\\\\.service|sshd\\\\.service|tailscaled\\\\.service\",state=~\"active|failed|inactive|activating|deactivating\"} == 1, \"service\", \"$1\", \"name\", \"(.+)\\\\.service\") or label_replace(node_systemd_unit_state{job=\"nodes\",node=~\"$node\",name=~\"cloudflared-tunnel-.*\\\\.service\",state=~\"active|failed|inactive|activating|deactivating\"} == 1, \"service\", \"cloudflared\", \"name\", \".*\")",
+          "expr": "label_replace(node_systemd_unit_state{job=\"nodes\",node=~\"$node\",name=~\"caddy\\\\.service|grafana\\\\.service|grafana-image-renderer\\\\.service|prometheus\\\\.service|prometheus-node-exporter\\\\.service|uptime-kuma\\\\.service|forgejo\\\\.service|vaultwarden\\\\.service|homepage-dashboard\\\\.service|sshd\\\\.service|tailscaled\\\\.service\",state=~\"active|failed|inactive|activating|deactivating\"} == 1, \"service\", \"$1\", \"name\", \"(.+)\\\\.service\") or label_replace(node_systemd_unit_state{job=\"nodes\",node=~\"$node\",name=~\"cloudflared-tunnel-.*\\\\.service\",state=~\"active|failed|inactive|activating|deactivating\"} == 1, \"service\", \"cloudflared\", \"name\", \".*\")",
           "format": "table",
           "instant": true,
           "legendFormat": "{{node}} {{service}}",
@@ -519,6 +519,6 @@
   "timezone": "browser",
   "title": "Homelab Nodes",
   "uid": "homelab-nodes",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }

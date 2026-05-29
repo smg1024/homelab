@@ -29,6 +29,10 @@
         check_for_updates = false;
       };
 
+      rendering = {
+        concurrent_render_request_limit = 2;
+      };
+
       "auth.anonymous".enabled = false;
       security = {
         admin_password = "$__file{${config.sops.secrets."grafana/admin_password".path}}";
@@ -73,6 +77,15 @@
           }
         ];
       };
+    };
+  };
+
+  services.grafana-image-renderer = {
+    enable = true;
+    provisionGrafana = true;
+
+    settings = {
+      server.addr = "127.0.0.1:8081";
     };
   };
 
