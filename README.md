@@ -20,6 +20,8 @@ flowchart TD
         caddy["Caddy<br/>HTTPS ingress / reverse proxy"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
         prometheus["Prometheus<br/>127.0.0.1:9090"]
+        grafana["Grafana<br/>127.0.0.1:3003"]
+        renderer["Grafana image renderer<br/>127.0.0.1:8081"]
         yNodeExporter["node_exporter<br/>:9100"]
     end
 
@@ -42,6 +44,7 @@ flowchart TD
     caddy -->|"home.ridewithmin.com"| homepage
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
+    caddy -->|"grafana.ridewithmin.com<br/>tailnet only"| grafana
 
     caddy -.->|backend access over Tailscale| midgardDns
     midgardDns -.-> homepage
@@ -50,6 +53,8 @@ flowchart TD
 
     prometheus --> yNodeExporter
     prometheus -.->|scrape over Tailscale| mNodeExporter
+    grafana --> prometheus
+    grafana -.-> renderer
 ```
 
 `flake.nix` pins NixOS 25.11 and exposes two NixOS configurations.
@@ -73,6 +78,7 @@ Main responsibilities:
 - Route public domains to internal services
 - Serve the Uptime Kuma status page
 - Run Prometheus for node-level monitoring and alert rule evaluation
+- Serve Grafana dashboards through a tailnet-restricted Caddy route
 
 Loaded services:
 
@@ -80,6 +86,7 @@ Loaded services:
 - `services/cloudflared.nix`
 - `services/uptime-kuma.nix`
 - `services/prometheus`
+- `services/grafana`
 
 ### midgard
 
@@ -260,6 +267,7 @@ home.ridewithmin.com   -> http://midgard.tail6fc192.ts.net:8082
 git.ridewithmin.com    -> http://midgard.tail6fc192.ts.net:3000
 vault.ridewithmin.com  -> http://midgard.tail6fc192.ts.net:8222
 status.ridewithmin.com -> http://127.0.0.1:3001
+grafana.ridewithmin.com -> http://127.0.0.1:3003, tailnet clients only
 ```
 
 Caddy uses the Cloudflare DNS plugin to issue certificates through ACME DNS
@@ -267,6 +275,10 @@ challenges.
 
 `status.ridewithmin.com` proxies only Uptime Kuma status-page related paths and
 returns `404` for every other path.
+
+`grafana.ridewithmin.com` is routed by Caddy to local Grafana only for requests
+from Tailscale address ranges. Other clients receive `404`. It is not part of
+the Cloudflare Tunnel public hostname list.
 
 ### Application Services
 
@@ -287,9 +299,10 @@ disables public signup, and allows invitations.
 
 ## Monitoring
 
-Prometheus runs on `yggdrasil` and collects node-level metrics from both NixOS
-hosts. Uptime Kuma remains responsible for public endpoint checks and the public
-status page.
+Prometheus and Grafana run on `yggdrasil`. Prometheus collects node-level
+metrics from both NixOS hosts, and Grafana provides the operator dashboard over
+the tailnet-restricted Caddy route. Uptime Kuma remains responsible for public
+endpoint checks and the public status page.
 
 Monitoring services:
 
@@ -305,6 +318,14 @@ Monitoring services:
   - Listens on `:9100`.
   - Does not open a general firewall port.
   - Enables the systemd collector for all `.service` units.
+
+- `services/grafana`
+  - Enables Grafana on `127.0.0.1:3003`.
+  - Provisions Prometheus as the default datasource.
+  - Provisions the `Homelab Nodes` dashboard from
+    `services/grafana/dashboards/node-overview.json`.
+  - Loads the admin password from the `grafana/admin_password` SOPS secret.
+  - Enables `grafana-image-renderer` on `127.0.0.1:8081`.
 
 Prometheus scrape targets:
 
@@ -325,8 +346,9 @@ Current alert rules:
 - `HighCpuUsage`
 - `HighLoad`
 
-Rules are visible in the Prometheus UI. External notification delivery through
-Alertmanager is not configured yet.
+Rules are visible in the Prometheus UI. Dashboards are visible in Grafana at
+`https://grafana.ridewithmin.com` from the tailnet. External notification
+delivery through Alertmanager is not configured yet.
 
 ## Container Runtime
 
@@ -395,6 +417,12 @@ Current secret consumers:
   - Contains the Cloudflare Tunnel credential.
   - Mode is `0400`.
 
+- `grafana/admin_password`
+  - Grafana administrator password.
+  - Read directly by Grafana from the SOPS materialized secret file.
+  - Owned by `grafana:grafana`.
+  - Mode is `0400`.
+
 - `vaultwarden/admin_token`
   - Vaultwarden admin token.
   - Rendered into the `vaultwarden.env` runtime template as `ADMIN_TOKEN`.
@@ -415,10 +443,12 @@ flowchart LR
         tunnel["cloudflared<br/>outbound tunnel"]
         ingress["Caddy<br/>hostname-based routing"]
         status["Uptime Kuma<br/>localhost:3001"]
+        grafana["Grafana<br/>localhost:3003"]
     end
 
     subgraph private["Tailscale tailnet"]
         mdns["midgard.tail6fc192.ts.net"]
+        operator["Tailnet operator"]
 
         subgraph app["midgard"]
             home["Homepage<br/>:8082"]
@@ -435,6 +465,9 @@ flowchart LR
     ingress -->|"home.ridewithmin.com"| home
     ingress -->|"git.ridewithmin.com"| git
     ingress -->|"vault.ridewithmin.com"| vault
+
+    operator -->|"grafana.ridewithmin.com"| ingress
+    ingress -->|"tailnet clients only"| grafana
 
     ingress -.->|private backend path| mdns
     mdns -.-> home
@@ -467,6 +500,7 @@ Access control declared in this repo:
 - Caddy decides the backend for each hostname.
 - The public Uptime Kuma route allows only status-page paths.
 - The Prometheus UI is bound to localhost on `yggdrasil`.
+- Grafana is bound to localhost and routed by Caddy only for tailnet clients.
 - `node_exporter` is scraped internally and does not open a public firewall
   port.
 - Application ports are not directly opened to the general Internet.
@@ -520,6 +554,24 @@ Then open:
 http://127.0.0.1:9090
 ```
 
+Access Grafana from a Tailscale-connected client:
+
+```text
+https://grafana.ridewithmin.com
+```
+
+If DNS or browser routing is inconvenient, use SSH port forwarding instead:
+
+```bash
+ssh -L 3003:127.0.0.1:3003 yggdrasil
+```
+
+Then open:
+
+```text
+http://127.0.0.1:3003
+```
+
 ## Validation
 
 Check flake evaluation locally:
@@ -548,4 +600,11 @@ systemctl is-active prometheus prometheus-node-exporter
 curl -fsS http://127.0.0.1:9090/-/ready
 curl -fsS http://127.0.0.1:9090/api/v1/targets | jq
 curl -fsS http://127.0.0.1:9090/api/v1/rules | jq
+```
+
+Check Grafana from `yggdrasil`:
+
+```bash
+systemctl is-active grafana grafana-image-renderer
+curl -fsS http://127.0.0.1:3003/api/health | jq
 ```

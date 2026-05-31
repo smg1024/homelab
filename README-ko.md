@@ -20,6 +20,8 @@ flowchart TD
         caddy["Caddy<br/>HTTPS ingress / reverse proxy"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
         prometheus["Prometheus<br/>127.0.0.1:9090"]
+        grafana["Grafana<br/>127.0.0.1:3003"]
+        renderer["Grafana image renderer<br/>127.0.0.1:8081"]
         yNodeExporter["node_exporter<br/>:9100"]
     end
 
@@ -42,6 +44,7 @@ flowchart TD
     caddy -->|"home.ridewithmin.com"| homepage
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
+    caddy -->|"grafana.ridewithmin.com<br/>tailnet only"| grafana
 
     caddy -.->|backend access over Tailscale| midgardDns
     midgardDns -.-> homepage
@@ -50,6 +53,8 @@ flowchart TD
 
     prometheus --> yNodeExporter
     prometheus -.->|scrape over Tailscale| mNodeExporter
+    grafana --> prometheus
+    grafana -.-> renderer
 ```
 
 `flake.nix`는 NixOS 25.11을 pinning하고, 두 NixOS configuration을 노출한다.
@@ -74,6 +79,7 @@ import한다.
 - 공개 도메인을 내부 서비스로 라우팅
 - Uptime Kuma 상태 페이지 제공
 - Prometheus를 통한 node-level monitoring과 alert rule 평가
+- tailnet으로 제한된 Caddy route를 통해 Grafana dashboard 제공
 
 로드하는 서비스:
 
@@ -81,6 +87,7 @@ import한다.
 - `services/cloudflared.nix`
 - `services/uptime-kuma.nix`
 - `services/prometheus`
+- `services/grafana`
 
 ### midgard
 
@@ -257,12 +264,17 @@ home.ridewithmin.com   -> http://midgard.tail6fc192.ts.net:8082
 git.ridewithmin.com    -> http://midgard.tail6fc192.ts.net:3000
 vault.ridewithmin.com  -> http://midgard.tail6fc192.ts.net:8222
 status.ridewithmin.com -> http://127.0.0.1:3001
+grafana.ridewithmin.com -> http://127.0.0.1:3003, tailnet client만 허용
 ```
 
 Caddy는 Cloudflare DNS plugin을 사용해 ACME DNS challenge로 인증서를 발급받는다.
 
 `status.ridewithmin.com`은 Uptime Kuma의 status page 관련 path만 proxy하고, 그
 외 path는 `404`를 반환한다.
+
+`grafana.ridewithmin.com`은 Tailscale 주소 대역에서 온 요청만 Caddy가 local
+Grafana로 라우팅한다. 그 외 client는 `404`를 받는다. 이 hostname은 Cloudflare
+Tunnel의 public hostname 목록에는 포함되어 있지 않다.
 
 ### Application Services
 
@@ -283,9 +295,10 @@ Forgejo는 registration과 Forgejo SSH가 비활성화되어 있다. Vaultwarden
 
 ## 모니터링
 
-Prometheus는 `yggdrasil`에서 실행되고, 두 NixOS 호스트의 node-level metric을
-수집한다. Uptime Kuma는 계속 public endpoint 확인과 public status page를
-담당한다.
+Prometheus와 Grafana는 `yggdrasil`에서 실행된다. Prometheus는 두 NixOS 호스트의
+node-level metric을 수집하고, Grafana는 tailnet으로 제한된 Caddy route를 통해
+운영자 dashboard를 제공한다. Uptime Kuma는 계속 public endpoint 확인과 public
+status page를 담당한다.
 
 모니터링 서비스:
 
@@ -301,6 +314,14 @@ Prometheus는 `yggdrasil`에서 실행되고, 두 NixOS 호스트의 node-level 
   - `:9100`에서 listen한다.
   - 일반 firewall port는 열지 않는다.
   - 모든 `.service` unit을 대상으로 systemd collector를 활성화한다.
+
+- `services/grafana`
+  - Grafana를 `127.0.0.1:3003`에서 활성화한다.
+  - Prometheus를 기본 datasource로 provision한다.
+  - `services/grafana/dashboards/node-overview.json`의 `Homelab Nodes`
+    dashboard를 provision한다.
+  - `grafana/admin_password` SOPS secret에서 admin password를 읽는다.
+  - `grafana-image-renderer`를 `127.0.0.1:8081`에서 활성화한다.
 
 Prometheus scrape target:
 
@@ -321,8 +342,9 @@ midgard.tail6fc192.ts.net:9100  -> midgard node_exporter
 - `HighCpuUsage`
 - `HighLoad`
 
-Rule은 Prometheus UI에서 확인할 수 있다. Alertmanager를 통한 외부 알림 전송은
-아직 구성하지 않았다.
+Rule은 Prometheus UI에서 확인할 수 있다. Dashboard는 tailnet에서
+`https://grafana.ridewithmin.com`으로 접근해 Grafana에서 확인한다.
+Alertmanager를 통한 외부 알림 전송은 아직 구성하지 않았다.
 
 ## Container Runtime
 
@@ -389,6 +411,12 @@ materialize하고, 각 파일에 owner, group, mode를 적용한다.
   - Cloudflare Tunnel credential을 담는다.
   - mode는 `0400`이다.
 
+- `grafana/admin_password`
+  - Grafana administrator password다.
+  - SOPS가 materialize한 secret file을 Grafana가 직접 읽는다.
+  - `grafana:grafana` 소유다.
+  - mode는 `0400`이다.
+
 - `vaultwarden/admin_token`
   - Vaultwarden admin token이다.
   - `vaultwarden.env` runtime template 안에 `ADMIN_TOKEN`으로 렌더링된다.
@@ -408,10 +436,12 @@ flowchart LR
         tunnel["cloudflared<br/>outbound tunnel"]
         ingress["Caddy<br/>hostname-based routing"]
         status["Uptime Kuma<br/>localhost:3001"]
+        grafana["Grafana<br/>localhost:3003"]
     end
 
     subgraph private["Tailscale tailnet"]
         mdns["midgard.tail6fc192.ts.net"]
+        operator["Tailnet operator"]
 
         subgraph app["midgard"]
             home["Homepage<br/>:8082"]
@@ -428,6 +458,9 @@ flowchart LR
     ingress -->|"home.ridewithmin.com"| home
     ingress -->|"git.ridewithmin.com"| git
     ingress -->|"vault.ridewithmin.com"| vault
+
+    operator -->|"grafana.ridewithmin.com"| ingress
+    ingress -->|"tailnet client만 허용"| grafana
 
     ingress -.->|private backend path| mdns
     mdns -.-> home
@@ -459,6 +492,7 @@ tailnet은 내부 네트워크 경계로 동작한다. public Internet 사용자
 - Caddy가 hostname별 backend를 결정한다.
 - Uptime Kuma public route는 status page path만 허용한다.
 - Prometheus UI는 `yggdrasil`의 localhost에만 bind된다.
+- Grafana는 localhost에 bind되고, Caddy가 tailnet client에 대해서만 라우팅한다.
 - `node_exporter`는 내부 scrape 용도이며 public firewall port를 열지 않는다.
 - application port는 일반 인터넷에 직접 열지 않는다.
 - tailnet 내부 접근 제어는 이 repo가 아니라 Tailscale ACL과 tailnet 멤버십에
@@ -511,6 +545,24 @@ ssh -L 9090:127.0.0.1:9090 yggdrasil
 http://127.0.0.1:9090
 ```
 
+Grafana는 Tailscale에 연결된 client에서 접근한다.
+
+```text
+https://grafana.ridewithmin.com
+```
+
+DNS나 browser routing이 불편하면 SSH port forwarding을 사용한다.
+
+```bash
+ssh -L 3003:127.0.0.1:3003 yggdrasil
+```
+
+그 다음 브라우저에서 연다.
+
+```text
+http://127.0.0.1:3003
+```
+
 ## 검증
 
 로컬에서 flake 평가 확인:
@@ -539,4 +591,11 @@ systemctl is-active prometheus prometheus-node-exporter
 curl -fsS http://127.0.0.1:9090/-/ready
 curl -fsS http://127.0.0.1:9090/api/v1/targets | jq
 curl -fsS http://127.0.0.1:9090/api/v1/rules | jq
+```
+
+`yggdrasil`에서 Grafana 상태 확인:
+
+```bash
+systemctl is-active grafana grafana-image-renderer
+curl -fsS http://127.0.0.1:3003/api/health | jq
 ```
