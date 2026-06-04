@@ -57,7 +57,7 @@ flowchart TD
     grafana -.-> renderer
 ```
 
-`flake.nix`는 NixOS 25.11을 pinning하고, 두 NixOS configuration을 노출한다.
+`flake.nix`는 NixOS 26.05를 pinning하고, 두 NixOS configuration을 노출한다.
 
 - `yggdrasil`
 - `midgard`

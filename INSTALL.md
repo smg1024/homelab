@@ -424,7 +424,7 @@ ssh yggdrasil
 user에 포함되므로 remote build와 remote switch에 사용할 수 있다.
 
 ```bash
-nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
+nix run github:NixOS/nixpkgs/nixos-26.05#nixos-rebuild -- \
   test \
   --fast \
   --flake .#yggdrasil \
@@ -436,7 +436,7 @@ nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
 문제가 없으면 switch를 실행한다.
 
 ```bash
-nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
+nix run github:NixOS/nixpkgs/nixos-26.05#nixos-rebuild -- \
   switch \
   --fast \
   --flake .#yggdrasil \
@@ -515,7 +515,7 @@ df -h
 remote rebuild 테스트:
 
 ```bash
-nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
+nix run github:NixOS/nixpkgs/nixos-26.05#nixos-rebuild -- \
   test \
   --fast \
   --flake .#midgard \
@@ -527,7 +527,7 @@ nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
 성공하면:
 
 ```bash
-nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
+nix run github:NixOS/nixpkgs/nixos-26.05#nixos-rebuild -- \
   switch \
   --fast \
   --flake .#midgard \
@@ -615,7 +615,7 @@ Caddy / DNS / apps
 서비스는 하나씩 추가하고, 각 단계마다 다음을 반복한다.
 
 ```bash
-nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
+nix run github:NixOS/nixpkgs/nixos-26.05#nixos-rebuild -- \
   test \
   --fast \
   --flake .#<host> \
@@ -623,7 +623,7 @@ nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
   --target-host <host> \
   --use-remote-sudo
 
-nix run github:NixOS/nixpkgs/nixos-25.11#nixos-rebuild -- \
+nix run github:NixOS/nixpkgs/nixos-26.05#nixos-rebuild -- \
   switch \
   --fast \
   --flake .#<host> \

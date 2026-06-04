@@ -11,6 +11,7 @@
   ];
 
   networking.hostName = "midgard";
+  services.dbus.implementation = "dbus";
 
   fonts = {
     packages = with pkgs; [

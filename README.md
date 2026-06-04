@@ -57,7 +57,7 @@ flowchart TD
     grafana -.-> renderer
 ```
 
-`flake.nix` pins NixOS 25.11 and exposes two NixOS configurations.
+`flake.nix` pins NixOS 26.05 and exposes two NixOS configurations.
 
 - `yggdrasil`
 - `midgard`

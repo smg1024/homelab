@@ -12,6 +12,31 @@
     ];
   };
 
+  sops.secrets."grafana/secret_key" = {
+    owner = "grafana";
+    group = "grafana";
+    mode = "0400";
+    restartUnits = [
+      "grafana.service"
+    ];
+  };
+
+  sops.secrets."grafana/renderer_token" = {
+    owner = "grafana";
+    group = "grafana";
+    mode = "0400";
+    restartUnits = [
+      "grafana.service"
+    ];
+  };
+
+  sops.secrets."grafana/renderer_env" = {
+    mode = "0400";
+    restartUnits = [
+      "grafana-image-renderer.service"
+    ];
+  };
+
   services.grafana = {
     enable = true;
     openFirewall = false;
@@ -31,11 +56,13 @@
 
       rendering = {
         concurrent_render_request_limit = 2;
+        renderer_token = "$__file{${config.sops.secrets."grafana/renderer_token".path}}";
       };
 
       "auth.anonymous".enabled = false;
       security = {
         admin_password = "$__file{${config.sops.secrets."grafana/admin_password".path}}";
+        secret_key = "$__file{${config.sops.secrets."grafana/secret_key".path}}";
         cookie_secure = true;
       };
       users.allow_sign_up = false;
@@ -88,6 +115,9 @@
       server.addr = "127.0.0.1:8081";
     };
   };
+
+  systemd.services.grafana-image-renderer.serviceConfig.EnvironmentFile =
+    config.sops.secrets."grafana/renderer_env".path;
 
   systemd.services.grafana.preStart = lib.mkAfter ''
     if [ -s ${config.sops.secrets."grafana/admin_password".path} ]; then

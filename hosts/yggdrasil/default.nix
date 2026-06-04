@@ -10,6 +10,7 @@
   ];
 
   networking.hostName = "yggdrasil";
+  services.dbus.implementation = "broker";
 
   home-manager.users.poby.imports = [
     ../../home/poby/yggdrasil.nix
