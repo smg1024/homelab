@@ -15,11 +15,15 @@ switch host:
     @just _rebuild {{ host }} switch
 
 _rebuild host action:
-    @case "{{ host }}" in yggdrasil|midgard) ;; *) echo "unknown host: {{ host }}" >&2; exit 2;; esac
-    nix run {{ nixos_rebuild }} -- \
+    @case "{{ host }}" in yggdrasil|midgard|alfheim) ;; *) echo "unknown host: {{ host }}" >&2; exit 2;; esac
+    @case "{{ host }}" in \
+      alfheim) target="poby@alfheim.tail6fc192.ts.net"; ssh_opts="-i $HOME/.config/sops-nix/secrets/github_ssh_key";; \
+      *) target="{{ host }}"; ssh_opts="";; \
+    esac; \
+    NIX_SSHOPTS="$ssh_opts" nix run {{ nixos_rebuild }} -- \
       {{ action }} \
-      --fast \
+      --no-reexec \
       --flake ".#{{ host }}" \
-      --build-host "{{ host }}" \
-      --target-host "{{ host }}" \
-      --use-remote-sudo
+      --build-host "$target" \
+      --target-host "$target" \
+      --sudo

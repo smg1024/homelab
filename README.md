@@ -2,7 +2,7 @@
 
 English | [한국어](README-ko.md)
 
-This repo is the source of truth for a homelab made up of two NixOS machines.
+This repo is the source of truth for a homelab made up of NixOS machines.
 Host configuration, disk layout, shared system modules, services, user
 configuration, and encrypted secrets are all declared in a Nix flake.
 
@@ -57,10 +57,11 @@ flowchart TD
     grafana -.-> renderer
 ```
 
-`flake.nix` pins NixOS 26.05 and exposes two NixOS configurations.
+`flake.nix` pins NixOS 26.05 and exposes three NixOS configurations.
 
 - `yggdrasil`
 - `midgard`
+- `alfheim`
 
 Shared system configuration is loaded from `modules/`, and each host imports
 additional hardware, disk, and service modules from `hosts/<host>/default.nix`.
@@ -108,6 +109,20 @@ Loaded services:
 Loaded host-specific modules:
 
 - `modules/podman.nix`
+
+### alfheim
+
+`alfheim` is an experimental Oracle Cloud Infrastructure ARM VM.
+
+Main responsibilities:
+
+- Validate NixOS operation on OCI
+- Test cloud-hosted homelab patterns before promoting persistent services
+- Provide a small remote node with the shared operator baseline
+
+It currently loads only the shared modules and no application-specific services.
+SSH is intentionally exposed only through the tailnet; the public OCI address
+does not accept SSH.
 
 ## Shared System Configuration
 
@@ -214,7 +229,7 @@ mutable setup can be promoted into declarative Nix configuration.
 
 Disk layout is declared with `disko`.
 
-Both hosts use a simple single-disk GPT layout.
+All hosts use a simple single-disk GPT layout.
 
 ```text
 GPT partition table
@@ -226,11 +241,13 @@ Host-specific disk configuration:
 
 - `hosts/yggdrasil/disko.nix`
 - `hosts/midgard/disko.nix`
+- `hosts/alfheim/disko.nix`
 
 Host-specific hardware configuration:
 
 - `hosts/yggdrasil/hardware-configuration.nix`
 - `hosts/midgard/hardware-configuration.nix`
+- `hosts/alfheim/hardware-configuration.nix`
 
 There is no separate swap partition. zram swap is configured in
 `modules/swap.nix`.
@@ -300,9 +317,9 @@ disables public signup, and allows invitations.
 ## Monitoring
 
 Prometheus and Grafana run on `yggdrasil`. Prometheus collects node-level
-metrics from both NixOS hosts, and Grafana provides the operator dashboard over
-the tailnet-restricted Caddy route. Uptime Kuma remains responsible for public
-endpoint checks and the public status page.
+metrics from the service hosts listed in its scrape config, and Grafana provides
+the operator dashboard over the tailnet-restricted Caddy route. Uptime Kuma
+remains responsible for public endpoint checks and the public status page.
 
 Monitoring services:
 
@@ -314,7 +331,7 @@ Monitoring services:
   - Loads alerting rules from `services/prometheus/node-health-alert-rule.yml`.
 
 - `services/node-exporter.nix`
-  - Runs `node_exporter` on both hosts.
+  - Runs `node_exporter` on every host.
   - Listens on `:9100`.
   - Does not open a general firewall port.
   - Enables the systemd collector for all `.service` units.
@@ -478,10 +495,11 @@ flowchart LR
     public -.-> blocked
 ```
 
-In the current configuration, the NixOS firewall is enabled on every host, and
-the directly allowed TCP port is SSH `22`. Application and monitoring ports such
-as `3000`, `3001`, `8082`, `8222`, `9090`, and `9100` are not opened as general
-public firewall ports.
+In the current configuration, the NixOS firewall is enabled on every host. The
+home service hosts allow SSH `22` directly, while `alfheim` keeps SSH available
+only through the trusted `tailscale0` interface. Application and monitoring
+ports such as `3000`, `3001`, `8082`, `8222`, `9090`, and `9100` are not opened
+as general public firewall ports.
 
 Services on `midgard` are reached by Caddy through the Tailscale MagicDNS name.
 
@@ -489,7 +507,7 @@ Services on `midgard` are reached by Caddy through the Tailscale MagicDNS name.
 midgard.tail6fc192.ts.net
 ```
 
-Both hosts mark the `tailscale0` interface as trusted. The tailnet therefore
+All hosts mark the `tailscale0` interface as trusted. The tailnet therefore
 acts as the internal network boundary. Public Internet users can access only the
 hostnames connected through Cloudflare, while devices inside the tailnet may
 reach internal service ports more directly depending on Tailscale policy.

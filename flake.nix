@@ -32,9 +32,10 @@
     sops-nix,
     ...
   }: let
-    system = "x86_64-linux";
-
-    mkHost = hostModule:
+    mkHost = {
+      hostModule,
+      system ? "x86_64-linux",
+    }:
       nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
@@ -74,8 +75,16 @@
       };
   in {
     nixosConfigurations = {
-      yggdrasil = mkHost ./hosts/yggdrasil;
-      midgard = mkHost ./hosts/midgard;
+      yggdrasil = mkHost {
+        hostModule = ./hosts/yggdrasil;
+      };
+      midgard = mkHost {
+        hostModule = ./hosts/midgard;
+      };
+      alfheim = mkHost {
+        hostModule = ./hosts/alfheim;
+        system = "aarch64-linux";
+      };
     };
   };
 }

@@ -1,7 +1,8 @@
 # NixOS Homelab Install Guide
 
 이 문서는 `yggdrasil`, `midgard`를 NixOS installer USB에서 부팅한 뒤 이 repo를
-source of truth로 사용해 최초 설치하는 절차를 설명한다.
+source of truth로 사용해 최초 설치하는 절차를 설명한다. `alfheim`은 이미 NixOS가
+설치된 OCI 실험 노드이므로 이 USB 설치 절차의 대상이 아니다.
 
 기본 원칙:
 
@@ -14,11 +15,12 @@ source of truth로 사용해 최초 설치하는 절차를 설명한다.
 
 ## 현재 repo 상태
 
-이 repo는 두 호스트를 가진 flake로 구성된다.
+이 repo는 세 호스트를 가진 flake로 구성된다.
 
 ```text
 yggdrasil
 midgard
+alfheim
 ```
 
 공통 설정은 `modules/`에 있고, 호스트별 설정은 `hosts/<host>/`에 있다.
