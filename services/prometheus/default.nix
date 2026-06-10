@@ -28,6 +28,12 @@
             ];
             labels.node = "midgard";
           }
+          {
+            targets = [
+              "alfheim.tail6fc192.ts.net:9100"
+            ];
+            labels.node = "alfheim";
+          }
         ];
       }
     ];
