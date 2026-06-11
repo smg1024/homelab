@@ -10,6 +10,14 @@ web_search = "live"
 [features]
 multi_agent = true
 prevent_idle_sleep = true
+hooks = true
+goals = true
+
+[analytics]
+enabled = false
+
+[feedback]
+enabled = false
 
 [agents]
 max_threads = 6
@@ -19,9 +27,11 @@ max_depth = 1
 status_line = [
   "model-with-reasoning",
   "context-remaining",
-  "current-dir",
-  "git-branch",
   "five-hour-limit",
+  "git-branch",
+  "branch-changes",
+  "project-name",
+  "pull-request-number",
 ]
 
 [sandbox_workspace_write]
