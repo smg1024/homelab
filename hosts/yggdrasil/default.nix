@@ -6,6 +6,7 @@
     ../../services/cloudflared.nix
     ../../services/uptime-kuma.nix
     ../../services/prometheus
+    ../../services/loki.nix
     ../../services/grafana
   ];
 

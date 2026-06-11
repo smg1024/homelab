@@ -51,6 +51,7 @@
           ./modules/tailscale.nix
           ./modules/secrets.nix
           ./services/node-exporter.nix
+          ./services/alloy.nix
 
           disko.nixosModules.disko
           sops-nix.nixosModules.sops
