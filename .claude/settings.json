@@ -4,7 +4,7 @@
   "effortLevel": "xhigh",
   "statusLine": {
     "type": "command",
-    "command": "bun \"${CLAUDE_PROJECT_DIR:-.}/.agents/hooks/hud.ts\""
+    "command": "bun \"$CLAUDE_PROJECT_DIR/.agents/hooks/hud.ts\""
   },
   "permissions": {
     "defaultMode": "auto",
