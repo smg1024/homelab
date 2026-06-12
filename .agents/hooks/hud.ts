@@ -3,14 +3,20 @@
  * Statusline HUD for Claude Code.
  *
  * Reads the statusline JSON payload on stdin and prints a single ANSI line:
- *   Fable 5 │ ctx ███▌░░░░ 43% 86k │ 5h ████▉░░░ 61% │ ⎇ main* │ +12/-4 │ homelab
+ *   Fable 5 │ ctx ███▌░░░░ 43% 86k │ 5h ████▉░░░ 61% │ ⎇ feat* │ +12/-4 │ PR#42 │ homelab
+ *
+ * PR#n appears when the current branch has an open PR targeting main
+ * (via `gh`, cached for 2 minutes to keep the statusline cheap).
  *
  * Lives in .agents/hooks/ (shared agent config). Codex CLI cannot run
  * command-backed statuslines yet — see openai/codex#17827 / #20140; when
  * that ships, point its config at this same script.
  */
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 const ESC = "\x1b[";
 const RESET = `${ESC}0m`;
@@ -25,6 +31,34 @@ const fmtTokens = (n: number) =>
     : n >= 1_000
       ? `${Math.round(n / 1_000)}k`
       : `${n}`;
+/** Open-PR number for branch→main, via gh; tmpdir-cached for 2 min. */
+const prNumber = (dir: string, branch: string): string => {
+  const key = createHash("sha1").update(`${dir}#${branch}`).digest("hex");
+  const cache = join(tmpdir(), `hud-pr-${key}.txt`);
+  try {
+    if (existsSync(cache) && Date.now() - statSync(cache).mtimeMs < 120_000)
+      return readFileSync(cache, "utf8").trim();
+  } catch {}
+  let num = "";
+  try {
+    const pr = JSON.parse(
+      execSync("gh pr view --json number,state,baseRefName", {
+        cwd: dir,
+        stdio: ["ignore", "pipe", "ignore"],
+        timeout: 2_000,
+      }).toString(),
+    );
+    if (pr.state === "OPEN" && pr.baseRefName === "main" && pr.number)
+      num = String(pr.number);
+  } catch {
+    /* no PR, gh missing/unauthenticated, or network issue */
+  }
+  try {
+    writeFileSync(cache, num);
+  } catch {}
+  return num;
+};
+
 const bar = (pct: number, width = 8) => {
   const clamped = Math.min(100, Math.max(0, pct));
   const cells = (clamped / 100) * width;
@@ -77,6 +111,7 @@ try {
   limit("5h", data.rate_limits?.five_hour, true);
 
   const dir = data.workspace?.current_dir ?? data.cwd ?? process.cwd();
+  let branch = "";
   try {
     const git = (cmd: string) =>
       execSync(cmd, {
@@ -86,7 +121,7 @@ try {
       })
         .toString()
         .trim();
-    const branch = git("git branch --show-current");
+    branch = git("git branch --show-current");
     if (branch) {
       const dirty = git("git status --porcelain") ? color(214, "*") : "";
       seg.push(color(110, `⎇ ${branch}`) + dirty);
@@ -99,6 +134,11 @@ try {
   const removed = data.cost?.total_lines_removed ?? 0;
   if (added || removed)
     seg.push(`${color(71, `+${added}`)}${dim("/")}${color(167, `-${removed}`)}`);
+
+  if (branch && branch !== "main") {
+    const pr = prNumber(dir, branch);
+    if (pr) seg.push(color(213, `PR#${pr}`));
+  }
 
   const base = String(dir).split("/").filter(Boolean).pop();
   if (base) seg.push(color(180, base));
