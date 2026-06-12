@@ -21,7 +21,7 @@ nav = [
 language = "en"
 font = false
 favicon = "assets/favicon.svg"
-icon.logo = "lucide/tree-deciduous"
+icon.logo = "fontawesome/solid/tree"
 icon.repo = "simple/forgejo"
 features = [
   "content.code.copy",
