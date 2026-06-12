@@ -50,17 +50,8 @@ flowchart TD
     grafana --> prometheus
 ```
 
-## Network boundaries
-
-- **Public Internet** — only the hostnames connected through Cloudflare are
-  reachable. Application ports (`3000`, `8082`, `8222`, `9090`, `9100`, ...)
-  are never opened on the firewall.
-- **Tailnet** — every host trusts the `tailscale0` interface. Caddy reaches
-  the midgard backends through the MagicDNS name
-  `midgard.tail6fc192.ts.net`. Internal tailnet access control is the domain
-  of Tailscale ACLs and is not declared in this repo.
-- **Localhost** — Prometheus, Grafana, and Uptime Kuma bind to loopback on
-  yggdrasil and are exposed only through Caddy routes.
+Who can reach what across these boundaries — public Internet, tailnet,
+localhost — is covered in the [security model](security.md).
 
 ## Shared system configuration
 

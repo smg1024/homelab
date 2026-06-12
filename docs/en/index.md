@@ -39,6 +39,7 @@ docs/            # this documentation site (Zensical)
 
 ## Read next
 
-- [Architecture](architecture.md) — traffic flow and network boundaries
+- [Design principles](principles.md) — the rules everything follows
+- [Architecture](architecture.md) — traffic flow and components
 - [Deploy & rollback](runbooks/deploy.md) — how changes reach the hosts
-- [Secrets](runbooks/secrets.md) — the sops-nix workflow
+- [Roadmap](roadmap.md) — where this is headed

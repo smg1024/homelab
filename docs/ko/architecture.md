@@ -50,16 +50,8 @@ flowchart TD
     grafana --> prometheus
 ```
 
-## 네트워크 경계
-
-- **공개 인터넷** — Cloudflare에 연결된 호스트네임만 접근 가능. 애플리케이션
-  포트(`3000`, `8082`, `8222`, `9090`, `9100` 등)는 방화벽에서 열지 않습니다.
-- **tailnet** — 모든 호스트가 `tailscale0` 인터페이스를 신뢰합니다. Caddy는
-  midgard 백엔드를 MagicDNS 이름 `midgard.tail6fc192.ts.net`으로 접근합니다.
-  tailnet 내부 접근 제어는 Tailscale ACL 소관으로, 이 저장소에서 선언하지
-  않습니다.
-- **localhost** — Prometheus, Grafana, Uptime Kuma는 yggdrasil의 루프백에만
-  바인딩되고 Caddy 라우트를 통해서만 노출됩니다.
+이 경계들 — 공개 인터넷, tailnet, localhost — 을 누가 넘을 수 있는지는
+[보안 모델](security.md)에서 다룹니다.
 
 ## 공유 시스템 구성
 

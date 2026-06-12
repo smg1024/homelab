@@ -38,6 +38,7 @@ docs/            # 이 문서 사이트 (Zensical)
 
 ## 다음으로 읽기
 
-- [아키텍처](architecture.md) — 트래픽 흐름과 네트워크 경계
+- [설계 원칙](principles.md) — 모든 것이 따르는 규칙
+- [아키텍처](architecture.md) — 트래픽 흐름과 구성 요소
 - [배포와 롤백](runbooks/deploy.md) — 변경을 호스트에 적용하는 방법
-- [시크릿 관리](runbooks/secrets.md) — sops-nix 워크플로
+- [로드맵](roadmap.md) — 앞으로의 방향
