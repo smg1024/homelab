@@ -105,11 +105,7 @@
     });
 
     devShells = forAllSystems (pkgs: {
-      docs = pkgs.mkShell {
-        packages = [
-          pkgs.zensical
-        ];
-      };
+      docs = pkgs.callPackage ./docs/shell.nix {};
     });
   };
 }
