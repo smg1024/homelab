@@ -14,6 +14,7 @@ them.
 
 ```text
 docs/
+├── Makefile        # build (`make`) and install (`make install`) targets
 ├── mkdocs.yml      # base config — English (default) site
 ├── mkdocs.ko.yml   # Korean overrides via INHERIT
 ├── en/             # English content (source of truth)

@@ -108,19 +108,6 @@
         nativeBuildInputs = [
           pkgs.zensical
         ];
-
-        buildPhase = ''
-          runHook preBuild
-          zensical build --strict --config-file mkdocs.yml
-          zensical build --strict --config-file mkdocs.ko.yml
-          runHook postBuild
-        '';
-
-        installPhase = ''
-          runHook preInstall
-          mv site $out
-          runHook postInstall
-        '';
       };
     });
 
