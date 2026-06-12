@@ -32,8 +32,17 @@ docs/
 ## 문서 수정 워크플로
 
 1. 먼저 `docs/en/`의 영어 페이지를 수정하고, `docs/ko/`에 같은 변경을
-   반영합니다. 새 페이지는 `zensical.toml`과 `zensical.ko.toml` **양쪽**
-   `nav`에 추가해야 합니다.
+   반영합니다. 새 페이지는 양 언어에서 두 가지를 더 챙깁니다:
+    - `zensical.toml`과 `zensical.ko.toml` **양쪽** `nav`에 추가
+    - 파일 맨 위 front matter로 네비게이션 아이콘 지정:
+
+      ```markdown
+      ---
+      icon: lucide/<이름>
+      ---
+      ```
+
+      아이콘 이름: [zensical/ui 아이콘 세트](https://github.com/zensical/ui/tree/master/dist/.icons).
 2. 로컬에서 빌드를 검증합니다.
 
     ```bash

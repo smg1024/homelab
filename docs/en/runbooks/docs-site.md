@@ -34,8 +34,17 @@ docs/
 ## Editing workflow
 
 1. Edit the English page under `docs/en/` first, then mirror the change in
-   `docs/ko/`. A new page must be added to the `nav` of **both**
-   `zensical.toml` and `zensical.ko.toml`.
+   `docs/ko/`. A new page needs two extra touches, in both languages:
+    - add it to the `nav` of `zensical.toml` **and** `zensical.ko.toml`
+    - give it a navigation icon via front matter at the top of the file:
+
+      ```markdown
+      ---
+      icon: lucide/<name>
+      ---
+      ```
+
+      Icon names: [zensical/ui icon sets](https://github.com/zensical/ui/tree/master/dist/.icons).
 2. Validate the build locally.
 
     ```bash
