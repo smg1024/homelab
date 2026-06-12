@@ -26,19 +26,31 @@ features = [
   "search.suggest",
 ]
 
+# Palette toggle for automatic mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+primary = "deep purple"
+accent = "deep purple"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+# Palette toggle for light mode
 [[project.theme.palette]]
 media = "(prefers-color-scheme: light)"
 scheme = "default"
-primary = "teal"
-toggle.icon = "material/brightness-7"
+primary = "deep purple"
+accent = "deep purple"
+toggle.icon = "lucide/sun"
 toggle.name = "Switch to dark mode"
 
+# Palette toggle for dark mode
 [[project.theme.palette]]
 media = "(prefers-color-scheme: dark)"
 scheme = "slate"
-primary = "teal"
-toggle.icon = "material/brightness-4"
-toggle.name = "Switch to light mode"
+primary = "deep purple"
+accent = "deep purple"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
 
 [project.extra]
 alternate = [

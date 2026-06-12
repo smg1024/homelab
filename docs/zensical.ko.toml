@@ -26,19 +26,31 @@ features = [
   "search.suggest",
 ]
 
+# 자동(시스템 설정) 모드 토글
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+primary = "deep purple"
+accent = "deep purple"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "라이트 모드로 전환"
+
+# 라이트 모드 토글
 [[project.theme.palette]]
 media = "(prefers-color-scheme: light)"
 scheme = "default"
-primary = "teal"
-toggle.icon = "material/brightness-7"
+primary = "deep purple"
+accent = "deep purple"
+toggle.icon = "lucide/sun"
 toggle.name = "다크 모드로 전환"
 
+# 다크 모드 토글
 [[project.theme.palette]]
 media = "(prefers-color-scheme: dark)"
 scheme = "slate"
-primary = "teal"
-toggle.icon = "material/brightness-4"
-toggle.name = "라이트 모드로 전환"
+primary = "deep purple"
+accent = "deep purple"
+toggle.icon = "lucide/moon"
+toggle.name = "시스템 설정으로 전환"
 
 [project.extra]
 alternate = [
