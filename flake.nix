@@ -101,14 +101,7 @@
     };
 
     packages = forAllSystems (pkgs: {
-      docs = pkgs.stdenvNoCC.mkDerivation {
-        name = "homelab-docs";
-        src = ./docs;
-
-        nativeBuildInputs = [
-          pkgs.zensical
-        ];
-      };
+      docs = pkgs.callPackage ./docs/package.nix {};
     });
 
     devShells = forAllSystems (pkgs: {

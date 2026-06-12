@@ -14,6 +14,7 @@ them.
 
 ```text
 docs/
+├── package.nix     # the derivation, wired via callPackage in flake.nix
 ├── Makefile        # build (`make`) and install (`make install`) targets
 ├── mkdocs.yml      # base config — English (default) site
 ├── mkdocs.ko.yml   # Korean overrides via INHERIT

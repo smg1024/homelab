@@ -13,6 +13,7 @@
 
 ```text
 docs/
+├── package.nix     # derivation 정의, flake.nix에서 callPackage로 연결
 ├── Makefile        # 빌드(`make`)와 설치(`make install`) 타깃
 ├── mkdocs.yml      # 기본 설정 — 영어(기본) 사이트
 ├── mkdocs.ko.yml   # INHERIT 기반 한국어 오버라이드
