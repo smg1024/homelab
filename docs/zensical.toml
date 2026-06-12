@@ -55,6 +55,7 @@ toggle.icon = "lucide/moon"
 toggle.name = "Switch to system preference"
 
 [project.extra]
+generator = false
 alternate = [
     { name = "English", link = "/", lang = "en" },
     { name = "한국어", link = "/ko/", lang = "ko" },
