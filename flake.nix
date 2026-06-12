@@ -113,11 +113,14 @@
           runHook preBuild
           zensical build --strict --config-file mkdocs.yml
           zensical build --strict --config-file mkdocs.ko.yml
-          mv site $out
           runHook postBuild
         '';
 
-        dontInstall = true;
+        installPhase = ''
+          runHook preInstall
+          mv site $out
+          runHook postInstall
+        '';
       };
     });
 
