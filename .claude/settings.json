@@ -17,6 +17,7 @@
       "Bash(nix eval:*)",
       "Bash(just --list)",
       "Bash(just default)",
+      "Bash(gh:*)",
       "Bash(just test:*)"
     ],
     "ask": [
