@@ -7,7 +7,6 @@
     "command": "bun \"$CLAUDE_PROJECT_DIR/.agents/hooks/hud.ts\""
   },
   "permissions": {
-    "defaultMode": "auto",
     "allow": [
       "WebSearch",
       "Bash(nix flake check:*)",
