@@ -2,6 +2,7 @@ site_name: Homelab
 site_description: NixOS homelab documentation
 site_url: https://docs.ridewithmin.com/
 docs_dir: en
+site_dir: site
 
 theme:
   name: material

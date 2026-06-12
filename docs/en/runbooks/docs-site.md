@@ -1,9 +1,10 @@
 # Docs site
 
 This site itself is declared in the flake. Content lives as Markdown under
-`docs/`, is built with
-[MkDocs Material](https://squidfunk.github.io/mkdocs-material/), and is served
-as static files by Caddy on yggdrasil (tailnet only).
+`docs/`, is built with [Zensical](https://zensical.org/) (the static site
+generator by the Material for MkDocs team), and is served as static files by
+Caddy on yggdrasil (tailnet only). Zensical reads the MkDocs-style
+`mkdocs.yml` configs natively.
 
 English is the default language; a Korean translation is built as a separate
 subsite under `/ko/`. The language selector in the header switches between
@@ -20,7 +21,7 @@ docs/
 ```
 
 - flake output: `packages.<system>.docs` — both languages built with
-  `mkdocs build --strict`, Korean into the `ko/` subdirectory
+  `zensical build --strict`, Korean into the `ko/` subdirectory
 - serving module: `services/docs-site.nix` — Caddy `file_server`, tailnet only
 
 ## Editing workflow
@@ -40,8 +41,8 @@ docs/
 
     ```bash
     nix develop .#docs
-    cd docs && mkdocs serve                    # English
-    cd docs && mkdocs serve -f mkdocs.ko.yml   # Korean
+    cd docs && zensical serve                    # English
+    cd docs && zensical serve -f mkdocs.ko.yml   # Korean
     # open http://127.0.0.1:8000
     ```
 

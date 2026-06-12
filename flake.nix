@@ -44,11 +44,6 @@
         system: fn nixpkgs.legacyPackages.${system}
       );
 
-    mkDocsEnv = pkgs:
-      pkgs.python3.withPackages (ps: [
-        ps.mkdocs-material
-      ]);
-
     mkHost = {
       hostModule,
       system ? "x86_64-linux",
@@ -111,13 +106,14 @@
         src = ./docs;
 
         nativeBuildInputs = [
-          (mkDocsEnv pkgs)
+          pkgs.zensical
         ];
 
         buildPhase = ''
           runHook preBuild
-          mkdocs build --strict --config-file mkdocs.yml --site-dir $out
-          mkdocs build --strict --config-file mkdocs.ko.yml --site-dir $out/ko
+          zensical build --strict --config-file mkdocs.yml
+          zensical build --strict --config-file mkdocs.ko.yml
+          mv site $out
           runHook postBuild
         '';
 
@@ -128,7 +124,7 @@
     devShells = forAllSystems (pkgs: {
       docs = pkgs.mkShell {
         packages = [
-          (mkDocsEnv pkgs)
+          pkgs.zensical
         ];
       };
     });

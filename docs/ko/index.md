@@ -22,7 +22,7 @@ services/        # 서비스 모듈 (ingress, 모니터링, forgejo, ...)
 hosts/<host>/    # 호스트별 default.nix + hardware + disko
 home/poby/       # poby 운영자용 Home Manager 프로필
 secrets/         # sops-nix 암호화 YAML
-docs/            # 이 문서 사이트 (MkDocs Material)
+docs/            # 이 문서 사이트 (Zensical)
 ```
 
 ## 공개 URL

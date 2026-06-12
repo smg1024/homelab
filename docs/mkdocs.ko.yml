@@ -3,6 +3,7 @@ INHERIT: mkdocs.yml
 site_description: NixOS 홈랩 구성 문서
 site_url: https://docs.ridewithmin.com/ko/
 docs_dir: ko
+site_dir: site/ko
 
 theme:
   language: ko

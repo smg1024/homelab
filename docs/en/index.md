@@ -23,7 +23,7 @@ services/        # service modules (ingress, monitoring, forgejo, ...)
 hosts/<host>/    # per-host default.nix + hardware + disko
 home/poby/       # Home Manager profiles for the poby operator
 secrets/         # sops-nix encrypted YAML
-docs/            # this documentation site (MkDocs Material)
+docs/            # this documentation site (Zensical)
 ```
 
 ## Public URLs

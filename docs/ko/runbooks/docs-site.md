@@ -1,8 +1,10 @@
 # 문서 사이트
 
 이 사이트 자체도 flake로 선언되어 있습니다. 콘텐츠는 `docs/` 아래 Markdown
-파일이고, [MkDocs Material](https://squidfunk.github.io/mkdocs-material/)로
-빌드되어 yggdrasil의 Caddy가 정적 파일로 서빙합니다 (tailnet 전용).
+파일이고, [Zensical](https://zensical.org/)(Material for MkDocs 팀이 만든
+정적 사이트 생성기)로 빌드되어 yggdrasil의 Caddy가 정적 파일로 서빙합니다
+(tailnet 전용). Zensical은 MkDocs 형식의 `mkdocs.yml` 설정을 네이티브로
+읽습니다.
 
 기본 언어는 영어이며, 한국어 번역본이 `/ko/` 아래 별도 서브사이트로
 빌드됩니다. 헤더의 언어 선택기로 전환할 수 있습니다.
@@ -17,7 +19,7 @@ docs/
 └── ko/             # 한국어 번역, en/을 미러링
 ```
 
-- flake output: `packages.<system>.docs` — 두 언어 모두 `mkdocs build
+- flake output: `packages.<system>.docs` — 두 언어 모두 `zensical build
   --strict`로 빌드, 한국어는 `ko/` 하위 디렉토리에 생성
 - 서빙 모듈: `services/docs-site.nix` — Caddy `file_server`, tailnet 전용
 
@@ -38,8 +40,8 @@ docs/
 
     ```bash
     nix develop .#docs
-    cd docs && mkdocs serve                    # 영어
-    cd docs && mkdocs serve -f mkdocs.ko.yml   # 한국어
+    cd docs && zensical serve                    # 영어
+    cd docs && zensical serve -f mkdocs.ko.yml   # 한국어
     # http://127.0.0.1:8000 접속
     ```
 
