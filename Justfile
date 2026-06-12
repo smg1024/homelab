@@ -24,10 +24,10 @@ docs-build:
 docs-preview lang="en":
     cd docs && nix develop ..#docs --command zensical serve {{ if lang == "ko" { "-f mkdocs.ko.yml" } else { "" } }}
 
-# Remove the local documentation build output.
+# Remove local documentation build artifacts.
 [group('docs')]
 docs-clean:
-    rm -rf docs/site
+    rm -rf docs/site result
 
 _rebuild host action:
     @case "{{ host }}" in yggdrasil|midgard|alfheim) ;; *) echo "unknown host: {{ host }}" >&2; exit 2;; esac
