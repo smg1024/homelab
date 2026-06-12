@@ -47,7 +47,7 @@ features = [
 media = "(prefers-color-scheme)"
 primary = "deep purple"
 accent = "deep purple"
-toggle.icon = "lucide/sun-moon"
+toggle.icon = "fontawesome/solid/circle-half-stroke"
 toggle.name = "라이트 모드로 전환"
 
 # 라이트 모드 토글
@@ -56,7 +56,7 @@ media = "(prefers-color-scheme: light)"
 scheme = "default"
 primary = "deep purple"
 accent = "deep purple"
-toggle.icon = "lucide/sun"
+toggle.icon = "fontawesome/solid/sun"
 toggle.name = "다크 모드로 전환"
 
 # 다크 모드 토글
@@ -65,7 +65,7 @@ media = "(prefers-color-scheme: dark)"
 scheme = "slate"
 primary = "deep purple"
 accent = "deep purple"
-toggle.icon = "lucide/moon"
+toggle.icon = "fontawesome/solid/moon"
 toggle.name = "시스템 설정으로 전환"
 
 [project.extra]
