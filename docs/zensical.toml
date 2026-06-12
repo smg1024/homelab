@@ -1,0 +1,59 @@
+[project]
+site_name = "Homelab"
+site_description = "NixOS homelab documentation"
+site_url = "https://docs.ridewithmin.com/"
+docs_dir = "en"
+site_dir = "site"
+
+nav = [
+  { "Overview" = "index.md" },
+  { "Architecture" = "architecture.md" },
+  { "Hosts" = [{ "yggdrasil" = "hosts/yggdrasil.md" }, { "midgard" = "hosts/midgard.md" }, { "alfheim" = "hosts/alfheim.md" }] },
+  { "Services" = [{ "Ingress" = "services/ingress.md" }, { "Monitoring" = "services/monitoring.md" }, { "Applications" = "services/applications.md" }] },
+  { "Operations" = [{ "Deploy & rollback" = "runbooks/deploy.md" }, { "Secrets" = "runbooks/secrets.md" }, { "Docs site" = "runbooks/docs-site.md" }] },
+]
+
+[project.theme]
+language = "en"
+font = false
+features = [
+  "content.code.copy",
+  "navigation.footer",
+  "navigation.sections",
+  "navigation.top",
+  "search.suggest",
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "teal"
+toggle.icon = "material/brightness-7"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "teal"
+toggle.icon = "material/brightness-4"
+toggle.name = "Switch to light mode"
+
+[[project.extra.alternate]]
+name = "English"
+link = "/"
+lang = "en"
+
+[[project.extra.alternate]]
+name = "한국어"
+link = "/ko/"
+lang = "ko"
+
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.pymdownx.details]
+[project.markdown_extensions.pymdownx.highlight]
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.superfences]
+custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
+]

@@ -3,8 +3,8 @@
 This site itself is declared in the flake. Content lives as Markdown under
 `docs/`, is built with [Zensical](https://zensical.org/) (the static site
 generator by the Material for MkDocs team), and is served as static files by
-Caddy on yggdrasil (tailnet only). Zensical reads the MkDocs-style
-`mkdocs.yml` configs natively.
+Caddy on yggdrasil (tailnet only). Configuration uses Zensical's native
+`zensical.toml` format.
 
 English is the default language; a Korean translation is built as a separate
 subsite under `/ko/`. The language selector in the header switches between
@@ -14,13 +14,13 @@ them.
 
 ```text
 docs/
-├── package.nix     # the derivation, wired via callPackage in flake.nix
-├── shell.nix       # dev shell for `zensical serve`, inherits package deps
-├── Makefile        # build (`make`) and install (`make install`) targets
-├── mkdocs.yml      # base config — English (default) site
-├── mkdocs.ko.yml   # Korean overrides via INHERIT
-├── en/             # English content (source of truth)
-└── ko/             # Korean translation, mirrors en/
+├── package.nix       # the derivation, wired via callPackage in flake.nix
+├── shell.nix         # dev shell for `zensical serve`, inherits package deps
+├── Makefile          # build (`make`) and install (`make install`) targets
+├── zensical.toml     # English (default) site config
+├── zensical.ko.toml  # Korean site config (full copy — TOML has no inheritance)
+├── en/               # English content (source of truth)
+└── ko/               # Korean translation, mirrors en/
 ```
 
 - flake output: `packages.<system>.docs` — both languages built with
@@ -31,7 +31,7 @@ docs/
 
 1. Edit the English page under `docs/en/` first, then mirror the change in
    `docs/ko/`. A new page must be added to the `nav` of **both**
-   `mkdocs.yml` and `mkdocs.ko.yml`.
+   `zensical.toml` and `zensical.ko.toml`.
 2. Validate the build locally.
 
     ```bash
@@ -44,8 +44,8 @@ docs/
 
     ```bash
     nix develop .#docs
-    cd docs && zensical serve                    # English
-    cd docs && zensical serve -f mkdocs.ko.yml   # Korean
+    cd docs && zensical serve                       # English
+    cd docs && zensical serve -f zensical.ko.toml   # Korean
     # open http://127.0.0.1:8000
     ```
 

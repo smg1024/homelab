@@ -1,0 +1,59 @@
+[project]
+site_name = "Homelab"
+site_description = "NixOS 홈랩 구성 문서"
+site_url = "https://docs.ridewithmin.com/ko/"
+docs_dir = "ko"
+site_dir = "site/ko"
+
+nav = [
+  { "개요" = "index.md" },
+  { "아키텍처" = "architecture.md" },
+  { "호스트" = [{ "yggdrasil" = "hosts/yggdrasil.md" }, { "midgard" = "hosts/midgard.md" }, { "alfheim" = "hosts/alfheim.md" }] },
+  { "서비스" = [{ "인그레스" = "services/ingress.md" }, { "모니터링" = "services/monitoring.md" }, { "애플리케이션" = "services/applications.md" }] },
+  { "운영" = [{ "배포와 롤백" = "runbooks/deploy.md" }, { "시크릿 관리" = "runbooks/secrets.md" }, { "문서 사이트" = "runbooks/docs-site.md" }] },
+]
+
+[project.theme]
+language = "ko"
+font = false
+features = [
+  "content.code.copy",
+  "navigation.footer",
+  "navigation.sections",
+  "navigation.top",
+  "search.suggest",
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "teal"
+toggle.icon = "material/brightness-7"
+toggle.name = "다크 모드로 전환"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "teal"
+toggle.icon = "material/brightness-4"
+toggle.name = "라이트 모드로 전환"
+
+[[project.extra.alternate]]
+name = "English"
+link = "/"
+lang = "en"
+
+[[project.extra.alternate]]
+name = "한국어"
+link = "/ko/"
+lang = "ko"
+
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.pymdownx.details]
+[project.markdown_extensions.pymdownx.highlight]
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.superfences]
+custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
+]

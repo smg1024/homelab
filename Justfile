@@ -22,7 +22,7 @@ docs-build:
 # Preview the documentation site locally with live reload.
 [group('docs')]
 docs-preview lang="en":
-    cd docs && nix develop ..#docs --command zensical serve {{ if lang == "ko" { "-f mkdocs.ko.yml" } else { "" } }}
+    cd docs && nix develop ..#docs --command zensical serve {{ if lang == "ko" { "-f zensical.ko.toml" } else { "" } }}
 
 # Remove local documentation build artifacts.
 [group('docs')]
