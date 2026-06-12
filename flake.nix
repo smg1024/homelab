@@ -116,7 +116,8 @@
 
         buildPhase = ''
           runHook preBuild
-          mkdocs build --strict --site-dir $out
+          mkdocs build --strict --config-file mkdocs.yml --site-dir $out
+          mkdocs build --strict --config-file mkdocs.ko.yml --site-dir $out/ko
           runHook postBuild
         '';
 

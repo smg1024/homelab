@@ -1,10 +1,11 @@
 site_name: Homelab
-site_description: NixOS 홈랩 구성 문서
+site_description: NixOS homelab documentation
 site_url: https://docs.ridewithmin.com/
+docs_dir: en
 
 theme:
   name: material
-  language: ko
+  language: en
   font: false
   palette:
     - media: "(prefers-color-scheme: light)"
@@ -12,19 +13,28 @@ theme:
       primary: teal
       toggle:
         icon: material/brightness-7
-        name: 다크 모드로 전환
+        name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: teal
       toggle:
         icon: material/brightness-4
-        name: 라이트 모드로 전환
+        name: Switch to light mode
   features:
     - content.code.copy
     - navigation.footer
     - navigation.sections
     - navigation.top
     - search.suggest
+
+extra:
+  alternate:
+    - name: English
+      link: /
+      lang: en
+    - name: 한국어
+      link: /ko/
+      lang: ko
 
 plugins:
   - search
@@ -42,17 +52,17 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
-  - 개요: index.md
-  - 아키텍처: architecture.md
-  - 호스트:
+  - Overview: index.md
+  - Architecture: architecture.md
+  - Hosts:
       - yggdrasil: hosts/yggdrasil.md
       - midgard: hosts/midgard.md
       - alfheim: hosts/alfheim.md
-  - 서비스:
-      - 인그레스: services/ingress.md
-      - 모니터링: services/monitoring.md
-      - 애플리케이션: services/applications.md
-  - 운영:
-      - 배포와 롤백: runbooks/deploy.md
-      - 시크릿 관리: runbooks/secrets.md
-      - 문서 사이트: runbooks/docs-site.md
+  - Services:
+      - Ingress: services/ingress.md
+      - Monitoring: services/monitoring.md
+      - Applications: services/applications.md
+  - Operations:
+      - Deploy & rollback: runbooks/deploy.md
+      - Secrets: runbooks/secrets.md
+      - Docs site: runbooks/docs-site.md
