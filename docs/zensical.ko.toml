@@ -26,9 +26,15 @@ icon.repo = "simple/forgejo"
 features = [
   "content.code.copy",
   "navigation.footer",
+  "navigation.instant",
+  "navigation.instant.prefetch",
+  "navigation.instant.progress",
+  "navigation.path",
   "navigation.sections",
   "navigation.top",
+  "navigation.tracking",
   "search.suggest",
+  "toc.follow",
 ]
 
 # 자동(시스템 설정) 모드 토글
