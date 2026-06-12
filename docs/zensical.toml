@@ -18,6 +18,8 @@ nav = [
 [project.theme]
 language = "en"
 font = false
+favicon = "assets/favicon.svg"
+icon.logo = "lucide/tree-deciduous"
 features = [
   "content.code.copy",
   "navigation.footer",
