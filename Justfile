@@ -24,11 +24,6 @@ docs-build:
 docs-serve lang="en":
     cd docs && nix develop ..#docs --command zensical serve {{ if lang == "ko" { "-f mkdocs.ko.yml" } else { "" } }}
 
-# Serve both languages locally (en: :8000, ko: :8001/ko/).
-[group('docs')]
-docs-serve-all:
-    cd docs && nix develop ..#docs --command sh -c 'trap "kill 0" INT TERM; zensical serve -a localhost:8000 & zensical serve -f mkdocs.ko.yml -a localhost:8001 & wait'
-
 _rebuild host action:
     @case "{{ host }}" in yggdrasil|midgard|alfheim) ;; *) echo "unknown host: {{ host }}" >&2; exit 2;; esac
     @case "{{ host }}" in \
