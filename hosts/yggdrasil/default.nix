@@ -8,6 +8,7 @@
     ../../services/prometheus
     ../../services/loki.nix
     ../../services/grafana
+    ../../services/docs-site.nix
   ];
 
   networking.hostName = "yggdrasil";

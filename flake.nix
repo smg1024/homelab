@@ -32,6 +32,23 @@
     sops-nix,
     ...
   }: let
+    systems = [
+      "x86_64-linux"
+      "aarch64-linux"
+      "x86_64-darwin"
+      "aarch64-darwin"
+    ];
+
+    forAllSystems = fn:
+      nixpkgs.lib.genAttrs systems (
+        system: fn nixpkgs.legacyPackages.${system}
+      );
+
+    mkDocsEnv = pkgs:
+      pkgs.python3.withPackages (ps: [
+        ps.mkdocs-material
+      ]);
+
     mkHost = {
       hostModule,
       system ? "x86_64-linux",
@@ -87,5 +104,32 @@
         system = "aarch64-linux";
       };
     };
+
+    packages = forAllSystems (pkgs: {
+      docs = pkgs.stdenvNoCC.mkDerivation {
+        name = "homelab-docs";
+        src = ./docs;
+
+        nativeBuildInputs = [
+          (mkDocsEnv pkgs)
+        ];
+
+        buildPhase = ''
+          runHook preBuild
+          mkdocs build --strict --site-dir $out
+          runHook postBuild
+        '';
+
+        dontInstall = true;
+      };
+    });
+
+    devShells = forAllSystems (pkgs: {
+      docs = pkgs.mkShell {
+        packages = [
+          (mkDocsEnv pkgs)
+        ];
+      };
+    });
   };
 }
