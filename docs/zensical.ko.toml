@@ -38,15 +38,11 @@ primary = "teal"
 toggle.icon = "material/brightness-4"
 toggle.name = "라이트 모드로 전환"
 
-[[project.extra.alternate]]
-name = "English"
-link = "/"
-lang = "en"
-
-[[project.extra.alternate]]
-name = "한국어"
-link = "/ko/"
-lang = "ko"
+[project.extra]
+alternate = [
+    { name = "English", link = "/", lang = "en" },
+    { name = "한국어", link = "/ko/", lang = "ko" },
+]
 
 [project.markdown_extensions.admonition]
 [project.markdown_extensions.attr_list]
