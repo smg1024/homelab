@@ -1,3 +1,7 @@
+---
+icon: lucide/house
+---
+
 # Homelab
 
 This site is the operations documentation for a homelab made up of NixOS

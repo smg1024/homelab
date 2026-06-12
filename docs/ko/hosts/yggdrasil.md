@@ -1,3 +1,7 @@
+---
+icon: lucide/server
+---
+
 # yggdrasil
 
 공개 진입점이자 경량 인프라 노드입니다. RAM이 4 GB뿐이므로 **가볍게

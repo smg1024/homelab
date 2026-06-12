@@ -1,3 +1,7 @@
+---
+icon: lucide/network
+---
+
 # Architecture
 
 The setup is split into an edge/infra node (`yggdrasil`) and an application

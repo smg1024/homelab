@@ -1,3 +1,7 @@
+---
+icon: lucide/server
+---
+
 # alfheim
 
 실험용 Oracle Cloud Infrastructure ARM VM입니다 (`aarch64-linux`).

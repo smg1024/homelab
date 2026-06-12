@@ -1,3 +1,7 @@
+---
+icon: lucide/layout-grid
+---
+
 # Applications
 
 All application services run on `midgard`; Caddy on yggdrasil forwards

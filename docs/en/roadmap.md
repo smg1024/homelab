@@ -1,3 +1,7 @@
+---
+icon: lucide/map
+---
+
 # Roadmap
 
 Where this homelab is headed. Checked items link to what shipped; unchecked

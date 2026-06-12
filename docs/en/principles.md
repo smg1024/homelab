@@ -1,3 +1,7 @@
+---
+icon: lucide/scale
+---
+
 # Design principles
 
 The rules this homelab is run by. When a new decision comes up, check it

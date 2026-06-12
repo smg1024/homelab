@@ -1,3 +1,7 @@
+---
+icon: lucide/book-open
+---
+
 # Docs site
 
 This site itself is declared in the flake. Content lives as Markdown under

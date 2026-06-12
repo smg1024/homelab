@@ -1,3 +1,7 @@
+---
+icon: lucide/archive
+---
+
 # Backup & restore
 
 What survives a dead disk, what does not, and how to get back.

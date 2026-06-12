@@ -1,3 +1,7 @@
+---
+icon: lucide/rocket
+---
+
 # Deploy & rollback
 
 Every change starts in the repository. Machines are never fixed by editing

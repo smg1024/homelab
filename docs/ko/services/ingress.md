@@ -1,3 +1,7 @@
+---
+icon: lucide/door-open
+---
+
 # 인그레스
 
 외부 트래픽은 직접 노출된 포트 대신 **Cloudflare Tunnel**을 중심으로

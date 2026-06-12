@@ -1,3 +1,7 @@
+---
+icon: lucide/door-open
+---
+
 # Ingress
 
 External traffic is centered on **Cloudflare Tunnel** instead of directly

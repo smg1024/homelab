@@ -1,3 +1,7 @@
+---
+icon: lucide/server
+---
+
 # yggdrasil
 
 The public entry point and lightweight infrastructure node. It only has 4 GB

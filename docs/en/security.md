@@ -1,3 +1,7 @@
+---
+icon: lucide/shield
+---
+
 # Security model
 
 Who can reach what, and why. The model is three concentric rings: public

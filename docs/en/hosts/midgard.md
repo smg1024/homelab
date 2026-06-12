@@ -1,3 +1,7 @@
+---
+icon: lucide/server
+---
+
 # midgard
 
 The actual application host. External traffic is forwarded by Caddy on

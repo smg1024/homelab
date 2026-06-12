@@ -1,3 +1,7 @@
+---
+icon: lucide/activity
+---
+
 # Monitoring
 
 The metrics and log stack runs on `yggdrasil`. Uptime Kuma is responsible for

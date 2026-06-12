@@ -1,3 +1,7 @@
+---
+icon: lucide/file-text
+---
+
 # ADR-001: 문서 사이트에 Zensical 채택
 
 **상태**: 채택 · **날짜**: 2026-06-12

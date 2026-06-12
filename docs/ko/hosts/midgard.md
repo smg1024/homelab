@@ -1,3 +1,7 @@
+---
+icon: lucide/server
+---
+
 # midgard
 
 실제 애플리케이션 호스트입니다. 외부 트래픽은 yggdrasil의 Caddy가 tailnet을

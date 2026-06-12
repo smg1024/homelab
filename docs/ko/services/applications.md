@@ -1,3 +1,7 @@
+---
+icon: lucide/layout-grid
+---
+
 # 애플리케이션
 
 애플리케이션 서비스는 모두 `midgard`에서 실행되며, yggdrasil의 Caddy가

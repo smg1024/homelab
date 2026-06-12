@@ -1,3 +1,7 @@
+---
+icon: lucide/book-open
+---
+
 # 문서 사이트
 
 이 사이트 자체도 flake로 선언되어 있습니다. 콘텐츠는 `docs/` 아래 Markdown

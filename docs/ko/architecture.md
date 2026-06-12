@@ -1,3 +1,7 @@
+---
+icon: lucide/network
+---
+
 # 아키텍처
 
 구성은 엣지/인프라 노드(`yggdrasil`)와 애플리케이션 노드(`midgard`)로

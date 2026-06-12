@@ -1,3 +1,7 @@
+---
+icon: lucide/house
+---
+
 # Homelab
 
 이 사이트는 NixOS 머신들로 구성된 홈랩의 운영 문서입니다. 모든 구성은

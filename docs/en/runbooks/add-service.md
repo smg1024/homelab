@@ -1,3 +1,7 @@
+---
+icon: lucide/circle-plus
+---
+
 # Adding a new service
 
 The full path from "I want to run X" to "X is deployed and reachable".

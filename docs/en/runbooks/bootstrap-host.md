@@ -1,3 +1,7 @@
+---
+icon: lucide/hard-drive
+---
+
 # Bootstrapping a host
 
 Installing NixOS on a new (or dead) machine from this repo, using

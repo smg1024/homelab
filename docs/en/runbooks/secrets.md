@@ -1,3 +1,7 @@
+---
+icon: lucide/key-round
+---
+
 # Secrets
 
 Secrets are managed with `sops-nix`. **Plaintext secrets never go into

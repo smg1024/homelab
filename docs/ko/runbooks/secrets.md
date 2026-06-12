@@ -1,3 +1,7 @@
+---
+icon: lucide/key-round
+---
+
 # 시크릿 관리
 
 시크릿은 `sops-nix`로 관리합니다. **평문 시크릿을 `.nix` 파일이나 Nix

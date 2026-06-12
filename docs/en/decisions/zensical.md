@@ -1,3 +1,7 @@
+---
+icon: lucide/file-text
+---
+
 # ADR-001: Zensical for the docs site
 
 **Status**: accepted · **Date**: 2026-06-12

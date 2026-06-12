@@ -1,3 +1,7 @@
+---
+icon: lucide/activity
+---
+
 # 모니터링
 
 메트릭과 로그 스택은 `yggdrasil`에서 실행됩니다. Uptime Kuma는 공개 엔드포인트
