@@ -24,6 +24,11 @@ docs-build:
 docs-serve lang="en":
     cd docs && nix develop ..#docs --command zensical serve {{ if lang == "ko" { "-f mkdocs.ko.yml" } else { "" } }}
 
+# Remove the local documentation build output.
+[group('docs')]
+docs-clean:
+    rm -rf docs/site
+
 _rebuild host action:
     @case "{{ host }}" in yggdrasil|midgard|alfheim) ;; *) echo "unknown host: {{ host }}" >&2; exit 2;; esac
     @case "{{ host }}" in \
