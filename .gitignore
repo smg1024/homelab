@@ -1,4 +1,9 @@
+# MacOS
+.DS_Store
+
 INITIAL-GUIDELINE.md
 
 # Claude Code — local, per-machine overrides (keep shared config committed)
 .claude/settings.local.json
+result
+docs/site

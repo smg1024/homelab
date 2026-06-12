@@ -32,6 +32,18 @@
     sops-nix,
     ...
   }: let
+    systems = [
+      "x86_64-linux"
+      "aarch64-linux"
+      "x86_64-darwin"
+      "aarch64-darwin"
+    ];
+
+    forAllSystems = fn:
+      nixpkgs.lib.genAttrs systems (
+        system: fn nixpkgs.legacyPackages.${system}
+      );
+
     mkHost = {
       hostModule,
       system ? "x86_64-linux",
@@ -87,5 +99,13 @@
         system = "aarch64-linux";
       };
     };
+
+    packages = forAllSystems (pkgs: {
+      docs = pkgs.callPackage ./docs/package.nix {};
+    });
+
+    devShells = forAllSystems (pkgs: {
+      docs = pkgs.callPackage ./docs/shell.nix {};
+    });
   };
 }
