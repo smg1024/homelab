@@ -1,5 +1,5 @@
 ---
-icon: lucide/hard-drive
+icon: fontawesome/solid/hard-drive
 ---
 
 # Bootstrapping a host

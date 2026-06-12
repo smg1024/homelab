@@ -1,5 +1,5 @@
 ---
-icon: lucide/shield
+icon: fontawesome/solid/shield-halved
 ---
 
 # 보안 모델

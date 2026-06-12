@@ -1,5 +1,5 @@
 ---
-icon: lucide/layout-grid
+icon: fontawesome/solid/cubes
 ---
 
 # Applications

@@ -1,5 +1,5 @@
 ---
-icon: lucide/archive
+icon: fontawesome/solid/box-archive
 ---
 
 # 백업과 복구

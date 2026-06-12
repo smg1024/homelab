@@ -1,5 +1,5 @@
 ---
-icon: lucide/activity
+icon: fontawesome/solid/chart-line
 ---
 
 # Monitoring

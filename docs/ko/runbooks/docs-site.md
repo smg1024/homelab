@@ -1,5 +1,5 @@
 ---
-icon: lucide/book-open
+icon: fontawesome/solid/book-open
 ---
 
 # 문서 사이트
@@ -38,7 +38,7 @@ docs/
 
       ```markdown
       ---
-      icon: lucide/<이름>
+      icon: fontawesome/solid/<이름>
       ---
       ```
 

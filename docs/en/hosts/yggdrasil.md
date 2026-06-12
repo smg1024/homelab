@@ -1,5 +1,5 @@
 ---
-icon: lucide/server
+icon: fontawesome/solid/server
 ---
 
 # yggdrasil

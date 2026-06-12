@@ -1,5 +1,5 @@
 ---
-icon: lucide/key-round
+icon: fontawesome/solid/key
 ---
 
 # Secrets

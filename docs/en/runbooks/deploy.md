@@ -1,5 +1,5 @@
 ---
-icon: lucide/rocket
+icon: fontawesome/solid/rocket
 ---
 
 # Deploy & rollback

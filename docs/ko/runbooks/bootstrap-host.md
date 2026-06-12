@@ -1,5 +1,5 @@
 ---
-icon: lucide/hard-drive
+icon: fontawesome/solid/hard-drive
 ---
 
 # 호스트 부트스트랩

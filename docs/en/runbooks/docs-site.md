@@ -1,5 +1,5 @@
 ---
-icon: lucide/book-open
+icon: fontawesome/solid/book-open
 ---
 
 # Docs site
@@ -40,7 +40,7 @@ docs/
 
       ```markdown
       ---
-      icon: lucide/<name>
+      icon: fontawesome/solid/<name>
       ---
       ```
 

@@ -1,5 +1,5 @@
 ---
-icon: lucide/circle-plus
+icon: fontawesome/solid/circle-plus
 ---
 
 # Adding a new service

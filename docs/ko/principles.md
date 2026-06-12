@@ -1,5 +1,5 @@
 ---
-icon: lucide/scale
+icon: fontawesome/solid/scale-balanced
 ---
 
 # 설계 원칙

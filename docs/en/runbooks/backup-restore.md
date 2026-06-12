@@ -1,5 +1,5 @@
 ---
-icon: lucide/archive
+icon: fontawesome/solid/box-archive
 ---
 
 # Backup & restore

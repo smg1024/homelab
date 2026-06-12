@@ -1,5 +1,5 @@
 ---
-icon: lucide/file-text
+icon: fontawesome/solid/file-lines
 ---
 
 # ADR-001: Zensical for the docs site

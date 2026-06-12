@@ -1,5 +1,5 @@
 ---
-icon: lucide/door-open
+icon: fontawesome/solid/door-open
 ---
 
 # 인그레스

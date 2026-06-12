@@ -1,5 +1,5 @@
 ---
-icon: lucide/circle-plus
+icon: fontawesome/solid/circle-plus
 ---
 
 # 새 서비스 추가

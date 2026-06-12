@@ -1,5 +1,5 @@
 ---
-icon: lucide/file-text
+icon: fontawesome/solid/file-lines
 ---
 
 # ADR-001: 문서 사이트에 Zensical 채택

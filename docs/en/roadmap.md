@@ -1,5 +1,5 @@
 ---
-icon: lucide/map
+icon: fontawesome/solid/map
 ---
 
 # Roadmap

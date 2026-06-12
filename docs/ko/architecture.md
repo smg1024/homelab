@@ -1,5 +1,5 @@
 ---
-icon: lucide/network
+icon: fontawesome/solid/network-wired
 ---
 
 # 아키텍처

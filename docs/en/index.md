@@ -1,5 +1,5 @@
 ---
-icon: lucide/house
+icon: fontawesome/solid/house
 ---
 
 # Homelab
