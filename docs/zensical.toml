@@ -33,6 +33,7 @@ features = [
   "navigation.sections",
   "navigation.top",
   "navigation.tracking",
+  "search.highlight",
   "search.suggest",
   "toc.follow",
 ]
