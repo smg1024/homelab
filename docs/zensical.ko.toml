@@ -4,6 +4,8 @@ site_description = "NixOS 홈랩 구성 문서"
 site_author = "Poby"
 copyright = "&copy; 2026 Sangmin Kim"
 site_url = "https://docs.ridewithmin.com/ko/"
+repo_url = "https://git.ridewithmin.com/smg1024/homelab"
+repo_name = "smg1024/homelab"
 docs_dir = "ko"
 site_dir = "site/ko"
 
@@ -20,6 +22,7 @@ language = "ko"
 font = false
 favicon = "assets/favicon.svg"
 icon.logo = "lucide/tree-deciduous"
+icon.repo = "simple/forgejo"
 features = [
   "content.code.copy",
   "navigation.footer",
