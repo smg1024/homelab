@@ -1,6 +1,8 @@
 [project]
 site_name = "Homelab"
 site_description = "NixOS homelab documentation"
+site_author = "Poby"
+copyright = "&copy; 2026 Sangmin Kim"
 site_url = "https://docs.ridewithmin.com/"
 docs_dir = "en"
 site_dir = "site"
