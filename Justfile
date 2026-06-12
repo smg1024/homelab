@@ -19,9 +19,9 @@ switch host:
 docs-build:
     nix build .#docs
 
-# Serve the documentation site locally with live reload.
+# Preview the documentation site locally with live reload.
 [group('docs')]
-docs-serve lang="en":
+docs-preview lang="en":
     cd docs && nix develop ..#docs --command zensical serve {{ if lang == "ko" { "-f mkdocs.ko.yml" } else { "" } }}
 
 # Remove the local documentation build output.
