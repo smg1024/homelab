@@ -11,8 +11,8 @@ icon: fontawesome/solid/shield-halved
 
 | 계층 | 누가 | 접근 대상 |
 | --- | --- | --- |
-| **공개 인터넷** | 누구나 | Cloudflare Tunnel로 라우팅된 호스트네임만: `home`, `git`, `vault`, `status` |
-| **tailnet** | Tailscale tailnet에 속한 기기 | 위 전부 + `grafana`/`docs` 라우트 + Tailscale ACL에 따른 호스트/포트 직접 접근 |
+| **공개 인터넷** | 누구나 | Cloudflare Tunnel로 라우팅된 호스트네임만: `home`, `git`, `vault`, `status`, `docs` |
+| **tailnet** | Tailscale tailnet에 속한 기기 | 위 전부 + `grafana` 라우트 + Tailscale ACL에 따른 호스트/포트 직접 접근 |
 | **localhost** | 호스트 위의 프로세스 | `127.0.0.1`에 바인딩된 Prometheus, Grafana, Uptime Kuma 백엔드 |
 
 ## 인그레스 경로
@@ -22,10 +22,9 @@ icon: fontawesome/solid/shield-halved
 Caddy(`https://localhost:443`)에 도착해 호스트네임별로 라우팅됩니다.
 명시적으로 라우팅되지 않은 요청은 전부 `404`입니다.
 
-두 라우트는 의도적으로 터널 호스트네임 목록에 **없고**, Caddy에서
-Tailscale 주소 대역(`100.64.0.0/10`, `fd7a:115c:a1e0::/48`)으로
-제한됩니다: `grafana.ridewithmin.com`과 `docs.ridewithmin.com`.
-tailnet 밖 클라이언트는 `404`를 받습니다.
+`grafana.ridewithmin.com`은 의도적으로 터널 호스트네임 목록에 **없고**,
+Caddy에서 Tailscale 주소 대역(`100.64.0.0/10`, `fd7a:115c:a1e0::/48`)으로
+제한됩니다. tailnet 밖 클라이언트는 `404`를 받습니다.
 
 공개 Uptime Kuma 라우트는 상태 페이지 경로만 허용하고 나머지는 모두
 `404`를 반환합니다.

@@ -17,6 +17,7 @@ name are set to match each public hostname.
 - `git.ridewithmin.com`
 - `vault.ridewithmin.com`
 - `status.ridewithmin.com`
+- `docs.ridewithmin.com`
 
 Unmatched requests fall through to `http_status:404`. The tunnel credential
 is the `cloudflare/cloudflared_tunnel_credentials` SOPS secret.
@@ -32,7 +33,7 @@ Caddy selects the internal backend by public hostname.
 | `vault.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8222` | |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | status-page paths only, `404` otherwise |
 | `grafana.ridewithmin.com` | `http://127.0.0.1:3003` | tailnet clients only, `404` otherwise |
-| `docs.ridewithmin.com` | static files (`file_server`) | tailnet clients only, `404` otherwise |
+| `docs.ridewithmin.com` | static files (`file_server`) | public |
 
 Certificates are issued through ACME DNS challenges using Caddy's Cloudflare
 DNS plugin. The Cloudflare API token is injected as an environment variable
@@ -40,8 +41,8 @@ from the `cloudflare/caddy_env` SOPS secret.
 
 ## The tailnet-only route pattern
 
-Grafana and the documentation site are not part of the tunnel's public
-hostname list; Caddy restricts them to Tailscale address ranges.
+Grafana is not part of the tunnel's public hostname list; Caddy restricts it
+to Tailscale address ranges.
 
 ```caddy
 @tailnet remote_ip 100.64.0.0/10 fd7a:115c:a1e0::/48
