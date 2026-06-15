@@ -18,7 +18,7 @@ summary.
 - [ ] Boot the target machine from a NixOS installer USB
 - [ ] On its console: `sudo passwd root` (temporary) and
       `sudo systemctl start sshd`, note the LAN IP
-- [ ] Find the stable disk path: `ls -l /dev/disk/by-id/` — never use
+- [ ] Find the stable disk path: `ls -l /dev/disk/by-id/`. Never use
       `/dev/sda`-style names
 - [ ] In the repo, set the disk in `hosts/<host>/disko.nix`
 - [ ] Generate hardware config from the target:
@@ -28,7 +28,7 @@ summary.
       > hosts/<host>/hardware-configuration.nix
     ```
 
-    Drop `fileSystems`/`swapDevices` entries — disko owns `/` and `/boot`,
+    Drop `fileSystems`/`swapDevices` entries; disko owns `/` and `/boot`,
     zram owns swap.
 
 - [ ] Enable the `imports` in `hosts/<host>/default.nix` and review with

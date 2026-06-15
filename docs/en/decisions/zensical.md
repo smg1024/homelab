@@ -10,7 +10,7 @@ icon: fontawesome/solid/file-lines
 
 This docs site was initially built with MkDocs Material. In February 2026
 the Material team announced that **MkDocs 2.0 is incompatible with Material
-for MkDocs** — the plugin system is removed, theming is rewritten, and
+for MkDocs**: the plugin system is removed, theming is rewritten, and
 MkDocs 1.x is effectively unmaintained. Material 9.x pins `mkdocs <2`, so
 builds keep working, but the foundation is end-of-life.
 

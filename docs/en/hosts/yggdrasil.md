@@ -5,12 +5,12 @@ icon: fontawesome/solid/server
 # yggdrasil
 
 The public entry point and lightweight infrastructure node. It only has 4 GB
-of RAM, so the rule is to **keep it lightweight** — no applications run here.
+of RAM, so the rule is to **keep it lightweight**. No applications run here.
 
 ## Responsibilities
 
 - Maintain the Cloudflare Tunnel (`cloudflared`)
-- Run the Caddy reverse proxy — route public domains to internal services
+- Run the Caddy reverse proxy to route public domains to internal services
 - Serve the Uptime Kuma public status page
 - Run Prometheus for node metrics and alert rule evaluation
 - Serve Grafana dashboards (tailnet-restricted Caddy route)

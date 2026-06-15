@@ -34,14 +34,14 @@ for everything else.
 
 The NixOS firewall is enabled on every host. Home hosts allow SSH `22`
 directly; `alfheim` accepts SSH only through the trusted `tailscale0`
-interface — its public OCI address does not answer SSH at all. Application
+interface. Its public OCI address does not answer SSH at all. Application
 and monitoring ports (`3000`, `3001`, `8082`, `8222`, `9090`, `9100`, ...)
 are never opened publicly.
 
 ## SSH policy
 
 - Root login disabled everywhere.
-- Password login disabled everywhere — keys only.
+- Password login disabled everywhere: keys only.
 - Operations go through the `poby` operator account (`wheel`, passwordless
   sudo).
 
@@ -55,7 +55,7 @@ identity. Only hosts registered as recipients in `.sops.yaml` (plus the
 
 ## What this repo does not control
 
-- **Tailscale ACLs** — tailnet-internal access control is configured in the
+- **Tailscale ACLs.** Tailnet-internal access control is configured in the
   Tailscale admin console, not declared here.
-- **Cloudflare-side policies** — DNS records and any Cloudflare Access rules
+- **Cloudflare-side policies.** DNS records and any Cloudflare Access rules
   live in the Cloudflare dashboard.

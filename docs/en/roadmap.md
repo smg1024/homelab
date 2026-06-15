@@ -9,19 +9,19 @@ items are intentions, roughly ordered by priority within each horizon.
 
 ## Now (operational gaps)
 
-- [ ] **Automated backups** — currently none ([details](runbooks/backup-restore.md)):
+- [ ] **Automated backups** (currently none, [details](runbooks/backup-restore.md)):
     - [ ] `services.vaultwarden.backupDir` for the Vaultwarden SQLite DB
     - [ ] Forgejo dump or mirror to an external remote
     - [ ] Off-host backup job (restic/borgbackup) for midgard `/var/lib`
-- [ ] **Alert delivery** — Prometheus rules exist but Alertmanager is not
-      configured; alerts are visible only in the UI
+- [ ] **Alert delivery:** Prometheus rules exist but Alertmanager is not
+      configured, so alerts are visible only in the UI
       ([details](services/monitoring.md))
-- [ ] **Deploy this docs site** — merge the docs branch, `just switch
+- [ ] **Deploy this docs site:** merge the docs branch, `just switch
       yggdrasil`, add the `docs.ridewithmin.com` DNS record
 
 ## Next
 
-- [ ] Give **alfheim** a real job — promote one low-risk service to the OCI
+- [ ] Give **alfheim** a real job: promote one low-risk service to the OCI
       node to validate the cloud-host pattern
 - [ ] Per-page **edit buttons** on this site (`content.action.edit` +
       Forgejo `edit_uri`)
@@ -37,5 +37,5 @@ items are intentions, roughly ordered by priority within each horizon.
 
 !!! tip "How to use this page"
     When an item ships, check it off and link the relevant page or commit.
-    When priorities change, reorder — this page is a living document, not a
+    When priorities change, reorder. This page is a living document, not a
     promise.

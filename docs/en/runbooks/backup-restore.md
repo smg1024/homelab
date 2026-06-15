@@ -13,36 +13,36 @@ What survives a dead disk, what does not, and how to get back.
 
 ## What is reproducible vs. what is data
 
-**Reproducible from the repo** — the entire system configuration of every
+**Reproducible from the repo:** the entire system configuration of every
 host. A machine can be rebuilt from scratch with the
 [bootstrap runbook](bootstrap-host.md); no backup needed.
 
-**Actual data** — state that exists only on the hosts:
+**Actual data** is the state that exists only on the hosts:
 
 | Data | Host | Location (NixOS module defaults) | Loss impact |
 | --- | --- | --- | --- |
-| Vaultwarden DB + attachments | midgard | `/var/lib/vaultwarden` | **Critical** — all passwords |
-| Forgejo repos + DB | midgard | `/var/lib/forgejo` | **Critical** — all Git history not pushed elsewhere |
-| Uptime Kuma config/history | yggdrasil | `/var/lib/private/uptime-kuma` | Annoying — checks recreated by hand |
-| Grafana dashboards (non-provisioned) | yggdrasil | `/var/lib/grafana` | Low — main dashboard is provisioned from the repo |
-| Prometheus TSDB | yggdrasil | `/var/lib/prometheus2` | Acceptable — 15d retention metrics |
+| Vaultwarden DB + attachments | midgard | `/var/lib/vaultwarden` | **Critical**: all passwords |
+| Forgejo repos + DB | midgard | `/var/lib/forgejo` | **Critical**: all Git history not pushed elsewhere |
+| Uptime Kuma config/history | yggdrasil | `/var/lib/private/uptime-kuma` | Annoying: checks recreated by hand |
+| Grafana dashboards (non-provisioned) | yggdrasil | `/var/lib/grafana` | Low: main dashboard is provisioned from the repo |
+| Prometheus TSDB | yggdrasil | `/var/lib/prometheus2` | Acceptable: 15d retention metrics |
 | Loki logs | yggdrasil | Loki `dataDir` | Acceptable |
 
-**Keys** — two items deserve explicit care:
+**Keys.** Two items deserve explicit care:
 
-- **Host SSH keys** (`/etc/ssh/ssh_host_ed25519_key`) — also the sops age
+- **Host SSH keys** (`/etc/ssh/ssh_host_ed25519_key`): also the sops age
   identity. If a host dies, its key dies with it; recovery relies on the
   `poby` operator key being a `.sops.yaml` recipient (it is). After rebuild,
   register the new host key and re-encrypt
   ([procedure](secrets.md#adding-a-new-host-as-a-recipient)).
-- **The `poby` age key and SSH private key** — these are the root of trust.
-  Keep copies outside the homelab (e.g., in Vaultwarden's emergency kit —
+- **The `poby` age key and SSH private key** are the root of trust.
+  Keep copies outside the homelab (e.g., in Vaultwarden's emergency kit,
   but note the circularity: not *only* in Vaultwarden).
 
 ## Restore path (host loss)
 
 1. Rebuild the host: [bootstrap runbook](bootstrap-host.md)
-2. Re-join the tailnet (`sudo tailscale up`) — MagicDNS names recover
+2. Re-join the tailnet (`sudo tailscale up`); MagicDNS names recover
 3. Re-key sops if the host key changed, redeploy
 4. Restore data directories from backup *(once backups exist)*
 5. Verify services per their pages, check Uptime Kuma goes green
@@ -51,7 +51,7 @@ host. A machine can be rebuilt from scratch with the
 
 The natural first steps, in order of value:
 
-1. `services.vaultwarden.backupDir` — the module has built-in SQLite backup
+1. `services.vaultwarden.backupDir`: the module has built-in SQLite backup
    support; cheapest possible win
 2. Forgejo dump or repo mirroring to an external remote
 3. A proper restic/borgbackup job for `/var/lib` state on midgard,

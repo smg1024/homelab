@@ -10,7 +10,7 @@ against this list first.
 ## The repo is the server
 
 The Git repository is the single source of truth. Machines are never fixed by
-editing config on a host — changes are made in the repo, validated, deployed,
+editing config on a host. Changes are made in the repo, validated, deployed,
 and committed. If a host and the repo disagree, the repo wins; the host gets
 rebuilt to match.
 
@@ -35,7 +35,7 @@ host's own SSH key. A leaked repo leaks nothing.
 
 ## Pin everything
 
-- Container image tags are pinned — never `latest`.
+- Container image tags are pinned, never `latest`.
 - `flake.lock` pins the entire system; it is updated deliberately with
   `nix flake update`, never edited by hand.
 - `system.stateVersion` records install-time defaults and is not bumped.
