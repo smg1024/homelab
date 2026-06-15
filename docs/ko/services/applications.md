@@ -4,8 +4,8 @@ icon: fontawesome/solid/cubes
 
 # 애플리케이션
 
-애플리케이션 서비스는 모두 `midgard`에서 실행되며, yggdrasil의 Caddy가
-tailnet을 통해 트래픽을 전달합니다.
+애플리케이션 서비스는 모두 `midgard`에서 실행되며 yggdrasil의 Caddy가
+tailnet으로 트래픽을 전달합니다.
 
 ## Homepage (`services/homepage.nix`)
 
@@ -32,10 +32,10 @@ Bitwarden 호환 비밀번호 관리자. `:8222`에서 실행되며
 
 ## 새 앱 추가 가이드라인
 
-- 업스트림이 컨테이너로 더 잘 패키징되어 있으면 **OCI 컨테이너**(Podman,
-  midgard 전용), 그렇지 않으면 **NixOS 모듈**을 우선합니다.
+- 업스트림이 컨테이너로 더 잘 배포된다면 OCI 컨테이너(Podman, midgard 전용),
+  그렇지 않으면 NixOS 모듈을 우선합니다.
 - 이미지 태그는 반드시 고정합니다 — `latest` 금지.
-- 새 공유 서비스는 `services/` 아래 모듈로 추가하고, `flake.nix`(공유) 또는
+- 새 공유 서비스는 `services/` 아래 모듈로 추가하고 `flake.nix`(공유) 또는
   `hosts/<host>/default.nix`(호스트 전용)에 연결합니다.
 - 내부 서비스 포트는 방화벽에서 열지 않습니다. 노출이 필요하면
   [인그레스 절차](ingress.md#expose-a-service)를 따릅니다.

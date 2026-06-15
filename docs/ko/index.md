@@ -5,9 +5,9 @@ icon: fontawesome/solid/house
 # Homelab
 
 이 사이트는 NixOS 머신들로 구성된 홈랩의 운영 문서입니다. 모든 구성은
-[Git 저장소](https://git.ridewithmin.com)의 Nix flake 하나로 선언되며,
-**저장소가 곧 단일 진실 공급원**입니다. 호스트에서 직접 설정을 고치지 않고,
-저장소를 수정 → 커밋 → 배포하는 흐름으로 운영합니다.
+[Git 저장소](https://git.ridewithmin.com)의 Nix flake 하나로 선언되며
+**저장소가 곧 단일 진실 공급원**입니다. 호스트에서 직접 설정을 고치지 않고
+저장소를 수정하고 커밋한 뒤 배포합니다.
 
 ## 호스트 한눈에 보기
 

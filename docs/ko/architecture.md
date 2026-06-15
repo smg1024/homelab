@@ -5,8 +5,8 @@ icon: fontawesome/solid/network-wired
 # 아키텍처
 
 구성은 엣지/인프라 노드(`yggdrasil`)와 애플리케이션 노드(`midgard`)로
-나뉩니다. 외부 트래픽은 포트를 직접 열지 않고 **Cloudflare Tunnel → Caddy**
-경로로만 들어오며, 호스트 간 내부 통신은 **Tailscale tailnet**을 경계로
+나뉩니다. 외부 트래픽은 포트를 직접 열지 않고 Cloudflare Tunnel → Caddy
+경로로만 들어오며 호스트 간 내부 통신은 Tailscale tailnet을 경계로
 삼습니다.
 
 ```mermaid
@@ -54,12 +54,12 @@ flowchart TD
     grafana --> prometheus
 ```
 
-이 경계들 — 공개 인터넷, tailnet, localhost — 을 누가 넘을 수 있는지는
+이 경계들 — 공개 인터넷, tailnet, localhost — 을 누가 넘는지는
 [보안 모델](security.md)에서 다룹니다.
 
 ## 공유 시스템 구성
 
-모든 호스트는 `flake.nix`를 통해 같은 공통 모듈을 로드합니다.
+모든 호스트는 `flake.nix`에서 공통 모듈을 로드합니다.
 
 | 모듈 | 내용 |
 | --- | --- |
@@ -75,7 +75,7 @@ flowchart TD
 
 ## 스토리지
 
-디스크 레이아웃은 `disko`로 선언하며, 모든 호스트가 단일 디스크 GPT
+디스크 레이아웃은 `disko`로 선언하며 모든 호스트가 단일 디스크 GPT
 레이아웃을 사용합니다.
 
 ```text
@@ -86,8 +86,8 @@ GPT 파티션 테이블
 
 ## 사용자 환경
 
-Home Manager는 NixOS 모듈로 활성화되어 호스트 switch 시 함께 적용되며,
-**`poby` 운영자 환경 전용**입니다. 장기 실행 서비스에는 사용하지 않습니다.
+Home Manager는 NixOS 모듈로 활성화되어 호스트 switch 시 함께 적용되며
+`poby` 운영자 환경 전용입니다. 장기 실행 서비스에는 사용하지 않습니다.
 공유 프로필(`home/poby/base.nix`, `ops.nix`)에 셸/Git/tmux 설정과
-`age`·`sops`·`just` 같은 운영 도구가 들어가고, 호스트별 프로필이 각 호스트에
+`age`·`sops`·`just` 같은 운영 도구가 들어가고 호스트별 프로필이 각 호스트에
 맞는 별칭을 추가합니다.

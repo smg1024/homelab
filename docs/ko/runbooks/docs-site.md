@@ -5,11 +5,11 @@ icon: fontawesome/solid/book-open
 # 문서 사이트
 
 이 사이트 자체도 flake로 선언되어 있습니다. 콘텐츠는 `docs/` 아래 Markdown
-파일이고, [Zensical](https://zensical.org/)(Material for MkDocs 팀이 만든
+파일이고 [Zensical](https://zensical.org/)(Material for MkDocs 팀이 만든
 정적 사이트 생성기)로 빌드되어 yggdrasil의 Caddy가 정적 파일로 서빙합니다
-(tailnet 전용). 설정은 Zensical 정식 형식인 `zensical.toml`을 사용합니다.
+(tailnet 전용). 설정은 Zensical 공식 형식인 `zensical.toml`을 사용합니다.
 
-기본 언어는 영어이며, 한국어 번역본이 `/ko/` 아래 별도 서브사이트로
+기본 언어는 영어이며 한국어 번역본이 `/ko/` 아래 별도 서브사이트로
 빌드됩니다. 헤더의 언어 선택기로 전환할 수 있습니다.
 
 ## 구조
@@ -31,8 +31,8 @@ docs/
 
 ## 문서 수정 워크플로
 
-1. 먼저 `docs/en/`의 영어 페이지를 수정하고, `docs/ko/`에 같은 변경을
-   반영합니다. 새 페이지는 양 언어에서 두 가지를 더 챙깁니다:
+1. 먼저 `docs/en/`의 영어 페이지를 수정하고 `docs/ko/`에 같은 변경을
+   반영합니다. 새 페이지는 양 언어에서 두 항목을 더 챙깁니다:
     - `zensical.toml`과 `zensical.ko.toml` **양쪽** `nav`에 추가
     - 파일 맨 위 front matter로 네비게이션 아이콘 지정:
 

@@ -4,7 +4,7 @@ icon: fontawesome/solid/circle-plus
 
 # 새 서비스 추가
 
-"X를 돌리고 싶다"에서 "X가 배포되어 접근 가능하다"까지의 전체 경로입니다.
+"X를 돌리고 싶다"에서 "X가 배포되어 접근 가능하다"까지의 절차입니다.
 
 ## 어디에, 어떻게 돌릴지 결정
 
@@ -16,7 +16,7 @@ icon: fontawesome/solid/circle-plus
 
 === "NixOS 모듈"
 
-    nixpkgs가 잘 패키징하고 있다면 이쪽을 우선합니다.
+    nixpkgs에서 패키지가 잘 유지된다면 이쪽을 우선합니다.
     `services/<name>.nix` 생성:
 
     ```nix
@@ -31,7 +31,7 @@ icon: fontawesome/solid/circle-plus
 
 === "OCI 컨테이너"
 
-    업스트림이 컨테이너로 더 잘 패키징할 때 사용합니다 (midgard 전용,
+    업스트림이 컨테이너 배포를 더 잘 지원할 때 사용합니다 (midgard 전용,
     **태그 고정**):
 
     ```nix

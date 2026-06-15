@@ -16,7 +16,7 @@ icon: fontawesome/solid/server
 
 ## 접근
 
-SSH는 의도적으로 **tailnet을 통해서만** 노출됩니다. OCI 공인 주소로는 SSH가
+SSH는 의도적으로 tailnet으로만 노출됩니다. OCI 공인 주소로는 SSH가
 열려 있지 않습니다.
 
 ```bash

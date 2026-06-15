@@ -37,8 +37,8 @@ nixos-rebuild <test|switch>
 ```
 
 !!! tip "test 먼저"
-    영향이 불확실한 변경은 `just test`로 먼저 활성화해 보고, 문제가 없으면
-    `just switch`로 부팅 기본값까지 올리는 순서를 권장합니다. `test`로
+    영향이 불확실한 변경은 `just test`로 먼저 활성화해 보고 문제가 없으면
+    `just switch`로 부팅 기본값까지 올립니다. `test`로
     활성화한 상태는 재부팅하면 사라집니다.
 
 ## 롤백
@@ -58,4 +58,4 @@ sudo nixos-rebuild switch --rollback
 - `system.stateVersion`은 초기 설치 시점의 기본값 기록입니다 — 릴리스 노트가
   명시적으로 요구하지 않는 한 올리지 않습니다.
 - 배포는 라이브 호스트를 건드리는 작업이므로 변경 내용을 커밋한 뒤 의도를
-  갖고 실행합니다.
+  확인하고 실행합니다.

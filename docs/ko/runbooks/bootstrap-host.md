@@ -4,9 +4,9 @@ icon: fontawesome/solid/hard-drive
 
 # 호스트 부트스트랩
 
-새(또는 죽은) 머신에 이 저장소를 기반으로 NixOS를 설치하는 절차입니다.
-installer USB 위에서 `nixos-anywhere`를 사용합니다. 모든 주의사항이 담긴
-전체 가이드는 저장소 루트의 `INSTALL.md`에 있고, 이 페이지는 운영 요약본입니다.
+새(또는 죽은) 머신에 이 저장소로 NixOS를 설치하는 절차입니다. installer USB
+환경에서 `nixos-anywhere`를 사용합니다. 자세한 가이드는 저장소 루트의
+`INSTALL.md`에 있고 이 페이지는 운영 요약본입니다.
 
 !!! danger "대상 디스크가 지워집니다"
     `disko`는 지정된 디스크를 재파티션하고 포맷합니다. 실행 전에 디스크

@@ -4,12 +4,12 @@ icon: fontawesome/solid/map
 
 # 로드맵
 
-이 홈랩이 향하는 곳. 체크된 항목은 완료된 작업으로 연결되고, 미체크 항목은
+이 홈랩이 향하는 곳. 체크된 항목은 완료된 작업으로 연결되고 미체크 항목은
 의도이며 각 구간 안에서 대략 우선순위 순입니다.
 
 ## 지금 (운영 공백)
 
-- [ ] **자동 백업** — 현재 전무 ([상세](runbooks/backup-restore.md)):
+- [ ] **자동 백업** — 현재 없음 ([상세](runbooks/backup-restore.md)):
     - [ ] Vaultwarden SQLite DB용 `services.vaultwarden.backupDir`
     - [ ] Forgejo dump 또는 외부 원격 미러링
     - [ ] midgard `/var/lib`를 호스트 밖으로 보내는 백업 작업 (restic/borgbackup)
@@ -30,7 +30,7 @@ icon: fontawesome/solid/map
 ## 언젠가 / 아이디어
 
 - [ ] 이 문서의 공개(읽기 전용) 버전
-- [ ] midgard의 Hermes Agent 선언적 구성 (안정화되면 mutable `~/.hermes`에서
+- [ ] midgard의 Hermes Agent 선언적 구성 (안정화되면 변경 가능한 `~/.hermes`에서
       승격)
 - [ ] Grafana 대시보드 코드화 확대 (프로비저닝 대시보드 추가)
 
