@@ -27,7 +27,7 @@ Bitwarden 호환 비밀번호 관리자. `:8222`에서 실행되며
 
 - SQLite 백엔드
 - 공개 가입 비활성화, 초대만 허용
-- 관리자 토큰은 `vaultwarden/admin_token` SOPS 시크릿에서
+- 관리자 토큰은 `vaultwarden/admin_token` SOPS 비밀에서
   `vaultwarden.env` 템플릿으로 렌더링
 
 ## 새 앱 추가 가이드라인

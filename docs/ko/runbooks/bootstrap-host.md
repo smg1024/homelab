@@ -47,7 +47,7 @@ nix run github:nix-community/nixos-anywhere -- \
       **실패해야 정상**
 - [ ] tailnet 합류: `sudo tailscale up`, `tailscale status`로 확인
 - [ ] 첫 원격 리빌드: `just test <host>` → `just switch <host>`
-- [ ] 호스트가 sops 수신자라면: 호스트 키가 바뀐 경우 시크릿 재암호화
+- [ ] 호스트가 sops 수신자라면: 호스트 키가 바뀐 경우 비밀 재암호화
       ([절차](secrets.md))
 - [ ] `hosts/<host>/` 변경과 `flake.lock` 커밋
 
