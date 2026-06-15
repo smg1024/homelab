@@ -7,8 +7,8 @@ icon: fontawesome/solid/book-open
 This site itself is declared in the flake. Content lives as Markdown under
 `docs/`, is built with [Zensical](https://zensical.org/) (the static site
 generator by the Material for MkDocs team), and is served as static files by
-Caddy on yggdrasil (tailnet only). Configuration uses Zensical's native
-`zensical.toml` format.
+Caddy on yggdrasil (public through Cloudflare Tunnel). Configuration uses
+Zensical's native `zensical.toml` format.
 
 English is the default language; a Korean translation is built as a separate
 subsite under `/ko/`. The language selector in the header switches between
@@ -29,7 +29,7 @@ docs/
 
 - flake output `packages.<system>.docs`: both languages built with
   `zensical build --strict`, Korean into the `ko/` subdirectory
-- serving module `services/docs-site.nix`: Caddy `file_server`, tailnet only
+- serving module `services/docs-site.nix`: Caddy `file_server`, public through Cloudflare Tunnel
 
 ## Editing workflow
 

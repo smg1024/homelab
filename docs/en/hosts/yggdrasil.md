@@ -15,7 +15,7 @@ of RAM, so the rule is to **keep it lightweight**. No applications run here.
 - Run Prometheus for node metrics and alert rule evaluation
 - Serve Grafana dashboards (tailnet-restricted Caddy route)
 - Run the Loki log store
-- Serve this documentation site (tailnet-restricted)
+- Serve this documentation site publicly through Cloudflare Tunnel
 
 ## Loaded service modules
 

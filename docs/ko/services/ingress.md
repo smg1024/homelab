@@ -17,6 +17,7 @@ Tunnel은 다음 공개 호스트네임을 yggdrasil의 로컬 Caddy(`https://lo
 - `git.ridewithmin.com`
 - `vault.ridewithmin.com`
 - `status.ridewithmin.com`
+- `docs.ridewithmin.com`
 
 매칭되지 않는 요청은 `http_status:404`로 떨어집니다. Tunnel 자격 증명은
 `cloudflare/cloudflared_tunnel_credentials` SOPS 비밀입니다.
@@ -32,7 +33,7 @@ Caddy는 공개 호스트네임별로 내부 백엔드를 선택합니다.
 | `vault.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8222` | |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | 상태 페이지 경로만 허용, 그 외 `404` |
 | `grafana.ridewithmin.com` | `http://127.0.0.1:3003` | tailnet 클라이언트만, 그 외 `404` |
-| `docs.ridewithmin.com` | 정적 파일 (`file_server`) | tailnet 클라이언트만, 그 외 `404` |
+| `docs.ridewithmin.com` | 정적 파일 (`file_server`) | 공개 |
 
 인증서는 Caddy의 Cloudflare DNS 플러그인으로 ACME DNS 챌린지를 거쳐
 발급합니다. Cloudflare API 토큰은 `cloudflare/caddy_env` SOPS 비밀에서
@@ -40,8 +41,8 @@ Caddy는 공개 호스트네임별로 내부 백엔드를 선택합니다.
 
 ## tailnet 전용 라우트 패턴
 
-Grafana와 문서 사이트는 Tunnel 공개 호스트네임 목록에 포함되지 않으며
-Caddy에서 Tailscale 주소 대역으로 접근을 제한합니다.
+Grafana는 Tunnel 공개 호스트네임 목록에 포함되지 않으며 Caddy에서 Tailscale
+주소 대역으로 접근을 제한합니다.
 
 ```caddy
 @tailnet remote_ip 100.64.0.0/10 fd7a:115c:a1e0::/48

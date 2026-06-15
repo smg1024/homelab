@@ -39,7 +39,7 @@ docs/            # this documentation site (Zensical)
 | `https://vault.ridewithmin.com` | Vaultwarden | Public (Cloudflare Tunnel) |
 | `https://status.ridewithmin.com` | Uptime Kuma status page | Public (status-page paths only) |
 | `https://grafana.ridewithmin.com` | Grafana | Tailnet only |
-| `https://docs.ridewithmin.com` | This documentation site | Tailnet only |
+| `https://docs.ridewithmin.com` | This documentation site | Public (Cloudflare Tunnel) |
 
 ## Read next
 

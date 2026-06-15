@@ -22,6 +22,7 @@ flowchart TD
         prometheus["Prometheus<br/>127.0.0.1:9090"]
         grafana["Grafana<br/>127.0.0.1:3003"]
         renderer["Grafana image renderer<br/>127.0.0.1:8081"]
+        docsSite["Docs site<br/>static files"]
         yNodeExporter["node_exporter<br/>:9100"]
     end
 
@@ -38,13 +39,14 @@ flowchart TD
 
     internet --> cloudflare
     cloudflare --> cloudflared
-    cloudflared -->|"home/git/vault/status.ridewithmin.com<br/>https://localhost:443"| caddy
+    cloudflared -->|"home/git/vault/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
 
     caddy -->|"status.ridewithmin.com"| kuma
     caddy -->|"home.ridewithmin.com"| homepage
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
     caddy -->|"grafana.ridewithmin.com<br/>tailnet only"| grafana
+    caddy -->|"docs.ridewithmin.com"| docsSite
 
     caddy -.->|backend access over Tailscale| midgardDns
     midgardDns -.-> homepage
@@ -80,6 +82,7 @@ Main responsibilities:
 - Serve the Uptime Kuma status page
 - Run Prometheus for node-level monitoring and alert rule evaluation
 - Serve Grafana dashboards through a tailnet-restricted Caddy route
+- Serve this documentation site publicly through Cloudflare Tunnel
 
 Loaded services:
 
@@ -88,6 +91,7 @@ Loaded services:
 - `services/uptime-kuma.nix`
 - `services/prometheus`
 - `services/grafana`
+- `services/docs-site.nix`
 
 ### midgard
 
@@ -265,6 +269,7 @@ Cloudflare Tunnel sends the following public hostnames to local Caddy on
 - `git.ridewithmin.com`
 - `vault.ridewithmin.com`
 - `status.ridewithmin.com`
+- `docs.ridewithmin.com`
 
 Each hostname is forwarded to the following origin.
 
@@ -284,6 +289,7 @@ home.ridewithmin.com   -> http://midgard.tail6fc192.ts.net:8082
 git.ridewithmin.com    -> http://midgard.tail6fc192.ts.net:3000
 vault.ridewithmin.com  -> http://midgard.tail6fc192.ts.net:8222
 status.ridewithmin.com -> http://127.0.0.1:3001
+docs.ridewithmin.com   -> static files from services/docs-site.nix
 grafana.ridewithmin.com -> http://127.0.0.1:3003, tailnet clients only
 ```
 
@@ -292,6 +298,9 @@ challenges.
 
 `status.ridewithmin.com` proxies only Uptime Kuma status-page related paths and
 returns `404` for every other path.
+
+`docs.ridewithmin.com` serves the built documentation site as static files from
+`yggdrasil` through Cloudflare Tunnel.
 
 `grafana.ridewithmin.com` is routed by Caddy to local Grafana only for requests
 from Tailscale address ranges. Other clients receive `404`. It is not part of

@@ -38,7 +38,7 @@ docs/            # 이 문서 사이트 (Zensical)
 | `https://vault.ridewithmin.com` | Vaultwarden | 공개 (Cloudflare Tunnel) |
 | `https://status.ridewithmin.com` | Uptime Kuma 상태 페이지 | 공개 (상태 페이지 경로만) |
 | `https://grafana.ridewithmin.com` | Grafana | tailnet 전용 |
-| `https://docs.ridewithmin.com` | 이 문서 사이트 | tailnet 전용 |
+| `https://docs.ridewithmin.com` | 이 문서 사이트 | 공개 (Cloudflare Tunnel) |
 
 ## 다음으로 읽기
 

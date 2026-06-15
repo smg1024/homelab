@@ -20,6 +20,7 @@ flowchart TD
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
         prometheus["Prometheus<br/>127.0.0.1:9090"]
         grafana["Grafana<br/>127.0.0.1:3003"]
+        docsSite["Docs site<br/>static files"]
         yNodeExporter["node_exporter<br/>:9100"]
     end
 
@@ -36,13 +37,14 @@ flowchart TD
 
     internet --> cloudflare
     cloudflare --> cloudflared
-    cloudflared -->|"home/git/vault/status.ridewithmin.com<br/>https://localhost:443"| caddy
+    cloudflared -->|"home/git/vault/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
 
     caddy -->|"status.ridewithmin.com"| kuma
     caddy -->|"home.ridewithmin.com"| homepage
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
     caddy -->|"grafana.ridewithmin.com<br/>tailnet only"| grafana
+    caddy -->|"docs.ridewithmin.com"| docsSite
 
     caddy -.->|backend access over Tailscale| midgardDns
     midgardDns -.-> homepage

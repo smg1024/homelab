@@ -15,7 +15,7 @@ icon: fontawesome/solid/server
 - Prometheus 노드 메트릭 수집 및 알림 규칙 평가
 - Grafana 대시보드 (tailnet 제한 Caddy 라우트)
 - Loki 로그 저장소
-- 이 문서 사이트 서빙 (tailnet 제한)
+- 이 문서 사이트 공개 서빙 (Cloudflare Tunnel)
 
 ## 로드하는 서비스 모듈
 

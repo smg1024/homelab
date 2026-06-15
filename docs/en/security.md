@@ -11,8 +11,8 @@ Internet, tailnet, and localhost.
 
 | Tier | Who | What they can reach |
 | --- | --- | --- |
-| **Public Internet** | anyone | Only hostnames routed through Cloudflare Tunnel: `home`, `git`, `vault`, `status` |
-| **Tailnet** | devices in the Tailscale tailnet | Everything above, plus `grafana` and `docs` routes, plus direct host/port access per Tailscale ACLs |
+| **Public Internet** | anyone | Only hostnames routed through Cloudflare Tunnel: `home`, `git`, `vault`, `status`, `docs` |
+| **Tailnet** | devices in the Tailscale tailnet | Everything above, plus the `grafana` route, plus direct host/port access per Tailscale ACLs |
 | **Localhost** | processes on the host itself | Prometheus, Grafana, Uptime Kuma backends bound to `127.0.0.1` |
 
 ## Ingress path
@@ -22,10 +22,9 @@ tunnel to Cloudflare; requests arrive through it at local Caddy
 (`https://localhost:443`), which routes by hostname. Anything not explicitly
 routed gets `404`.
 
-Two routes are deliberately **not** in the tunnel's hostname list and are
-gated by Caddy to Tailscale address ranges (`100.64.0.0/10`,
-`fd7a:115c:a1e0::/48`): `grafana.ridewithmin.com` and
-`docs.ridewithmin.com`. Non-tailnet clients receive `404`.
+`grafana.ridewithmin.com` is deliberately **not** in the tunnel's hostname list
+and is gated by Caddy to Tailscale address ranges (`100.64.0.0/10`,
+`fd7a:115c:a1e0::/48`). Non-tailnet clients receive `404`.
 
 The public Uptime Kuma route allows only status-page paths and returns `404`
 for everything else.
