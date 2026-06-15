@@ -6,8 +6,8 @@ icon: fontawesome/solid/network-wired
 
 The setup is split into an edge/infra node (`yggdrasil`) and an application
 node (`midgard`). External traffic enters only through **Cloudflare Tunnel →
-Caddy** instead of directly exposed ports, and the **Tailscale tailnet** acts
-as the internal network boundary between hosts.
+Caddy** instead of directly exposed ports, and the **Tailscale tailnet** is
+the internal network boundary between hosts.
 
 ```mermaid
 flowchart TD
@@ -54,8 +54,8 @@ flowchart TD
     grafana --> prometheus
 ```
 
-Who can reach what across these boundaries — public Internet, tailnet,
-localhost — is covered in the [security model](security.md).
+Who can reach what across these boundaries (public Internet, tailnet,
+localhost) is covered in the [security model](security.md).
 
 ## Shared system configuration
 

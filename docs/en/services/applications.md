@@ -33,7 +33,7 @@ Bitwarden-compatible password manager. Runs on `:8222`, exposed at
 
 - Prefer **OCI containers** (Podman, midgard only) when upstream packages
   better as a container; otherwise prefer **NixOS modules**.
-- Always pin image tags — never `latest`.
+- Always pin image tags, never `latest`.
 - Add a new shared service as a module under `services/` and wire it into
   `flake.nix` (shared) or `hosts/<host>/default.nix` (host-specific).
 - Internal service ports are not opened on the firewall. To expose a service,

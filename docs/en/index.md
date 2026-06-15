@@ -6,16 +6,16 @@ icon: fontawesome/solid/house
 
 This site is the operations documentation for a homelab made up of NixOS
 machines. Everything is declared in a single Nix flake in the
-[Git repository](https://git.ridewithmin.com) — **the repo is the single
-source of truth**. Machines are never fixed by editing config on a host;
+[Git repository](https://git.ridewithmin.com). **The repo is the single
+source of truth.** Machines are never fixed by editing config on a host;
 changes are made in the repo, committed, then deployed.
 
 ## Hosts at a glance
 
 | Host | Role | Architecture | Notes |
 | --- | --- | --- | --- |
-| `yggdrasil` | Edge/infra node — Cloudflare Tunnel, Caddy, monitoring stack | `x86_64-linux` | 4 GB RAM, keep it lightweight |
-| `midgard` | Application host — Forgejo, Vaultwarden, Homepage, Podman | `x86_64-linux` | |
+| `yggdrasil` | Edge/infra node: Cloudflare Tunnel, Caddy, monitoring stack | `x86_64-linux` | 4 GB RAM, keep it lightweight |
+| `midgard` | Application host: Forgejo, Vaultwarden, Homepage, Podman | `x86_64-linux` | |
 | `alfheim` | Experimental OCI ARM VM | `aarch64-linux` | SSH over the tailnet only |
 
 ## Repository layout
@@ -43,7 +43,7 @@ docs/            # this documentation site (Zensical)
 
 ## Read next
 
-- [Design principles](principles.md) — the rules everything follows
-- [Architecture](architecture.md) — traffic flow and components
-- [Deploy & rollback](runbooks/deploy.md) — how changes reach the hosts
-- [Roadmap](roadmap.md) — where this is headed
+- [Design principles](principles.md): the rules everything follows
+- [Architecture](architecture.md): traffic flow and components
+- [Deploy & rollback](runbooks/deploy.md): how changes reach the hosts
+- [Roadmap](roadmap.md): where this is headed

@@ -36,8 +36,8 @@ midgard.tail6fc192.ts.net:9100  -> midgard node_exporter (tailnet 경유)
 - `LowMemory`, `HighCpuUsage`, `HighLoad`
 
 !!! warning "Alertmanager 미구성"
-    규칙은 Prometheus UI에서 확인할 수 있지만, Alertmanager를 통한 외부 알림
-    전달은 아직 구성되어 있지 않습니다.
+    규칙은 Prometheus UI에서 확인할 수 있지만 Alertmanager로 외부에 알림을
+    보내는 구성은 아직 없습니다.
 
 ## 접근 방법
 

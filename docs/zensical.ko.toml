@@ -16,7 +16,7 @@ nav = [
   { "보안 모델" = "security.md" },
   { "호스트" = [{ "yggdrasil" = "hosts/yggdrasil.md" }, { "midgard" = "hosts/midgard.md" }, { "alfheim" = "hosts/alfheim.md" }] },
   { "서비스" = [{ "인그레스" = "services/ingress.md" }, { "모니터링" = "services/monitoring.md" }, { "애플리케이션" = "services/applications.md" }] },
-  { "운영" = [{ "배포와 롤백" = "runbooks/deploy.md" }, { "시크릿 관리" = "runbooks/secrets.md" }, { "새 서비스 추가" = "runbooks/add-service.md" }, { "호스트 부트스트랩" = "runbooks/bootstrap-host.md" }, { "백업과 복구" = "runbooks/backup-restore.md" }, { "문서 사이트" = "runbooks/docs-site.md" }] },
+  { "운영" = [{ "배포와 롤백" = "runbooks/deploy.md" }, { "비밀 관리" = "runbooks/secrets.md" }, { "새 서비스 추가" = "runbooks/add-service.md" }, { "호스트 부트스트랩" = "runbooks/bootstrap-host.md" }, { "백업과 복구" = "runbooks/backup-restore.md" }, { "문서 사이트" = "runbooks/docs-site.md" }] },
   { "결정 기록" = [{ "ADR-001: Zensical" = "decisions/zensical.md" }] },
   { "로드맵" = "roadmap.md" },
 ]

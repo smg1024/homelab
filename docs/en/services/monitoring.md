@@ -41,13 +41,13 @@ Defined in `services/prometheus/node-health-alert-rule.yml`.
 
 ## Access
 
-Grafana — from a tailnet-connected client:
+Grafana, from a tailnet-connected client:
 
 ```text
 https://grafana.ridewithmin.com
 ```
 
-Prometheus UI — through SSH port forwarding:
+Prometheus UI, through SSH port forwarding:
 
 ```bash
 ssh -L 9090:127.0.0.1:9090 yggdrasil

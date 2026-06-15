@@ -11,7 +11,7 @@ Secrets are managed with `sops-nix`. **Plaintext secrets never go into
 
 - Encrypted files: `secrets/*.yaml` (currently `ingress.yaml`,
   `vaultwarden.yaml`, ...)
-- Encryption policy: `.sops.yaml` — files matching `secrets/[^/]+\.yaml` are
+- Encryption policy `.sops.yaml`: files matching `secrets/[^/]+\.yaml` are
   encrypted for the `poby`, `yggdrasil`, and `midgard` age recipients.
 - Each host decrypts using its own SSH host key
   (`/etc/ssh/ssh_host_ed25519_key`) as the age identity, so only hosts

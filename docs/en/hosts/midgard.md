@@ -31,7 +31,7 @@ modules/podman.nix      # host-specific module
 | `8082` | Homepage | `https://home.ridewithmin.com` |
 | `3000` | Forgejo | `https://git.ridewithmin.com` |
 | `8222` | Vaultwarden | `https://vault.ridewithmin.com` |
-| `9100` | node_exporter | — (scraped by Prometheus over the tailnet) |
+| `9100` | node_exporter | Not exposed; scraped by Prometheus over the tailnet |
 
 ## Container runtime
 
@@ -40,7 +40,7 @@ Podman is enabled only on midgard (`modules/podman.nix`).
 - `virtualisation.oci-containers.backend = "podman"`
 - weekly auto-prune (`podman-prune.timer`)
 - registry search path limited to `docker.io` and `ghcr.io`
-- image tags are **always pinned** — never `latest`
+- image tags are **always pinned**, never `latest`
 
 Long-running container services should be declared with
 `virtualisation.oci-containers.containers` instead of ad-hoc compose

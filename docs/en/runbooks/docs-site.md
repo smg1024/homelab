@@ -22,14 +22,14 @@ docs/
 ├── shell.nix         # dev shell for `zensical serve`, inherits package deps
 ├── Makefile          # build (`make`) and install (`make install`) targets
 ├── zensical.toml     # English (default) site config
-├── zensical.ko.toml  # Korean site config (full copy — TOML has no inheritance)
+├── zensical.ko.toml  # Korean site config (full copy, TOML has no inheritance)
 ├── en/               # English content (source of truth)
 └── ko/               # Korean translation, mirrors en/
 ```
 
-- flake output: `packages.<system>.docs` — both languages built with
+- flake output `packages.<system>.docs`: both languages built with
   `zensical build --strict`, Korean into the `ko/` subdirectory
-- serving module: `services/docs-site.nix` — Caddy `file_server`, tailnet only
+- serving module `services/docs-site.nix`: Caddy `file_server`, tailnet only
 
 ## Editing workflow
 
@@ -62,7 +62,7 @@ docs/
     # open http://127.0.0.1:8000
     ```
 
-4. Commit, then deploy — the docs are part of the system closure and update
+4. Commit, then deploy. The docs are part of the system closure and update
    together.
 
     ```bash

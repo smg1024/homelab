@@ -49,7 +49,7 @@ Two questions first:
 - [ ] Wire it in: `hosts/<host>/default.nix` imports (host-specific) or
       `flake.nix` modules list (shared)
 - [ ] Secrets, if any: add to `secrets/*.yaml` via sops, declare
-      `sops.secrets."..."` — see [Secrets](secrets.md)
+      `sops.secrets."..."` (see [Secrets](secrets.md))
 - [ ] Exposure, if needed:
     - [ ] Caddy virtualHost in `services/ingress.nix`
     - [ ] Public service → hostname in `services/cloudflared.nix` ingress;

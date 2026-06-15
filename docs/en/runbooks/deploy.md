@@ -56,6 +56,6 @@ systemd-boot menu.
 ## Caveats
 
 - Never edit `flake.lock` by hand; use `nix flake update`.
-- `system.stateVersion` records initial-install defaults — do not bump it
+- `system.stateVersion` records initial-install defaults; do not bump it
   unless release notes explicitly say to.
 - Deploys touch live hosts: commit your changes and run them deliberately.

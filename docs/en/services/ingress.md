@@ -4,7 +4,7 @@ icon: fontawesome/solid/door-open
 
 # Ingress
 
-External traffic is centered on **Cloudflare Tunnel** instead of directly
+All external traffic enters through **Cloudflare Tunnel** instead of directly
 exposed ports. Both `cloudflared` and Caddy run on `yggdrasil`.
 
 ## Cloudflare Tunnel (`services/cloudflared.nix`)

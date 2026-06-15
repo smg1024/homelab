@@ -4,7 +4,7 @@ icon: fontawesome/solid/door-open
 
 # 인그레스
 
-외부 트래픽은 직접 노출된 포트 대신 **Cloudflare Tunnel**을 중심으로
+외부 트래픽은 직접 노출된 포트 대신 Cloudflare Tunnel을 거쳐
 들어옵니다. `cloudflared`와 Caddy 모두 `yggdrasil`에서 실행됩니다.
 
 ## Cloudflare Tunnel (`services/cloudflared.nix`)
@@ -19,7 +19,7 @@ Tunnel은 다음 공개 호스트네임을 yggdrasil의 로컬 Caddy(`https://lo
 - `status.ridewithmin.com`
 
 매칭되지 않는 요청은 `http_status:404`로 떨어집니다. Tunnel 자격 증명은
-`cloudflare/cloudflared_tunnel_credentials` SOPS 시크릿입니다.
+`cloudflare/cloudflared_tunnel_credentials` SOPS 비밀입니다.
 
 ## Caddy (`services/ingress.nix`)
 
@@ -34,13 +34,13 @@ Caddy는 공개 호스트네임별로 내부 백엔드를 선택합니다.
 | `grafana.ridewithmin.com` | `http://127.0.0.1:3003` | tailnet 클라이언트만, 그 외 `404` |
 | `docs.ridewithmin.com` | 정적 파일 (`file_server`) | tailnet 클라이언트만, 그 외 `404` |
 
-인증서는 Caddy의 Cloudflare DNS 플러그인으로 ACME DNS 챌린지를 통해
-발급합니다. Cloudflare API 토큰은 `cloudflare/caddy_env` SOPS 시크릿에서
+인증서는 Caddy의 Cloudflare DNS 플러그인으로 ACME DNS 챌린지를 거쳐
+발급합니다. Cloudflare API 토큰은 `cloudflare/caddy_env` SOPS 비밀에서
 환경 변수로 주입됩니다.
 
 ## tailnet 전용 라우트 패턴
 
-Grafana와 문서 사이트는 Tunnel 공개 호스트네임 목록에 포함되지 않으며,
+Grafana와 문서 사이트는 Tunnel 공개 호스트네임 목록에 포함되지 않으며
 Caddy에서 Tailscale 주소 대역으로 접근을 제한합니다.
 
 ```caddy
