@@ -1,0 +1,64 @@
+name: Deploy
+
+# Push-based CD. On merge to main, a runner joins the tailnet ephemerally and
+# runs `nixos-rebuild switch` against each node. build-host == target-host ==
+# the node, so each host builds itself (no arch matrix here, no cache needed) —
+# the runner only evaluates the flake and orchestrates. This mirrors the
+# Justfile `_rebuild` recipe.
+
+on:
+  push:
+    branches: [main]
+
+# Serialize deploys: a new merge waits for an in-flight deploy to finish
+# rather than racing it.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  switch:
+    name: switch ${{ matrix.host }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [yggdrasil, midgard, alfheim]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Join tailnet (ephemeral)
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+          # Accept MagicDNS so `*.tail6fc192.ts.net` resolves on the runner.
+          args: --accept-dns=true
+          # Tailnet peer propagation is eventually consistent, so a cold
+          # ssh-keyscan can race the join. Block (up to 3 min) until the
+          # ephemeral runner can actually reach the target node first.
+          ping: ${{ matrix.host }}.tail6fc192.ts.net
+
+      - name: Load deploy key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Trust ${{ matrix.host }} host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -T 30 "${{ matrix.host }}.tail6fc192.ts.net" >> ~/.ssh/known_hosts
+
+      - name: nixos-rebuild switch ${{ matrix.host }}
+        run: |
+          target="poby@${{ matrix.host }}.tail6fc192.ts.net"
+          nix run github:NixOS/nixpkgs/nixos-26.05#nixos-rebuild -- \
+            switch \
+            --no-reexec \
+            --flake ".#${{ matrix.host }}" \
+            --build-host "$target" \
+            --target-host "$target" \
+            --sudo

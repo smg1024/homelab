@@ -1,0 +1,41 @@
+name: CI
+
+# Build-only verification. Compiles each host's full system closure on a
+# throwaway runner — no activation, no tailnet, no secrets. These are the
+# checks to mark "required" in branch protection so only buildable configs
+# can merge to main.
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build ${{ matrix.host }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - host: yggdrasil
+            os: ubuntu-latest
+          - host: midgard
+            os: ubuntu-latest
+          # alfheim is aarch64-linux — build it natively on an arm runner
+          # instead of cross-compiling/emulating from x86.
+          - host: alfheim
+            os: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Build ${{ matrix.host }} system closure
+        run: |
+          nix build \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+            --no-link --print-out-paths
