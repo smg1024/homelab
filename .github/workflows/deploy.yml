@@ -38,9 +38,9 @@ jobs:
           # Accept MagicDNS so `*.tail6fc192.ts.net` resolves on the runner.
           args: --accept-dns=true
           # Tailnet peer propagation is eventually consistent, so a cold
-          # ssh-keyscan can race the join. Block (up to 3 min) until the
-          # ephemeral runner can actually reach the target node first.
-          ping: ${{ matrix.host }}.tail6fc192.ts.net
+          # ssh-keyscan can race the join. `targets` runs `tailscale ping`
+          # after `tailscale up` and blocks until the node is reachable.
+          targets: ${{ matrix.host }}.tail6fc192.ts.net
 
       - name: Load deploy key
         uses: webfactory/ssh-agent@v0.9.0
