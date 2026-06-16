@@ -6,12 +6,12 @@ icon: fontawesome/solid/robot
 
 GitHub Actions builds every change and, once it lands on `main`, deploys it to
 the hosts automatically. The manual [`just` workflow](deploy.md) stays as the
-break-glass path — the pipeline runs the same `nixos-rebuild`, just unattended.
+break-glass path. The pipeline runs the same `nixos-rebuild`, just unattended.
 
 The split is deliberate:
 
-- **CI** proves every host *builds* — on a throwaway runner that touches no host.
-- **CD** rolls merged changes out — joining the tailnet and running the exact
+- **CI** proves every host *builds*, on a throwaway runner that touches no host.
+- **CD** rolls merged changes out, joining the tailnet and running the exact
   same `nixos-rebuild switch` you would run by hand.
 
 ## Flow
@@ -22,13 +22,13 @@ PR / push ──▶ CI: build each host's system closure   (build only, no host 
 merge to main ──▶ CD: join tailnet → nixos-rebuild switch on every host
 ```
 
-## CI — build check
+## CI: build check
 
 `.github/workflows/ci.yml`, triggered on pull requests to `main`.
 
 - One job per host builds
   `nixosConfigurations.<host>.config.system.build.toplevel`.
-- It **only builds** — no activation, no tailnet, no secrets. A config that
+- It **only builds**: no activation, no tailnet, no secrets. A config that
   fails to evaluate or compile fails here, before it can reach a host.
 - `yggdrasil` and `midgard` build on `ubuntu-latest`; `alfheim` builds on a
   native `ubuntu-24.04-arm` runner, so its `aarch64` closure is built natively
@@ -39,7 +39,7 @@ merge to main ──▶ CD: join tailnet → nixos-rebuild switch on every host
 Mark the three `build …` checks as **required** in branch protection so only
 buildable configs can reach `main`.
 
-## CD — deploy on merge
+## CD: deploy on merge
 
 `.github/workflows/deploy.yml`, triggered on push to `main` (a merge).
 
@@ -59,7 +59,7 @@ Each host is handled by a job that:
     ```
 
 Because `--build-host` and `--target-host` are both the node, **each host builds
-itself** — exactly like a manual deploy. The runner only evaluates the flake and
+itself**, exactly like a manual deploy. The runner only evaluates the flake and
 orchestrates, so there is no cross-architecture build problem (`alfheim`
 compiles its own `aarch64` closure) and no binary cache to maintain. A
 `concurrency` group serializes deploys so two merges never race.
