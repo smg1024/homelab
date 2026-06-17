@@ -2,6 +2,7 @@
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
+    ../../modules/podman.nix
   ];
 
   networking.hostName = "alfheim";
