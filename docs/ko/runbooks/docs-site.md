@@ -26,8 +26,8 @@ docs/
 └── ko/               # 한국어 번역, en/을 미러링
 ```
 
-- flake output `packages.<system>.docs`: 두 언어 모두 `zensical build
-  --strict`로 빌드, 한국어는 `ko/` 하위 디렉토리에 생성
+- flake output `packages.<system>.docs`: 두 언어 모두 `zensical build --strict`로
+  빌드, 한국어는 `ko/` 하위 디렉토리에 생성
 - 서빙 모듈 `services/docs-site.nix`: Caddy `file_server`, Cloudflare Tunnel 공개 라우트
 
 ## 문서 수정 워크플로
