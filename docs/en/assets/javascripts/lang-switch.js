@@ -6,9 +6,16 @@
  * switch always jumps to the overview. Here we swap only the language prefix
  * of the current path instead.
  *
- * A full reload (not instant navigation) is used on purpose: switching
- * language must also switch <html lang>, the search index, and the nav tree,
- * none of which instant navigation swaps cleanly.
+ * The links' href is corrected on every render (first load and after each
+ * instant navigation) via Material's `document$` observable. Doing it on
+ * render, rather than only on hover/pointerdown, means the target is always
+ * right even for touch taps, keyboard activation, prefetch, middle-click, and
+ * right-click "copy link" — the cases where the old pointer-only fix let the
+ * stale "/" href slip through and land on the overview.
+ *
+ * A plain left-click additionally forces a full reload, so <html lang>, the
+ * search index, and the nav tree all switch cleanly rather than via instant
+ * navigation (which would swap only the page content).
  */
 (function () {
   function targetUrl(link) {
@@ -19,31 +26,32 @@
     return base + rel + location.search + location.hash;
   }
 
-  function langLink(ev) {
-    return ev.target && ev.target.closest
-      ? ev.target.closest("a[hreflang]")
-      : null;
+  function fixLinks() {
+    var links = document.querySelectorAll("a[hreflang]");
+    for (var i = 0; i < links.length; i++) {
+      links[i].setAttribute("href", targetUrl(links[i]));
+    }
   }
 
-  // Keep the href accurate for hover preview, middle-click, right-click
-  // "copy link", and keyboard focus.
-  ["pointerover", "focusin", "pointerdown"].forEach(function (type) {
-    document.addEventListener(
-      type,
-      function (ev) {
-        var link = langLink(ev);
-        if (link) link.setAttribute("href", targetUrl(link));
-      },
-      true
-    );
-  });
+  // Re-point the language links on every page render, including the SPA-like
+  // instant navigations that reset them back to the static roots.
+  if (window.document$ && typeof window.document$.subscribe === "function") {
+    window.document$.subscribe(fixLinks);
+  } else {
+    document.addEventListener("DOMContentLoaded", fixLinks);
+    fixLinks();
+  }
 
-  // Force a full reload on a plain left-click so the language switches cleanly.
-  // Modifier/middle clicks fall through to the (already corrected) href.
+  // Plain left-click -> full reload to the mirrored page. Modifier and
+  // middle clicks fall through to the (already corrected) href so that
+  // "open in new tab" still lands on the right page.
   document.addEventListener(
     "click",
     function (ev) {
-      var link = langLink(ev);
+      var link =
+        ev.target && ev.target.closest
+          ? ev.target.closest("a[hreflang]")
+          : null;
       if (
         !link ||
         ev.button !== 0 ||
