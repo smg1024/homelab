@@ -9,18 +9,18 @@ icon: fontawesome/solid/map
 
 ## 지금 (운영 공백)
 
-- [ ] **자동 백업** — 현재 없음 ([상세](runbooks/backup-restore.md)):
+- [ ] **자동 백업** (현재 없음, [상세](runbooks/backup-restore.md)):
     - [ ] Vaultwarden SQLite DB용 `services.vaultwarden.backupDir`
     - [ ] Forgejo dump 또는 외부 원격 미러링
     - [ ] midgard `/var/lib`를 호스트 밖으로 보내는 백업 작업 (restic/borgbackup)
-- [ ] **알림 전달** — Prometheus 규칙은 있지만 Alertmanager가 미구성;
+- [ ] **알림 전달**: Prometheus 규칙은 있지만 Alertmanager가 미구성;
       알림이 UI에서만 보임 ([상세](services/monitoring.md))
-- [ ] **이 문서 사이트 배포** — docs 브랜치 머지, `just switch yggdrasil`,
+- [ ] **이 문서 사이트 배포**: docs 브랜치 머지, `just switch yggdrasil`,
       `docs.ridewithmin.com` DNS 레코드 추가
 
 ## 다음
 
-- [ ] **alfheim**에 실제 역할 부여 — 위험도 낮은 서비스 하나를 OCI 노드로
+- [ ] **alfheim**에 실제 역할 부여: 위험도 낮은 서비스 하나를 OCI 노드로
       승격해 클라우드 호스트 패턴 검증
 - [ ] 이 사이트에 페이지별 **편집 버튼** (`content.action.edit` +
       Forgejo `edit_uri`)
@@ -36,5 +36,5 @@ icon: fontawesome/solid/map
 
 !!! tip "이 페이지 사용법"
     항목이 완료되면 체크하고 관련 페이지나 커밋을 링크하세요. 우선순위가
-    바뀌면 순서를 조정하세요 — 이 페이지는 약속이 아니라 살아있는
+    바뀌면 순서를 조정하세요. 이 페이지는 약속이 아니라 살아있는
     문서입니다.

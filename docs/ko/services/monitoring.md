@@ -41,13 +41,13 @@ midgard.tail6fc192.ts.net:9100  -> midgard node_exporter (tailnet 경유)
 
 ## 접근 방법
 
-Grafana — tailnet에 연결된 클라이언트에서:
+Grafana, tailnet에 연결된 클라이언트에서:
 
 ```text
 https://grafana.ridewithmin.com
 ```
 
-Prometheus UI — SSH 포트 포워딩으로:
+Prometheus UI, SSH 포트 포워딩으로:
 
 ```bash
 ssh -L 9090:127.0.0.1:9090 yggdrasil

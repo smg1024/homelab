@@ -10,7 +10,7 @@ icon: fontawesome/solid/server
 ## 책임
 
 - Cloudflare Tunnel 유지 (`cloudflared`)
-- Caddy 리버스 프록시 운영 — 공개 도메인을 내부 서비스로 라우팅
+- 공개 도메인을 내부 서비스로 라우팅하는 Caddy 리버스 프록시 운영
 - Uptime Kuma 공개 상태 페이지 서빙
 - Prometheus 노드 메트릭 수집 및 알림 규칙 평가
 - Grafana 대시보드 (tailnet 제한 Caddy 라우트)

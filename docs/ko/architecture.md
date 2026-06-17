@@ -56,7 +56,7 @@ flowchart TD
     grafana --> prometheus
 ```
 
-이 경계들 — 공개 인터넷, tailnet, localhost — 을 누가 넘는지는
+이 경계들(공개 인터넷, tailnet, localhost)을 누가 넘는지는
 [보안 모델](security.md)에서 다룹니다.
 
 ## 공유 시스템 구성

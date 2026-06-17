@@ -49,7 +49,7 @@ icon: fontawesome/solid/circle-plus
 - [ ] 연결: 호스트 전용이면 `hosts/<host>/default.nix`의 imports, 공유면
       `flake.nix` 모듈 목록
 - [ ] 비밀이 있다면: sops로 `secrets/*.yaml`에 추가하고
-      `sops.secrets."..."` 선언 — [비밀 관리](secrets.md) 참고
+      `sops.secrets."..."` 선언 ([비밀 관리](secrets.md) 참고)
 - [ ] 노출이 필요하다면:
     - [ ] `services/ingress.nix`에 Caddy virtualHost 추가
     - [ ] 공개 서비스 → `services/cloudflared.nix` ingress에 호스트네임 추가;
