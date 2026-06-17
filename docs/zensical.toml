@@ -21,6 +21,8 @@ nav = [
   { "Roadmap" = "roadmap.md" },
 ]
 
+extra_javascript = ["assets/javascripts/lang-switch.js"]
+
 [project.theme]
 language = "en"
 font = false
