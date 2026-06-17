@@ -31,7 +31,7 @@ modules/podman.nix      # 호스트 전용 모듈
 | `8082` | Homepage | `https://home.ridewithmin.com` |
 | `3000` | Forgejo | `https://git.ridewithmin.com` |
 | `8222` | Vaultwarden | `https://vault.ridewithmin.com` |
-| `9100` | node_exporter | — (Prometheus가 tailnet으로 수집) |
+| `9100` | node_exporter | 미개방 (Prometheus가 tailnet으로 수집) |
 
 ## 컨테이너 런타임
 
@@ -40,7 +40,7 @@ Podman은 midgard에만 활성화됩니다 (`modules/podman.nix`).
 - `virtualisation.oci-containers.backend = "podman"`
 - 주간 자동 prune (`podman-prune.timer`)
 - 레지스트리 검색 경로: `docker.io`, `ghcr.io`로 제한
-- 이미지 태그는 **반드시 고정** — `latest` 금지
+- 이미지 태그는 **반드시 고정**, `latest` 금지
 
 장기 실행 컨테이너 서비스는 ad-hoc compose 명령 대신
 `virtualisation.oci-containers.containers`로 선언합니다.

@@ -10,7 +10,7 @@ icon: fontawesome/solid/key
 ## 동작 방식
 
 - 암호화된 파일: `secrets/*.yaml` (현재 `ingress.yaml`, `vaultwarden.yaml` 등)
-- 암호화 정책: `.sops.yaml` — `secrets/[^/]+\.yaml` 패턴이 `poby`,
+- 암호화 정책 `.sops.yaml`: `secrets/[^/]+\.yaml` 패턴이 `poby`,
   `yggdrasil`, `midgard` age 수신자로 암호화됩니다.
 - 각 호스트는 자신의 SSH 호스트 키(`/etc/ssh/ssh_host_ed25519_key`)를 age
   신원으로 사용해 복호화합니다. 즉 `.sops.yaml`에 등록된 호스트만 비밀을
