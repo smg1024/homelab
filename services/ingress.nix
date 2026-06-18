@@ -42,6 +42,10 @@
       reverse_proxy http://midgard.tail6fc192.ts.net:8222
     '';
 
+    virtualHosts."jamye-plz.ridewithmin.com".extraConfig = ''
+      reverse_proxy http://alfheim.tail6fc192.ts.net:8080
+    '';
+
     virtualHosts."status.ridewithmin.com".extraConfig = ''
       redir / /status 302
 

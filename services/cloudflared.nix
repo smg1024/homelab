@@ -1,7 +1,4 @@
-{
-  config,
-  ...
-}: {
+{config, ...}: {
   sops.secrets."cloudflare/cloudflared_tunnel_credentials" = {
     mode = "0400";
   };
@@ -34,6 +31,14 @@
         originRequest = {
           httpHostHeader = "vault.ridewithmin.com";
           originServerName = "vault.ridewithmin.com";
+        };
+      };
+
+      ingress."jamye-plz.ridewithmin.com" = {
+        service = "https://localhost:443";
+        originRequest = {
+          httpHostHeader = "jamye-plz.ridewithmin.com";
+          originServerName = "jamye-plz.ridewithmin.com";
         };
       };
 

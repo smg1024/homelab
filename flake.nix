@@ -23,6 +23,8 @@
       url = "github:NousResearch/hermes-agent";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    jamye-plz.url = "github:jamye-plz/jamye-plz/feat/nix-deploy";
   };
 
   outputs = inputs @ {

@@ -3,6 +3,7 @@
     ./hardware-configuration.nix
     ./disko.nix
     ../../modules/podman.nix
+    ../../services/jamye-plz.nix
   ];
 
   networking.hostName = "alfheim";
