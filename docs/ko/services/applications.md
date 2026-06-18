@@ -33,16 +33,17 @@ Bitwarden 호환 비밀번호 관리자. `:8222`에서 실행되며
 
 ## jamye-plz (`services/jamye-plz.nix`)
 
-지인 폐쇄 그룹용 소셜 PWA. `alfheim`의 `:8080`에서 실행되며
+지인 폐쇄 그룹용 full-stack 소셜 PWA. `alfheim`의 `:8080`에서 실행되며
 `https://jamye-plz.ridewithmin.com`으로 노출됩니다.
 
 - upstream `jamye-plz` flake input에서 가져옵니다.
 - upstream `services.jamye-plz` NixOS 모듈로 활성화합니다.
-- alfheim의 로컬 PostgreSQL과 Caddy는 upstream 모듈이 관리합니다.
+- upstream 모듈이 frontend, backend API, 로컬 PostgreSQL 데이터베이스,
+  alfheim-local Caddy를 관리합니다.
 - OAuth/JWT 비밀은 `secrets/jamye-plz.yaml`에 있고 `sops.templates`로
   `jamye-plz.env`를 렌더링합니다.
 - 공개 트래픽 경로: yggdrasil의 Cloudflare Tunnel → yggdrasil의 Caddy →
-  `alfheim.tail6fc192.ts.net:8080`
+  `alfheim.tail6fc192.ts.net:8080`의 full-stack 서비스 엔트리포인트
 
 ## 새 앱 추가 가이드라인
 
