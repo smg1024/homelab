@@ -30,7 +30,7 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
         with:
           extra-conf: |
-            access-tokens = github.com=${{ secretes.JAMYE_PLZ_REPO }}
+            access-tokens = github.com=${{ secrets.JAMYE_PLZ_REPO }}
 
       - name: Join tailnet (ephemeral)
         uses: tailscale/github-action@v3
