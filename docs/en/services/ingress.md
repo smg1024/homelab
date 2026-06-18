@@ -16,6 +16,7 @@ name are set to match each public hostname.
 - `home.ridewithmin.com`
 - `git.ridewithmin.com`
 - `vault.ridewithmin.com`
+- `jamye-plz.ridewithmin.com`
 - `status.ridewithmin.com`
 - `docs.ridewithmin.com`
 
@@ -31,6 +32,7 @@ Caddy selects the internal backend by public hostname.
 | `home.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8082` | |
 | `git.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:3000` | |
 | `vault.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8222` | |
+| `jamye-plz.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | jamye-plz on alfheim |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | status-page paths only, `404` otherwise |
 | `grafana.ridewithmin.com` | `http://127.0.0.1:3003` | tailnet clients only, `404` otherwise |
 | `docs.ridewithmin.com` | static files (`file_server`) | public |
@@ -60,5 +62,10 @@ respond 404
 2. For a public service, add the same hostname to the `ingress` block in
    `services/cloudflared.nix` (skip for tailnet-only routes).
 3. Add a DNS record in Cloudflare (public: Tunnel CNAME, tailnet-only:
-   yggdrasil's tailnet address).
+   yggdrasil's tailnet address). Public tunnel routes can be registered with:
+
+    ```bash
+    cloudflared tunnel route dns 7464b4c7-93aa-4ef0-990d-76d6b0bb158a <name>.ridewithmin.com
+    ```
+
 4. Validate, then deploy with `just switch yggdrasil`.

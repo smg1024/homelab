@@ -43,13 +43,14 @@ host's own SSH key. A leaked repo leaks nothing.
 ## Keep yggdrasil light
 
 The edge node has 4 GB of RAM and one job: routing and observing. Applications
-run on midgard. If a new service is not ingress or monitoring, it does not
-belong on yggdrasil.
+belong on application hosts (`midgard` or `alfheim`), not on yggdrasil. If a
+new service is not ingress or monitoring, it does not belong on yggdrasil.
 
 ## NixOS modules first
 
-Prefer NixOS modules for infrastructure. Reach for OCI containers (Podman,
-midgard only) when upstream genuinely packages better as a container.
+Prefer NixOS modules for infrastructure and apps that package cleanly that
+way. Reach for OCI containers only when upstream genuinely packages better as
+a container and the target host deliberately has Podman enabled.
 
 ## One change at a time
 

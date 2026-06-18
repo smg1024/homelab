@@ -29,6 +29,16 @@ docs-preview lang="en":
 docs-clean:
     rm -rf docs/site result
 
+# Update all flake inputs, including private GitHub inputs.
+[group('flake')]
+up:
+    nix flake update --refresh --option access-tokens "github.com=$(gh auth token)"
+
+# Update one flake input, including private GitHub inputs.
+[group('flake')]
+upp input:
+    nix flake update '{{ input }}' --refresh --option access-tokens "github.com=$(gh auth token)"
+
 _rebuild host action:
     @case "{{ host }}" in yggdrasil|midgard|alfheim) ;; *) echo "unknown host: {{ host }}" >&2; exit 2;; esac;
     nix run {{ nixos_rebuild }} -- \

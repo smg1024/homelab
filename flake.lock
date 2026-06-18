@@ -95,16 +95,16 @@
         "uv2nix": "uv2nix_3"
       },
       "locked": {
-        "lastModified": 1781749913,
-        "narHash": "sha256-c92TrRpvNx7WtUJhMy9KFbaFbF7Mwv4KwW6Jw4+Imqk=",
+        "lastModified": 1781766512,
+        "narHash": "sha256-aBmrdzzHO0z/EZOmOYGrOQ4jdruTO3zG5Auk/Yi1IYI=",
         "owner": "jamye-plz",
         "repo": "jamye-plz",
-        "rev": "8cf59deeb51ad1f83a316d7842e02354a2cb96bb",
+        "rev": "e1b2b09b19aaf9622d26ed8be2bfad5f3012a45e",
         "type": "github"
       },
       "original": {
         "owner": "jamye-plz",
-        "ref": "feat/nix-deploy",
+        "ref": "main",
         "repo": "jamye-plz",
         "type": "github"
       }

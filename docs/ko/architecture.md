@@ -4,10 +4,10 @@ icon: fontawesome/solid/network-wired
 
 # 아키텍처
 
-구성은 엣지/인프라 노드(`yggdrasil`)와 애플리케이션 노드(`midgard`)로
-나뉩니다. 외부 트래픽은 포트를 직접 열지 않고 Cloudflare Tunnel → Caddy
-경로로만 들어오며 호스트 간 내부 통신은 Tailscale tailnet을 경계로
-삼습니다.
+구성은 엣지/인프라 노드(`yggdrasil`), 주 애플리케이션 노드(`midgard`),
+클라우드 ARM 애플리케이션 노드(`alfheim`)로 나뉩니다. 외부 트래픽은 포트를
+직접 열지 않고 Cloudflare Tunnel → Caddy 경로로만 들어오며 호스트 간 내부
+통신은 Tailscale tailnet을 경계로 삼습니다.
 
 ```mermaid
 flowchart TD
@@ -26,6 +26,7 @@ flowchart TD
 
     subgraph tailnet["Tailscale tailnet"]
         midgardDns["midgard.tail6fc192.ts.net"]
+        alfheimDns["alfheim.tail6fc192.ts.net"]
 
         subgraph midgard["midgard: 애플리케이션 호스트"]
             homepage["Homepage 대시보드<br/>:8082"]
@@ -33,26 +34,35 @@ flowchart TD
             vaultwarden["Vaultwarden<br/>:8222"]
             mNodeExporter["node_exporter<br/>:9100"]
         end
+
+        subgraph alfheim["alfheim: OCI ARM 애플리케이션 호스트"]
+            jamyePlz["jamye-plz<br/>:8080"]
+            aNodeExporter["node_exporter<br/>:9100"]
+        end
     end
 
     internet --> cloudflare
     cloudflare --> cloudflared
-    cloudflared -->|"home/git/vault/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
+    cloudflared -->|"home/git/vault/jamye-plz/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
 
     caddy -->|"status.ridewithmin.com"| kuma
     caddy -->|"home.ridewithmin.com"| homepage
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
+    caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
     caddy -->|"grafana.ridewithmin.com<br/>tailnet 전용"| grafana
     caddy -->|"docs.ridewithmin.com"| docsSite
 
     caddy -.->|Tailscale 경유 백엔드 접근| midgardDns
+    caddy -.->|Tailscale 경유 백엔드 접근| alfheimDns
     midgardDns -.-> homepage
     midgardDns -.-> forgejo
     midgardDns -.-> vaultwarden
+    alfheimDns -.-> jamyePlz
 
     prometheus --> yNodeExporter
     prometheus -.->|Tailscale 경유 수집| mNodeExporter
+    prometheus -.->|Tailscale 경유 수집| aNodeExporter
     grafana --> prometheus
 ```
 

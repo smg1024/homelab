@@ -16,7 +16,7 @@ changes are made in the repo, committed, then deployed.
 | --- | --- | --- | --- |
 | `yggdrasil` | Edge/infra node: Cloudflare Tunnel, Caddy, monitoring stack | `x86_64-linux` | 4 GB RAM, keep it lightweight |
 | `midgard` | Application host: Forgejo, Vaultwarden, Homepage, Podman | `x86_64-linux` | |
-| `alfheim` | Experimental OCI ARM VM | `aarch64-linux` | SSH over the tailnet only |
+| `alfheim` | OCI ARM application node: jamye-plz | `aarch64-linux` | SSH over the tailnet only |
 
 ## Repository layout
 
@@ -37,6 +37,7 @@ docs/            # this documentation site (Zensical)
 | `https://home.ridewithmin.com` | Homepage dashboard | Public (Cloudflare Tunnel) |
 | `https://git.ridewithmin.com` | Forgejo | Public (Cloudflare Tunnel) |
 | `https://vault.ridewithmin.com` | Vaultwarden | Public (Cloudflare Tunnel) |
+| `https://jamye-plz.ridewithmin.com` | jamye-plz | Public (Cloudflare Tunnel) |
 | `https://status.ridewithmin.com` | Uptime Kuma status page | Public (status-page paths only) |
 | `https://grafana.ridewithmin.com` | Grafana | Tailnet only |
 | `https://docs.ridewithmin.com` | This documentation site | Public (Cloudflare Tunnel) |

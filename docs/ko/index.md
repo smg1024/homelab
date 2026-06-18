@@ -15,7 +15,7 @@ icon: fontawesome/solid/house
 | --- | --- | --- | --- |
 | `yggdrasil` | 엣지/인프라 노드: Cloudflare Tunnel, Caddy, 모니터링 스택 | `x86_64-linux` | 4 GB RAM, 가볍게 유지 |
 | `midgard` | 애플리케이션 호스트: Forgejo, Vaultwarden, Homepage, Podman | `x86_64-linux` | |
-| `alfheim` | 실험용 OCI ARM VM | `aarch64-linux` | SSH는 tailnet 전용 |
+| `alfheim` | OCI ARM 애플리케이션 노드: jamye-plz | `aarch64-linux` | SSH는 tailnet 전용 |
 
 ## 저장소 레이아웃
 
@@ -36,6 +36,7 @@ docs/            # 이 문서 사이트 (Zensical)
 | `https://home.ridewithmin.com` | Homepage 대시보드 | 공개 (Cloudflare Tunnel) |
 | `https://git.ridewithmin.com` | Forgejo | 공개 (Cloudflare Tunnel) |
 | `https://vault.ridewithmin.com` | Vaultwarden | 공개 (Cloudflare Tunnel) |
+| `https://jamye-plz.ridewithmin.com` | jamye-plz | 공개 (Cloudflare Tunnel) |
 | `https://status.ridewithmin.com` | Uptime Kuma 상태 페이지 | 공개 (상태 페이지 경로만) |
 | `https://grafana.ridewithmin.com` | Grafana | tailnet 전용 |
 | `https://docs.ridewithmin.com` | 이 문서 사이트 | 공개 (Cloudflare Tunnel) |

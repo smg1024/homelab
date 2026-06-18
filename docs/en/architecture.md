@@ -4,10 +4,11 @@ icon: fontawesome/solid/network-wired
 
 # Architecture
 
-The setup is split into an edge/infra node (`yggdrasil`) and an application
-node (`midgard`). External traffic enters only through **Cloudflare Tunnel →
-Caddy** instead of directly exposed ports, and the **Tailscale tailnet** is
-the internal network boundary between hosts.
+The setup is split into an edge/infra node (`yggdrasil`), a primary
+application node (`midgard`), and a cloud ARM application node (`alfheim`).
+External traffic enters only through **Cloudflare Tunnel → Caddy** instead of
+directly exposed ports, and the **Tailscale tailnet** is the internal network
+boundary between hosts.
 
 ```mermaid
 flowchart TD
@@ -26,6 +27,7 @@ flowchart TD
 
     subgraph tailnet["Tailscale tailnet"]
         midgardDns["midgard.tail6fc192.ts.net"]
+        alfheimDns["alfheim.tail6fc192.ts.net"]
 
         subgraph midgard["midgard: application host"]
             homepage["Homepage dashboard<br/>:8082"]
@@ -33,26 +35,35 @@ flowchart TD
             vaultwarden["Vaultwarden<br/>:8222"]
             mNodeExporter["node_exporter<br/>:9100"]
         end
+
+        subgraph alfheim["alfheim: OCI ARM application host"]
+            jamyePlz["jamye-plz<br/>:8080"]
+            aNodeExporter["node_exporter<br/>:9100"]
+        end
     end
 
     internet --> cloudflare
     cloudflare --> cloudflared
-    cloudflared -->|"home/git/vault/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
+    cloudflared -->|"home/git/vault/jamye-plz/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
 
     caddy -->|"status.ridewithmin.com"| kuma
     caddy -->|"home.ridewithmin.com"| homepage
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
+    caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
     caddy -->|"grafana.ridewithmin.com<br/>tailnet only"| grafana
     caddy -->|"docs.ridewithmin.com"| docsSite
 
     caddy -.->|backend access over Tailscale| midgardDns
+    caddy -.->|backend access over Tailscale| alfheimDns
     midgardDns -.-> homepage
     midgardDns -.-> forgejo
     midgardDns -.-> vaultwarden
+    alfheimDns -.-> jamyePlz
 
     prometheus --> yNodeExporter
     prometheus -.->|scrape over Tailscale| mNodeExporter
+    prometheus -.->|scrape over Tailscale| aNodeExporter
     grafana --> prometheus
 ```
 
