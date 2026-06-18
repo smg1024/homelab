@@ -16,6 +16,7 @@ Tunnel은 다음 공개 호스트네임을 yggdrasil의 로컬 Caddy(`https://lo
 - `home.ridewithmin.com`
 - `git.ridewithmin.com`
 - `vault.ridewithmin.com`
+- `jamye-plz.ridewithmin.com`
 - `status.ridewithmin.com`
 - `docs.ridewithmin.com`
 
@@ -31,6 +32,7 @@ Caddy는 공개 호스트네임별로 내부 백엔드를 선택합니다.
 | `home.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8082` | |
 | `git.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:3000` | |
 | `vault.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8222` | |
+| `jamye-plz.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | alfheim의 jamye-plz |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | 상태 페이지 경로만 허용, 그 외 `404` |
 | `grafana.ridewithmin.com` | `http://127.0.0.1:3003` | tailnet 클라이언트만, 그 외 `404` |
 | `docs.ridewithmin.com` | 정적 파일 (`file_server`) | 공개 |
@@ -60,5 +62,10 @@ respond 404
 2. 공개 서비스라면 `services/cloudflared.nix`의 `ingress`에 같은 호스트네임
    추가 (tailnet 전용이면 생략)
 3. Cloudflare DNS에 레코드 추가 (공개: Tunnel CNAME, tailnet 전용:
-   yggdrasil의 tailnet 주소)
+   yggdrasil의 tailnet 주소). 공개 Tunnel route는 다음 명령으로 등록합니다:
+
+    ```bash
+    cloudflared tunnel route dns 7464b4c7-93aa-4ef0-990d-76d6b0bb158a <name>.ridewithmin.com
+    ```
+
 4. 검증 후 `just switch yggdrasil`로 배포

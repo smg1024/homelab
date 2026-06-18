@@ -21,8 +21,8 @@ items are intentions, roughly ordered by priority within each horizon.
 
 ## Next
 
-- [ ] Give **alfheim** a real job: promote one low-risk service to the OCI
-      node to validate the cloud-host pattern
+- [x] Give **alfheim** a real job: [jamye-plz](services/applications.md)
+      now runs on the OCI node and validates the cloud-host pattern
 - [ ] Per-page **edit buttons** on this site (`content.action.edit` +
       Forgejo `edit_uri`)
 - [ ] Review whether any tailnet-only surface deserves **Cloudflare Access**

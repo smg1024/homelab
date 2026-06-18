@@ -9,9 +9,10 @@ icon: fontawesome/solid/key
 
 ## 동작 방식
 
-- 암호화된 파일: `secrets/*.yaml` (현재 `ingress.yaml`, `vaultwarden.yaml` 등)
+- 암호화된 파일: `secrets/*.yaml` (현재 `ingress.yaml`, `vaultwarden.yaml`,
+  `jamye-plz.yaml` 등)
 - 암호화 정책 `.sops.yaml`: `secrets/[^/]+\.yaml` 패턴이 `poby`,
-  `yggdrasil`, `midgard` age 수신자로 암호화됩니다.
+  `yggdrasil`, `midgard`, `alfheim` age 수신자로 암호화됩니다.
 - 각 호스트는 자신의 SSH 호스트 키(`/etc/ssh/ssh_host_ed25519_key`)를 age
   신원으로 사용해 복호화합니다. 즉 `.sops.yaml`에 등록된 호스트만 비밀을
   읽을 수 있습니다.
@@ -47,6 +48,7 @@ icon: fontawesome/solid/key
 | `cloudflare/caddy_env` | Caddy | DNS 챌린지용 Cloudflare API 토큰 |
 | `cloudflare/cloudflared_tunnel_credentials` | cloudflared | Tunnel 자격 증명 |
 | `grafana/admin_password` | Grafana | 관리자 비밀번호 |
+| `jamye-plz/*` | jamye-plz | `jamye-plz.env`로 렌더링되는 JWT/OAuth 클라이언트 설정 |
 | `vaultwarden/admin_token` | Vaultwarden | 관리자 토큰 (`ADMIN_TOKEN`) |
 
 ## 새 호스트를 수신자로 추가
@@ -58,7 +60,7 @@ icon: fontawesome/solid/key
     ```
 
 2. `.sops.yaml`에 수신자를 추가합니다.
-3. 기존 비밀 파일을 재암호화합니다.
+3. 영향을 받는 비밀 파일을 재암호화합니다.
 
     ```bash
     sops updatekeys secrets/<file>.yaml

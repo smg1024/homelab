@@ -20,8 +20,9 @@ icon: fontawesome/solid/map
 
 ## 다음
 
-- [ ] **alfheim**에 실제 역할 부여: 위험도 낮은 서비스 하나를 OCI 노드로
-      승격해 클라우드 호스트 패턴 검증
+- [x] **alfheim**에 실제 역할 부여:
+      [jamye-plz](services/applications.md)가
+      OCI 노드에서 실행되며 클라우드 호스트 패턴을 검증
 - [ ] 이 사이트에 페이지별 **편집 버튼** (`content.action.edit` +
       Forgejo `edit_uri`)
 - [ ] tailnet 전용 화면 중 **Cloudflare Access**를 2차 방어로 둘 곳이

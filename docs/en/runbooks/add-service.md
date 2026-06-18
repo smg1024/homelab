@@ -10,8 +10,9 @@ The full path from "I want to run X" to "X is deployed and reachable".
 
 Two questions first:
 
-1. **Which host?** Applications go on midgard. Only ingress/monitoring
-   infrastructure goes on yggdrasil ([principles](../principles.md)).
+1. **Which host?** Applications go on an application host (`midgard` or
+   `alfheim`). Only ingress/monitoring infrastructure goes on yggdrasil
+   ([principles](../principles.md)).
 2. **Module or container?**
 
 === "NixOS module"
@@ -31,8 +32,8 @@ Two questions first:
 
 === "OCI container"
 
-    Use when upstream packages better as a container (midgard only,
-    **pinned tag**):
+    Use when upstream packages better as a container and the chosen host has
+    Podman enabled (**pinned tag**):
 
     ```nix
     {...}: {
@@ -55,7 +56,11 @@ Two questions first:
     - [ ] Public service → hostname in `services/cloudflared.nix` ingress;
           tailnet-only → `@tailnet` matcher pattern instead
     - [ ] DNS record in Cloudflare (public: Tunnel CNAME, tailnet-only:
-          yggdrasil's tailnet address)
+          yggdrasil's tailnet address). For public tunnel routes:
+
+          ```bash
+          cloudflared tunnel route dns <tunnel-id> <name>.ridewithmin.com
+          ```
 - [ ] Monitoring: add an Uptime Kuma check for public endpoints
 - [ ] Validate: `nix flake check --no-build`
 - [ ] Deploy: `just test <host>`, verify, then `just switch <host>`

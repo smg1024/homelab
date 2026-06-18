@@ -11,7 +11,7 @@ Internet, tailnet, and localhost.
 
 | Tier | Who | What they can reach |
 | --- | --- | --- |
-| **Public Internet** | anyone | Only hostnames routed through Cloudflare Tunnel: `home`, `git`, `vault`, `status`, `docs` |
+| **Public Internet** | anyone | Only hostnames routed through Cloudflare Tunnel: `home`, `git`, `vault`, `jamye-plz`, `status`, `docs` |
 | **Tailnet** | devices in the Tailscale tailnet | Everything above, plus the `grafana` route, plus direct host/port access per Tailscale ACLs |
 | **Localhost** | processes on the host itself | Prometheus, Grafana, Uptime Kuma backends bound to `127.0.0.1` |
 
@@ -34,7 +34,7 @@ for everything else.
 The NixOS firewall is enabled on every host. Home hosts allow SSH `22`
 directly; `alfheim` accepts SSH only through the trusted `tailscale0`
 interface. Its public OCI address does not answer SSH at all. Application
-and monitoring ports (`3000`, `3001`, `8082`, `8222`, `9090`, `9100`, ...)
+and monitoring ports (`3000`, `3001`, `8080`, `8082`, `8222`, `9090`, `9100`, ...)
 are never opened publicly.
 
 ## SSH policy

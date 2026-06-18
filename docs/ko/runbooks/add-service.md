@@ -10,8 +10,9 @@ icon: fontawesome/solid/circle-plus
 
 먼저 두 가지를 정합니다:
 
-1. **어느 호스트?** 애플리케이션은 midgard로. yggdrasil에는
-   인그레스/모니터링 인프라만 둡니다 ([설계 원칙](../principles.md)).
+1. **어느 호스트?** 애플리케이션은 애플리케이션 호스트(`midgard` 또는
+   `alfheim`)에 둡니다. yggdrasil에는 인그레스/모니터링 인프라만 둡니다
+   ([설계 원칙](../principles.md)).
 2. **모듈인가 컨테이너인가?**
 
 === "NixOS 모듈"
@@ -31,8 +32,8 @@ icon: fontawesome/solid/circle-plus
 
 === "OCI 컨테이너"
 
-    업스트림이 컨테이너 배포를 더 잘 지원할 때 사용합니다 (midgard 전용,
-    **태그 고정**):
+    업스트림이 컨테이너 배포를 더 잘 지원하고 선택한 호스트에 Podman이
+    활성화되어 있을 때 사용합니다 (**태그 고정**):
 
     ```nix
     {...}: {
@@ -55,7 +56,11 @@ icon: fontawesome/solid/circle-plus
     - [ ] 공개 서비스 → `services/cloudflared.nix` ingress에 호스트네임 추가;
           tailnet 전용 → 대신 `@tailnet` 매처 패턴 사용
     - [ ] Cloudflare에 DNS 레코드 (공개: Tunnel CNAME, tailnet 전용:
-          yggdrasil의 tailnet 주소)
+          yggdrasil의 tailnet 주소). 공개 Tunnel route는 다음 명령으로 등록:
+
+          ```bash
+          cloudflared tunnel route dns <tunnel-id> <name>.ridewithmin.com
+          ```
 - [ ] 모니터링: 공개 엔드포인트라면 Uptime Kuma 체크 추가
 - [ ] 검증: `nix flake check --no-build`
 - [ ] 배포: `just test <host>` → 확인 → `just switch <host>`

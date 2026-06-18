@@ -10,9 +10,10 @@ Secrets are managed with `sops-nix`. **Plaintext secrets never go into
 ## How it works
 
 - Encrypted files: `secrets/*.yaml` (currently `ingress.yaml`,
-  `vaultwarden.yaml`, ...)
+  `vaultwarden.yaml`, `jamye-plz.yaml`, ...)
 - Encryption policy `.sops.yaml`: files matching `secrets/[^/]+\.yaml` are
-  encrypted for the `poby`, `yggdrasil`, and `midgard` age recipients.
+  encrypted for the `poby`, `yggdrasil`, `midgard`, and `alfheim` age
+  recipients.
 - Each host decrypts using its own SSH host key
   (`/etc/ssh/ssh_host_ed25519_key`) as the age identity, so only hosts
   registered in `.sops.yaml` can read the secrets.
@@ -49,6 +50,7 @@ Secrets are managed with `sops-nix`. **Plaintext secrets never go into
 | `cloudflare/caddy_env` | Caddy | Cloudflare API token for DNS challenges |
 | `cloudflare/cloudflared_tunnel_credentials` | cloudflared | Tunnel credential |
 | `grafana/admin_password` | Grafana | administrator password |
+| `jamye-plz/*` | jamye-plz | JWT and OAuth client settings rendered into `jamye-plz.env` |
 | `vaultwarden/admin_token` | Vaultwarden | admin token (`ADMIN_TOKEN`) |
 
 ## Adding a new host as a recipient
@@ -60,7 +62,7 @@ Secrets are managed with `sops-nix`. **Plaintext secrets never go into
     ```
 
 2. Add the recipient to `.sops.yaml`.
-3. Re-encrypt the existing secret files.
+3. Re-encrypt the affected secret files.
 
     ```bash
     sops updatekeys secrets/<file>.yaml
