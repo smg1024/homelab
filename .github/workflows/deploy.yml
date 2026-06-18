@@ -28,6 +28,9 @@ jobs:
       - uses: actions/checkout@v6
 
       - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            access-tokens = github.com=${{ secretes.JAMYE_PLZ_REPO }}
 
       - name: Join tailnet (ephemeral)
         uses: tailscale/github-action@v3
