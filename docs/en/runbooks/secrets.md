@@ -11,12 +11,13 @@ Secrets are managed with `sops-nix`. **Plaintext secrets never go into
 
 - Encrypted files: `secrets/*.yaml` (currently `ingress.yaml`,
   `vaultwarden.yaml`, `jamye-plz.yaml`, ...)
-- Encryption policy `.sops.yaml`: files matching `secrets/[^/]+\.yaml` are
-  encrypted for the `poby`, `yggdrasil`, `midgard`, and `alfheim` age
-  recipients.
+- Encryption policy `.sops.yaml`: new or re-keyed files matching
+  `secrets/[^/]+\.yaml` are encrypted for the `poby`, `yggdrasil`,
+  `midgard`, and `alfheim` age recipients.
 - Each host decrypts using its own SSH host key
-  (`/etc/ssh/ssh_host_ed25519_key`) as the age identity, so only hosts
-  registered in `.sops.yaml` can read the secrets.
+  (`/etc/ssh/ssh_host_ed25519_key`) as the age identity. A host can read only
+  files whose SOPS metadata includes that host's age recipient; older files may
+  need `sops updatekeys` before a newly added host can decrypt them.
 - At activation/runtime, sops-nix materializes secrets as files under
   `/run/secrets` or as service-specific templates, applying owner, group, and
   mode.
