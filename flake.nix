@@ -24,7 +24,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    jamye-plz.url = "github:jamye-plz/jamye-plz/feat/nix-deploy";
+    jamye-plz.url = "github:jamye-plz/jamye-plz";
   };
 
   outputs = inputs @ {
