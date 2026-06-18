@@ -2,6 +2,7 @@ keys:
   - &poby age1qeyrh6e40nek3da4mnj298cy2l3aswe7432us30d2p93akcvp9zqext63j
   - &yggdrasil age10zgc2lj0j8zfetrysupdumftrq2esmud2xru2hn5228rk6v45p2sa2t4k0
   - &midgard age1g2fpds2u6rz02pejpr05uu7r596fz5gvwz4jg7sahjktp67n39psukvng9
+  - &alfheim age1whvjze7vklt4nr20jsynqg6t5vzd9k9sf7s8tf977tw7wsnkl3ss3ehmss
 
 creation_rules:
   - path_regex: secrets/[^/]+\.yaml$
@@ -10,3 +11,4 @@ creation_rules:
           - *poby
           - *yggdrasil
           - *midgard
+          - *alfheim
