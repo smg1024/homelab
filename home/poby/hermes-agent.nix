@@ -13,6 +13,9 @@
   };
 in {
   home.sessionVariables = hermesKrFontEnv;
+  home.sessionPath = [
+    "$HOME/.local/bin"
+  ];
   systemd.user.sessionVariables = hermesKrFontEnv;
 
   home.packages = [
