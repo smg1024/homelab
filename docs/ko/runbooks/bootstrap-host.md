@@ -9,9 +9,10 @@ icon: fontawesome/solid/hard-drive
 한 번에 한 호스트씩, 다음 호스트로 넘어가기 전에 검증하세요. 두 머신을 동시에
 설치하지 않습니다.
 
-절차 자체는 간단합니다. **최초** 설치는 항상 `nixos-anywhere`로 합니다. 그 이후의
-리빌드는 모두 평범한 `just test` / `just switch`입니다. 빌드와 활성화는 대상
-호스트에서 이뤄지므로, 배포를 실행하는 워크스테이션은 macOS여도 됩니다.
+절차 자체는 간단합니다. **최초** 설치는 항상 `nixos-anywhere`로 합니다. 호스트가
+접속 가능하고 배포 키를 신뢰하게 된 뒤의 일반 변경은 GitHub Actions CI/CD로
+흘립니다. 로컬 `just test` / `just switch`는 명시적인 부트스트랩 또는 비상
+요청이 있을 때만 사용합니다.
 
 !!! danger "대상 디스크가 지워집니다"
     `disko`는 지정된 디스크를 재파티션하고 포맷합니다. 설치 전에 디스크 ID를
@@ -112,8 +113,8 @@ USB를 제거하고 내부 디스크로 부팅한 뒤:
 - [ ] `ssh poby@<host>` 성공, `ssh root@<host>`와 패스워드 로그인은
       **실패해야 정상**
 - [ ] tailnet 합류: `sudo tailscale up`, `tailscale status`로 확인
-- [ ] 이후부터는 평범한 배포 모델로: `just test <host>` → `just switch <host>`
-      ([배포와 롤백](deploy.md) 참고)
+- [ ] 이후부터는 평범한 배포 모델로: 호스트 변경을 커밋하고 PR을 열어 CI/CD에
+      맡깁니다 ([배포와 롤백](deploy.md) 참고)
 - [ ] 호스트가 sops 수신자라면: 호스트 키가 바뀐 경우 비밀 재암호화
       ([비밀 관리](secrets.md))
 - [ ] `hosts/<host>/` 변경과 `flake.lock` 커밋
@@ -135,5 +136,5 @@ vfat `/boot`, ext4 `/`.
 
 - sops-nix로 비밀을 구성합니다([비밀 관리](secrets.md)).
 - 서비스를 추가하고 노출합니다([새 서비스 추가](add-service.md)).
-- 모든 변경은 같은 흐름을 거칩니다. 저장소를 수정하고 `just test <host>`로
-  시험한 뒤 `just switch <host>`로 적용하고 커밋합니다.
+- 모든 변경은 같은 흐름을 거칩니다. 저장소를 수정하고 PR을 열어 CI가 빌드하게
+  한 뒤, 초록색이면 병합하고 CD가 배포하게 둡니다.

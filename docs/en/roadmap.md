@@ -16,8 +16,8 @@ items are intentions, roughly ordered by priority within each horizon.
 - [ ] **Alert delivery:** Prometheus rules exist but Alertmanager is not
       configured, so alerts are visible only in the UI
       ([details](services/monitoring.md))
-- [ ] **Deploy this docs site:** merge the docs branch, `just switch
-      yggdrasil`, add the `docs.ridewithmin.com` DNS record
+- [ ] **Deploy this docs site:** merge the docs branch, let CD deploy it,
+      add the `docs.ridewithmin.com` DNS record
 
 ## Next
 

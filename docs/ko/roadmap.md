@@ -15,7 +15,7 @@ icon: fontawesome/solid/map
     - [ ] midgard `/var/lib`를 호스트 밖으로 보내는 백업 작업 (restic/borgbackup)
 - [ ] **알림 전달**: Prometheus 규칙은 있지만 Alertmanager가 미구성이라
       알림이 UI에서만 보임 ([상세](services/monitoring.md))
-- [ ] **이 문서 사이트 배포**: docs 브랜치 머지, `just switch yggdrasil`,
+- [ ] **이 문서 사이트 배포**: docs 브랜치 머지, CD로 배포,
       `docs.ridewithmin.com` DNS 레코드 추가
 
 ## 다음

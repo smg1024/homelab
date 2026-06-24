@@ -2,636 +2,81 @@
 
 English | [한국어](README-ko.md)
 
-This repo is the source of truth for a homelab made up of NixOS machines.
-Host configuration, disk layout, shared system modules, services, user
-configuration, and encrypted secrets are all declared in a Nix flake.
+This repository is the source of truth for a NixOS homelab. Host
+configuration, shared modules, services, operator environment, and encrypted
+secrets are declared in a single Nix flake and deployed through GitHub Actions.
 
-## Overall Architecture
+## Documentation
 
-The setup is split into an edge/infra node and an application node.
+The detailed documentation lives on the docs site:
 
-```mermaid
-flowchart TD
-    internet["Internet users"]
-    cloudflare["Cloudflare<br/>DNS / Tunnel edge"]
+- English: <https://docs.ridewithmin.com/>
+- 한국어: <https://docs.ridewithmin.com/ko/>
 
-    subgraph yggdrasil["yggdrasil: edge / infra node"]
-        cloudflared["cloudflared<br/>Cloudflare Tunnel client"]
-        caddy["Caddy<br/>HTTPS ingress / reverse proxy"]
-        kuma["Uptime Kuma<br/>127.0.0.1:3001"]
-        prometheus["Prometheus<br/>127.0.0.1:9090"]
-        grafana["Grafana<br/>127.0.0.1:3003"]
-        renderer["Grafana image renderer<br/>127.0.0.1:8081"]
-        docsSite["Docs site<br/>static files"]
-        yNodeExporter["node_exporter<br/>:9100"]
-    end
+Use the docs site for architecture details, host runbooks, service notes,
+secrets, CI/CD, rollback, and operational procedures.
 
-    subgraph tailnet["Tailscale tailnet"]
-        midgardDns["midgard.tail6fc192.ts.net"]
+## Overview
 
-        subgraph midgard["midgard: application host"]
-            homepage["Homepage dashboard<br/>:8082"]
-            forgejo["Forgejo<br/>:3000"]
-            vaultwarden["Vaultwarden<br/>:8222"]
-            mNodeExporter["node_exporter<br/>:9100"]
-        end
-    end
+The homelab is split into an edge/infra node, an application host, and an ARM
+cloud node. Public traffic enters through Cloudflare Tunnel and lands on Caddy
+on `yggdrasil`; internal backend traffic moves over Tailscale. The repository
+is treated as the server: changes are made here, reviewed through pull
+requests, and rolled out by CI/CD.
 
-    internet --> cloudflare
-    cloudflare --> cloudflared
-    cloudflared -->|"home/git/vault/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
+## Hosts
 
-    caddy -->|"status.ridewithmin.com"| kuma
-    caddy -->|"home.ridewithmin.com"| homepage
-    caddy -->|"git.ridewithmin.com"| forgejo
-    caddy -->|"vault.ridewithmin.com"| vaultwarden
-    caddy -->|"grafana.ridewithmin.com<br/>tailnet only"| grafana
-    caddy -->|"docs.ridewithmin.com"| docsSite
+| Host | Role | Notes |
+| --- | --- | --- |
+| `yggdrasil` | Edge / infrastructure | Cloudflare Tunnel, Caddy ingress, monitoring, status page, docs site |
+| `midgard` | Application host | Forgejo, Vaultwarden, Homepage, Podman-backed applications |
+| `alfheim` | OCI ARM node | ARM/cloud-host validation and `jamye-plz` |
 
-    caddy -.->|backend access over Tailscale| midgardDns
-    midgardDns -.-> homepage
-    midgardDns -.-> forgejo
-    midgardDns -.-> vaultwarden
+## Architecture
 
-    prometheus --> yNodeExporter
-    prometheus -.->|scrape over Tailscale| mNodeExporter
-    grafana --> prometheus
-    grafana -.-> renderer
-```
+`flake.nix` pins NixOS 26.05 and exposes one `nixosConfiguration` per host.
+Shared system behavior comes from `modules/`; service definitions live under
+`services/`; each host wires in its hardware and host-specific modules from
+`hosts/<host>/`.
 
-`flake.nix` pins NixOS 26.05 and exposes three NixOS configurations.
-
-- `yggdrasil`
-- `midgard`
-- `alfheim`
-
-Shared system configuration is loaded from `modules/`, and each host imports
-additional hardware, disk, and service modules from `hosts/<host>/default.nix`.
-
-## Host Roles
-
-### yggdrasil
-
-`yggdrasil` is the public entry point and lightweight infrastructure node.
-
-Main responsibilities:
-
-- Maintain the Cloudflare Tunnel
-- Run the Caddy reverse proxy
-- Route public domains to internal services
-- Serve the Uptime Kuma status page
-- Run Prometheus for node-level monitoring and alert rule evaluation
-- Serve Grafana dashboards through a tailnet-restricted Caddy route
-- Serve this documentation site publicly through Cloudflare Tunnel
-
-Loaded services:
-
-- `services/ingress.nix`
-- `services/cloudflared.nix`
-- `services/uptime-kuma.nix`
-- `services/prometheus`
-- `services/grafana`
-- `services/docs-site.nix`
-
-### midgard
-
-`midgard` is the actual application host.
-
-Main responsibilities:
-
-- Run the Homelab dashboard
-- Run Forgejo
-- Run Vaultwarden
-- Provide the Podman runtime for future containerized application services
-
-Loaded services:
-
-- `services/homepage.nix`
-- `services/forgejo.nix`
-- `services/vaultwarden.nix`
-
-Loaded host-specific modules:
-
-- `modules/podman.nix`
-
-### alfheim
-
-`alfheim` is an experimental Oracle Cloud Infrastructure ARM VM.
-
-Main responsibilities:
-
-- Validate NixOS operation on OCI
-- Test cloud-hosted homelab patterns before promoting persistent services
-- Provide a small remote node with the shared operator baseline
-
-It currently loads only the shared modules and no application-specific services.
-SSH is intentionally exposed only through the tailnet; the public OCI address
-does not accept SSH.
-
-## Shared System Configuration
-
-All hosts share the same common modules through `flake.nix`.
-
-- `modules/base.nix`
-- `modules/gc.nix`
-- `modules/swap.nix`
-- `modules/users.nix`
-- `modules/ssh.nix`
-- `modules/tailscale.nix`
-- `modules/secrets.nix`
-
-All hosts also load the shared node exporter service:
-
-- `services/node-exporter.nix`
-
-Common baseline:
-
-- Enable Nix flakes and `nix-command`
-- Use systemd-boot
-- Use NetworkManager
-- Enable the NixOS firewall
-- Enable OpenSSH
-- Disable SSH password login
-- Disable SSH root login
-- Enable Tailscale
-- Enable zram swap
-- Run weekly Nix garbage collection
-- Run automatic Nix store optimisation
-- Expose node-level metrics through `node_exporter`
-
-The administrative user is `poby`. `poby` belongs to the `wheel` and
-`networkmanager` groups, and passwordless sudo is allowed for `wheel`.
-
-## User Environment
-
-Home Manager is enabled through the NixOS module and is applied as part of each
-host switch. It is used only for the `poby` operator environment, not for
-long-running application services.
-
-Shared Home Manager profiles:
-
-- `home/poby/base.nix`
-  - Sets `home.stateVersion`.
-  - Manages basic Bash, Git, and tmux configuration.
-  - Sets common editor and pager environment variables.
-
-- `home/poby/ops.nix`
-  - Installs operator-only tools such as `age`, `sops`, and `just`.
-  - Defines common operational aliases for `journalctl`, `systemctl`, and
-    Tailscale.
-
-Host-specific Home Manager profiles:
-
-- `home/poby/yggdrasil.nix`
-  - Adds ingress-oriented aliases for Caddy, Cloudflare Tunnel, and Uptime Kuma.
-
-- `home/poby/midgard.nix`
-  - Adds application-host aliases for Forgejo, Homepage, Vaultwarden, and
-    Podman.
-  - Installs `sqlite` for operator-side inspection tasks.
-  - Imports `home/poby/hermes-agent.nix` for Hermes Agent.
-
-### Hermes Agent
-
-Hermes Agent is installed on `midgard` as part of `poby`'s Home Manager
-environment, not as a NixOS system service.
-
-Declared package module:
-
-- `home/poby/hermes-agent.nix`
-
-This module installs the Hermes CLI from the upstream `hermes-agent` flake and
-adds operator/agent helper tools such as `tirith`, `git`, `ripgrep`, `fd`, `jq`,
-`yq`, `curl`, `wget`, and `just`.
-
-The current intent is to keep Hermes mutable while it is being tested. Runtime
-state, OAuth credentials, profiles, memories, gateway settings, and
-`SOUL.md`/`USER.md` edits live under:
+External users reach public services through:
 
 ```text
-/home/poby/.hermes
+Internet -> Cloudflare -> cloudflared on yggdrasil -> Caddy -> service backend
 ```
 
-Initial setup is done interactively as `poby` on `midgard`.
+Private administration and host-to-host traffic use the Tailscale tailnet.
+Application ports are not opened directly to the public Internet.
 
-```bash
-ssh midgard
-hermes auth add openai-codex
-hermes setup
-```
+## Repository Layout
 
-Telegram and other gateway integrations should also be configured as `poby`
-during this experimentation phase. If a gateway needs to keep running across SSH
-logouts, install it as a user service with `hermes gateway install` and enable
-linger for `poby`.
+| Path | Purpose |
+| --- | --- |
+| `flake.nix` / `flake.lock` | Nix flake inputs and host outputs |
+| `hosts/` | Per-host NixOS configuration, hardware config, and disk layout |
+| `modules/` | Shared NixOS modules used across hosts |
+| `services/` | Service modules and ingress/monitoring configuration |
+| `home/` | Home Manager profile for the `poby` operator account |
+| `secrets/` | `sops-nix` encrypted secrets |
+| `docs/` | English and Korean documentation site source |
 
-The upstream NixOS module is intentionally not enabled right now. Once the
-desired Hermes profile, provider, gateway, and memory layout is stable, the
-mutable setup can be promoted into declarative Nix configuration.
+## Change Flow
 
-## Storage
-
-Disk layout is declared with `disko`.
-
-All hosts use a simple single-disk GPT layout.
+Normal changes follow the GitHub Actions workflow:
 
 ```text
-GPT partition table
-512M EFI System Partition  -> /boot, vfat
-remaining disk             -> /, ext4
+edit -> pull request -> CI builds every host -> merge -> CD deploys all nodes
 ```
 
-Host-specific disk configuration:
-
-- `hosts/yggdrasil/disko.nix`
-- `hosts/midgard/disko.nix`
-- `hosts/alfheim/disko.nix`
-
-Host-specific hardware configuration:
-
-- `hosts/yggdrasil/hardware-configuration.nix`
-- `hosts/midgard/hardware-configuration.nix`
-- `hosts/alfheim/hardware-configuration.nix`
-
-There is no separate swap partition. zram swap is configured in
-`modules/swap.nix`.
-
-## Service Routing
-
-### Cloudflare Tunnel
-
-`cloudflared` runs on `yggdrasil`.
-
-Cloudflare Tunnel sends the following public hostnames to local Caddy on
-`yggdrasil`.
-
-- `home.ridewithmin.com`
-- `git.ridewithmin.com`
-- `vault.ridewithmin.com`
-- `status.ridewithmin.com`
-- `docs.ridewithmin.com`
-
-Each hostname is forwarded to the following origin.
-
-```text
-https://localhost:443
-```
-
-The request `Host` header and TLS origin server name are set to match each
-public hostname.
-
-### Caddy Ingress
-
-Caddy runs on `yggdrasil` and selects the internal backend by public hostname.
-
-```text
-home.ridewithmin.com   -> http://midgard.tail6fc192.ts.net:8082
-git.ridewithmin.com    -> http://midgard.tail6fc192.ts.net:3000
-vault.ridewithmin.com  -> http://midgard.tail6fc192.ts.net:8222
-status.ridewithmin.com -> http://127.0.0.1:3001
-docs.ridewithmin.com   -> static files from services/docs-site.nix
-grafana.ridewithmin.com -> http://127.0.0.1:3003, tailnet clients only
-```
-
-Caddy uses the Cloudflare DNS plugin to issue certificates through ACME DNS
-challenges.
-
-`status.ridewithmin.com` proxies only Uptime Kuma status-page related paths and
-returns `404` for every other path.
-
-`docs.ridewithmin.com` serves the built documentation site as static files from
-`yggdrasil` through Cloudflare Tunnel.
-
-`grafana.ridewithmin.com` is routed by Caddy to local Grafana only for requests
-from Tailscale address ranges. Other clients receive `404`. It is not part of
-the Cloudflare Tunnel public hostname list.
-
-### Application Services
-
-Application services running on `midgard`:
-
-- Homepage dashboard: `8082`
-- Forgejo: `3000`
-- Vaultwarden: `8222`
-
-Public URLs:
-
-- `https://home.ridewithmin.com`
-- `https://git.ridewithmin.com`
-- `https://vault.ridewithmin.com`
-
-Forgejo registration and Forgejo SSH are disabled. Vaultwarden uses SQLite,
-disables public signup, and allows invitations.
-
-## Monitoring
-
-Prometheus and Grafana run on `yggdrasil`. Prometheus collects node-level
-metrics from the service hosts listed in its scrape config, and Grafana provides
-the operator dashboard over the tailnet-restricted Caddy route. Uptime Kuma
-remains responsible for public endpoint checks and the public status page.
-
-Monitoring services:
-
-- `services/prometheus`
-  - Enables Prometheus on `yggdrasil`.
-  - Binds the Prometheus UI/API to `127.0.0.1:9090`.
-  - Scrapes node metrics every `3m`.
-  - Retains metrics for `15d`.
-  - Loads alerting rules from `services/prometheus/node-health-alert-rule.yml`.
-
-- `services/node-exporter.nix`
-  - Runs `node_exporter` on every host.
-  - Listens on `:9100`.
-  - Does not open a general firewall port.
-  - Enables the systemd collector for all `.service` units.
-
-- `services/grafana`
-  - Enables Grafana on `127.0.0.1:3003`.
-  - Provisions Prometheus as the default datasource.
-  - Provisions the `Homelab Nodes` dashboard from
-    `services/grafana/dashboards/node-overview.json`.
-  - Loads the admin password from the `grafana/admin_password` SOPS secret.
-  - Enables `grafana-image-renderer` on `127.0.0.1:8081`.
-
-Prometheus scrape targets:
-
-```text
-127.0.0.1:9100                  -> yggdrasil node_exporter
-midgard.tail6fc192.ts.net:9100  -> midgard node_exporter
-```
-
-Current alert rules:
-
-- `NodeDown`
-- `CriticalServiceInactive`
-- `SystemdServiceFailed`
-- `RootDiskLow`
-- `RootInodesLow`
-- `RootFilesystemReadOnly`
-- `LowMemory`
-- `HighCpuUsage`
-- `HighLoad`
-
-Rules are visible in the Prometheus UI. Dashboards are visible in Grafana at
-`https://grafana.ridewithmin.com` from the tailnet. External notification
-delivery through Alertmanager is not configured yet.
-
-## Container Runtime
-
-Podman is enabled only on `midgard` through `modules/podman.nix`. `yggdrasil`
-does not import the Podman module.
-
-Current Podman settings:
-
-- `virtualisation.podman.enable = true`
-- `virtualisation.oci-containers.backend = "podman"`
-- weekly Podman auto-prune through `podman-prune.timer`
-- registry search path limited to `docker.io` and `ghcr.io`
-- `podman-compose` installed in the system profile
-
-`virtualisation.podman.extraPackages` is intentionally left empty. The
-`podman-compose` CLI is exposed through `environment.systemPackages`; it is not
-added to the Podman wrapper environment. This keeps the container runtime
-configuration small while still allowing both `podman-compose` and
-`podman compose` to work on `midgard`.
-
-Long-running container services should normally be declared with
-`virtualisation.oci-containers.containers` instead of ad-hoc compose commands.
-Compose is kept available for temporary testing, upstream compose file
-inspection, and manual operator workflows.
-
-## Secret Management
-
-Secrets are managed with `sops-nix`.
-
-Encrypted secret files:
-
-- `secrets/ingress.yaml`
-- `secrets/vaultwarden.yaml`
-
-The encryption policy lives in `.sops.yaml`. Files matching
-`secrets/[^/]+\.yaml` are encrypted for the following age recipients.
-
-- `poby`
-- `yggdrasil`
-- `midgard`
-
-At runtime, each NixOS host uses its own SSH host key as the SOPS age identity.
-
-```text
-/etc/ssh/ssh_host_ed25519_key
-```
-
-This means a host can decrypt the repo secrets only when its SSH host private
-key matches a recipient registered in `.sops.yaml`.
-
-Plaintext secret values are not stored in the Nix store. During
-activation/runtime, `sops-nix` materializes them as files under `/run/secrets`
-or as service-specific templates, then applies the owner, group, and mode to
-each file.
-
-Current secret consumers:
-
-- `cloudflare/caddy_env`
-  - Used by Caddy.
-  - Contains the Cloudflare API token for DNS challenges.
-  - Owned by the Caddy user/group.
-  - Mode is `0400`.
-
-- `cloudflare/cloudflared_tunnel_credentials`
-  - Used by `cloudflared`.
-  - Contains the Cloudflare Tunnel credential.
-  - Mode is `0400`.
-
-- `grafana/admin_password`
-  - Grafana administrator password.
-  - Read directly by Grafana from the SOPS materialized secret file.
-  - Owned by `grafana:grafana`.
-  - Mode is `0400`.
-
-- `vaultwarden/admin_token`
-  - Vaultwarden admin token.
-  - Rendered into the `vaultwarden.env` runtime template as `ADMIN_TOKEN`.
-  - Owned by `vaultwarden:vaultwarden`.
-  - Mode is `0400`.
-
-## External Access Control
-
-External Internet access is centered on Cloudflare Tunnel instead of directly
-exposed ports.
-
-```mermaid
-flowchart LR
-    public["Public Internet"]
-    cf["Cloudflare<br/>DNS / Tunnel"]
-
-    subgraph edge["yggdrasil"]
-        tunnel["cloudflared<br/>outbound tunnel"]
-        ingress["Caddy<br/>hostname-based routing"]
-        status["Uptime Kuma<br/>localhost:3001"]
-        grafana["Grafana<br/>localhost:3003"]
-    end
-
-    subgraph private["Tailscale tailnet"]
-        mdns["midgard.tail6fc192.ts.net"]
-        operator["Tailnet operator"]
-
-        subgraph app["midgard"]
-            home["Homepage<br/>:8082"]
-            git["Forgejo<br/>:3000"]
-            vault["Vaultwarden<br/>:8222"]
-        end
-    end
-
-    public --> cf
-    cf --> tunnel
-    tunnel -->|"HTTPS origin<br/>localhost:443"| ingress
-
-    ingress -->|"status.ridewithmin.com<br/>allowed status paths only"| status
-    ingress -->|"home.ridewithmin.com"| home
-    ingress -->|"git.ridewithmin.com"| git
-    ingress -->|"vault.ridewithmin.com"| vault
-
-    operator -->|"grafana.ridewithmin.com"| ingress
-    ingress -->|"tailnet clients only"| grafana
-
-    ingress -.->|private backend path| mdns
-    mdns -.-> home
-    mdns -.-> git
-    mdns -.-> vault
-
-    blocked["Application ports are not<br/>directly exposed to the public Internet"]
-    public -.-> blocked
-```
-
-In the current configuration, the NixOS firewall is enabled on every host. The
-home service hosts allow SSH `22` directly, while `alfheim` keeps SSH available
-only through the trusted `tailscale0` interface. Application and monitoring
-ports such as `3000`, `3001`, `8082`, `8222`, `9090`, and `9100` are not opened
-as general public firewall ports.
-
-Services on `midgard` are reached by Caddy through the Tailscale MagicDNS name.
-
-```text
-midgard.tail6fc192.ts.net
-```
-
-All hosts mark the `tailscale0` interface as trusted. The tailnet therefore
-acts as the internal network boundary. Public Internet users can access only the
-hostnames connected through Cloudflare, while devices inside the tailnet may
-reach internal service ports more directly depending on Tailscale policy.
-
-Access control declared in this repo:
-
-- Public hostnames enter `yggdrasil` only through Cloudflare Tunnel.
-- Caddy decides the backend for each hostname.
-- The public Uptime Kuma route allows only status-page paths.
-- The Prometheus UI is bound to localhost on `yggdrasil`.
-- Grafana is bound to localhost and routed by Caddy only for tailnet clients.
-- `node_exporter` is scraped internally and does not open a public firewall
-  port.
-- Application ports are not directly opened to the general Internet.
-- Internal tailnet access control depends on Tailscale ACLs and tailnet
-  membership, not this repo.
-
-If Cloudflare Access policies exist, they are Cloudflare-side settings and are
-not declared in this repo.
-
-## Operations
-
-`Justfile` is the normal deployment entrypoint.
-
-Apply a new configuration for testing without making it the boot default:
-
-```bash
-just test yggdrasil
-just test midgard
-```
-
-Apply a new configuration and make it the boot default:
-
-```bash
-just switch yggdrasil
-just switch midgard
-```
-
-Internally, the target host is used as both the build host and the target host.
-
-```text
-nixos-rebuild <test|switch>
-  --fast
-  --flake .#<host>
-  --build-host <host>
-  --target-host <host>
-  --use-remote-sudo
-```
-
-The command is run from the workstation, while the Linux system closure is built
-and activated on the target NixOS host.
-
-Access the Prometheus UI through SSH port forwarding:
-
-```bash
-ssh -L 9090:127.0.0.1:9090 yggdrasil
-```
-
-Then open:
-
-```text
-http://127.0.0.1:9090
-```
-
-Access Grafana from a Tailscale-connected client:
-
-```text
-https://grafana.ridewithmin.com
-```
-
-If DNS or browser routing is inconvenient, use SSH port forwarding instead:
-
-```bash
-ssh -L 3003:127.0.0.1:3003 yggdrasil
-```
-
-Then open:
-
-```text
-http://127.0.0.1:3003
-```
-
-## Validation
-
-Check flake evaluation locally:
-
-```bash
-nix flake show --all-systems
-nix flake check --no-build
-```
-
-Check the basic state on each host:
-
-```bash
-hostname
-systemctl is-active sshd
-systemctl is-active tailscaled
-tailscale status
-zramctl
-df -h
-bootctl status
-```
-
-Check Prometheus from `yggdrasil`:
-
-```bash
-systemctl is-active prometheus prometheus-node-exporter
-curl -fsS http://127.0.0.1:9090/-/ready
-curl -fsS http://127.0.0.1:9090/api/v1/targets | jq
-curl -fsS http://127.0.0.1:9090/api/v1/rules | jq
-```
-
-Check Grafana from `yggdrasil`:
-
-```bash
-systemctl is-active grafana grafana-image-renderer
-curl -fsS http://127.0.0.1:3003/api/health | jq
-```
+Local `just test` and `just switch` are explicit-request break-glass or
+bootstrap commands, not the default validation or deployment path.
+
+## Useful Docs
+
+- [Architecture](https://docs.ridewithmin.com/architecture/)
+- [Security model](https://docs.ridewithmin.com/security/)
+- [Hosts](https://docs.ridewithmin.com/hosts/yggdrasil/)
+- [Services](https://docs.ridewithmin.com/services/applications/)
+- [CI/CD pipeline](https://docs.ridewithmin.com/runbooks/ci-cd/)
+- [Deploy & rollback](https://docs.ridewithmin.com/runbooks/deploy/)
+- [Secrets](https://docs.ridewithmin.com/runbooks/secrets/)

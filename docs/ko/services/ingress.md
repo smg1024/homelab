@@ -68,4 +68,4 @@ respond 404
     cloudflared tunnel route dns 7464b4c7-93aa-4ef0-990d-76d6b0bb158a <name>.ridewithmin.com
     ```
 
-4. 검증 후 `just switch yggdrasil`로 배포
+4. PR을 열고 CI를 기다린 뒤 병합해 CD가 변경을 배포하게 둡니다.

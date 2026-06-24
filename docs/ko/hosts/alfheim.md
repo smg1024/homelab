@@ -54,9 +54,10 @@ ssh poby@alfheim.tail6fc192.ts.net
 ```
 
 !!! note "배포 시 SSH 키"
-    `Justfile`이 alfheim 배포 시
-    `~/.config/sops-nix/secrets/github_ssh_key`를 SSH 키로 사용합니다.
-    다른 호스트와 달리 대상 주소도 MagicDNS 전체 이름을 사용합니다.
+    GitHub Actions CD는 저장소의 배포 키 비밀을 사용합니다. 명시적인 로컬
+    비상 배포가 요청된 경우 `Justfile`은 alfheim용 SSH 키로
+    `~/.config/sops-nix/secrets/github_ssh_key`를 사용합니다. 다른 호스트와
+    달리 대상 주소도 MagicDNS 전체 이름을 사용합니다.
 
 ## 점검
 

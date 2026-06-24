@@ -54,9 +54,10 @@ ssh poby@alfheim.tail6fc192.ts.net
 ```
 
 !!! note "SSH key for deploys"
-    The `Justfile` uses `~/.config/sops-nix/secrets/github_ssh_key` as the
-    SSH key when deploying to alfheim. Unlike the other hosts, the target
-    address is also the full MagicDNS name.
+    GitHub Actions CD uses the repository deploy key secret. If an explicit
+    local break-glass deploy is requested, the `Justfile` uses
+    `~/.config/sops-nix/secrets/github_ssh_key` as the SSH key for alfheim.
+    Unlike the other hosts, the target address is also the full MagicDNS name.
 
 ## Health checks
 

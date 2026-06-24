@@ -63,8 +63,10 @@ icon: fontawesome/solid/circle-plus
           ```
 - [ ] 모니터링: 공개 엔드포인트라면 Uptime Kuma 체크 추가
 - [ ] 검증: `nix flake check --no-build`
-- [ ] 배포: `just test <host>` → 확인 → `just switch <host>`
-- [ ] 커밋
+- [ ] 커밋하고 PR 생성
+- [ ] CI가 모든 호스트를 빌드할 때까지 대기
+- [ ] 초록색이면 병합; CD가 변경을 배포
+- [ ] CD 완료 후 서비스 확인
 
 ## 검증
 
@@ -79,9 +81,11 @@ curl -fsS https://<name>.ridewithmin.com/
 
 ## 잘못됐을 때
 
-`just test`로 활성화한 상태는 재부팅하면 사라집니다. switch까지 했다면
 호스트에서 롤백합니다:
 
 ```bash
 sudo nixos-rebuild switch --rollback
 ```
+
+명시적인 수동 `just test` 활성화를 사용했다면, 그 활성화는 재부팅하면
+사라집니다.

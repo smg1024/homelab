@@ -7,7 +7,10 @@ icon: fontawesome/solid/rocket
 Every change starts in the repository. Machines are never fixed by editing
 config directly on a host.
 
-## Validate before deploying
+## Validate before opening a PR
+
+GitHub Actions CI is the authoritative build check. Local validation is still
+useful before opening a PR:
 
 ```bash
 nix flake check --no-build
@@ -16,8 +19,20 @@ nix flake show --all-systems
 
 ## Deploy
 
-The `Justfile` is the normal deployment entrypoint. Building and activation
-happen remotely **on the target host**.
+The normal deployment path is GitHub Actions:
+
+1. Open a PR.
+2. Wait for CI to build every host.
+3. Merge once the checks are green.
+4. Let CD switch `yggdrasil`, `midgard`, and `alfheim`.
+
+See [CI/CD pipeline](ci-cd.md) for the workflow details.
+
+## Explicit manual path
+
+`just test` and `just switch` are break-glass/bootstrap commands. Run them only
+when an operator explicitly asks for a local activation. Building and
+activation still happen remotely **on the target host**.
 
 ```bash
 just test <host>     # activate without making it the boot default
@@ -37,10 +52,10 @@ nixos-rebuild <test|switch>
   --sudo
 ```
 
-!!! tip "test first"
-    For changes with uncertain impact, activate with `just test` first and
-    promote to `just switch` once everything looks fine. A configuration
-    activated with `test` disappears on reboot.
+!!! tip "manual test activation"
+    When the explicit manual path is needed, `just test` activates a
+    configuration without making it the boot default. A configuration activated
+    with `test` disappears on reboot.
 
 ## Rollback
 
@@ -58,4 +73,5 @@ systemd-boot menu.
 - Never edit `flake.lock` by hand; use `nix flake update`.
 - `system.stateVersion` records initial-install defaults; do not bump it
   unless release notes explicitly say to.
-- Deploys touch live hosts: commit your changes and run them deliberately.
+- Deploys touch live hosts: use CI/CD for normal changes, and run local
+  `just test` / `just switch` only on explicit request.

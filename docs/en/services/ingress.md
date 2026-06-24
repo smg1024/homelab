@@ -68,4 +68,4 @@ respond 404
     cloudflared tunnel route dns 7464b4c7-93aa-4ef0-990d-76d6b0bb158a <name>.ridewithmin.com
     ```
 
-4. Validate, then deploy with `just switch yggdrasil`.
+4. Open a PR, wait for CI, then merge and let CD deploy the change.
