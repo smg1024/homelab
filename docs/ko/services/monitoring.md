@@ -5,7 +5,7 @@ icon: fontawesome/solid/chart-line
 # 모니터링
 
 메트릭과 로그 스택은 `yggdrasil`에서 실행됩니다. Uptime Kuma는 공개 엔드포인트
-체크와 공개 상태 페이지를 담당합니다.
+체크를 수행하고 상태 페이지를 제공합니다.
 
 ## 구성 요소
 
