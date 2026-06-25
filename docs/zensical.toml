@@ -16,7 +16,7 @@ nav = [
   { "Security model" = "security.md" },
   { "Hosts" = [{ "yggdrasil" = "hosts/yggdrasil.md" }, { "midgard" = "hosts/midgard.md" }, { "alfheim" = "hosts/alfheim.md" }] },
   { "Services" = [{ "Ingress" = "services/ingress.md" }, { "Monitoring" = "services/monitoring.md" }, { "Applications" = "services/applications.md" }] },
-  { "Operations" = [{ "Deploy & rollback" = "runbooks/deploy.md" }, { "CI/CD pipeline" = "runbooks/ci-cd.md" }, { "Secrets" = "runbooks/secrets.md" }, { "Adding a service" = "runbooks/add-service.md" }, { "Bootstrapping a host" = "runbooks/bootstrap-host.md" }, { "Backup & restore" = "runbooks/backup-restore.md" }, { "Docs site" = "runbooks/docs-site.md" }] },
+  { "Operations" = [{ "Deploy & rollback" = "runbooks/deploy.md" }, { "CI/CD pipeline" = "runbooks/ci-cd.md" }, { "Secrets" = "runbooks/secrets.md" }, { "Adding a service" = "runbooks/add-service.md" }, { "Bootstrapping a host" = "runbooks/bootstrap-host.md" }, { "Backup & restore" = "runbooks/backup-restore.md" }, { "Docs site" = "runbooks/docs-site.md" }, { "Style guide" = "STYLE.md" }] },
   { "Decisions" = [{ "ADR-001: Zensical" = "decisions/zensical.md" }] },
   { "Roadmap" = "roadmap.md" },
 ]
