@@ -6,7 +6,7 @@ icon: fontawesome/solid/network-wired
 
 구성은 엣지/인프라 노드(`yggdrasil`), 주 애플리케이션 노드(`midgard`),
 클라우드 ARM 애플리케이션 노드(`alfheim`)로 나뉩니다. 외부 트래픽은 포트를
-직접 열지 않고 Cloudflare Tunnel → Caddy 경로로만 들어오며 호스트 간 내부
+직접 열지 않고 Cloudflare Tunnel → Caddy 경로로만 들어오며, 호스트 간 내부
 통신은 Tailscale tailnet을 경계로 삼습니다.
 
 ```mermaid
@@ -100,6 +100,6 @@ GPT 파티션 테이블
 
 Home Manager는 NixOS 모듈로 활성화되어 호스트 switch 시 함께 적용되며
 `poby` 운영자 환경 전용입니다. 장기 실행 서비스에는 사용하지 않습니다.
-공유 프로필(`home/poby/base.nix`, `ops.nix`)에 셸/Git/tmux 설정과
-`age`·`sops`·`just` 같은 운영 도구가 들어가고 호스트별 프로필이 각 호스트에
-맞는 별칭을 추가합니다.
+공유 프로필(`home/poby/base.nix`, `ops.nix`)에는 셸/Git/tmux 설정과
+`age`·`sops`·`just` 같은 운영 도구가 들어가고, 호스트별 프로필이 각 호스트에
+맞는 별칭을 더합니다.

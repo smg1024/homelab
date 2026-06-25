@@ -62,7 +62,7 @@ ssh poby@alfheim.tail6fc192.ts.net
 ## 점검
 
 애플리케이션 systemd unit 이름은 `jamye-plz-backend`지만, 공개 서비스는
-Caddy를 통해 제공되는 full PWA이며 로컬 PostgreSQL 데이터베이스를 함께
+Caddy가 제공하는 full PWA이며 로컬 PostgreSQL 데이터베이스를 함께
 사용합니다.
 
 ```bash

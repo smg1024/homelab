@@ -87,5 +87,5 @@ curl -fsS https://<name>.ridewithmin.com/
 sudo nixos-rebuild switch --rollback
 ```
 
-명시적인 수동 `just test` 활성화를 사용했다면, 그 활성화는 재부팅하면
+명시적인 수동 `just test` 활성화를 사용했다면, 그 설정은 재부팅하면
 사라집니다.

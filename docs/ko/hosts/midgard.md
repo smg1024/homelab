@@ -5,7 +5,7 @@ icon: fontawesome/solid/server
 # midgard
 
 실제 애플리케이션 호스트입니다. 외부 트래픽은 yggdrasil의 Caddy가 tailnet의
-`midgard.tail6fc192.ts.net`으로 전달하며 midgard의 서비스 포트는 공개
+`midgard.tail6fc192.ts.net`으로 전달합니다. midgard의 서비스 포트는 공개
 방화벽에서 열지 않습니다.
 
 ## 책임
@@ -50,5 +50,5 @@ Podman은 midgard에만 활성화됩니다 (`modules/podman.nix`).
 
 Hermes Agent는 시스템 서비스가 아니라 `poby`의 Home Manager 환경
 (`home/poby/hermes-agent.nix`)으로 설치됩니다. 런타임 상태와 자격 증명은
-`/home/poby/.hermes` 아래에 변경 가능한 상태로 유지하며 구성이 안정화되면
+`/home/poby/.hermes` 아래에 변경 가능한 상태로 둡니다. 구성이 안정화되면
 선언적 Nix 구성으로 승격할 예정입니다.
