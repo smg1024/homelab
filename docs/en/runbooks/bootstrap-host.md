@@ -10,9 +10,9 @@ procedure. Do one host at a time and verify it before starting the next,
 rather than installing two machines in parallel.
 
 The procedure itself is simple: the **first** install always goes through
-`nixos-anywhere`. Every rebuild after that is an ordinary `just test` /
-`just switch`. Build and activation run on the target host, so the
-workstation driving the deploy can be macOS.
+`nixos-anywhere`. After the host is reachable and trusts the deploy key, normal
+changes go through GitHub Actions CI/CD. Local `just test` / `just switch` is
+reserved for explicit bootstrap or break-glass requests.
 
 !!! danger "This wipes the target disk"
     `disko` repartitions and formats the disk it is pointed at. Triple-check
@@ -115,11 +115,15 @@ Remove the USB and boot from the internal disk, then:
 
 - [ ] `ssh poby@<host>` works; `ssh root@<host>` and password login **fail**
 - [ ] Join the tailnet: `sudo tailscale up`, verify with `tailscale status`
-- [ ] Switch to the normal deploy model: `just test <host>`, then
-      `just switch <host>` (see [Deploy & rollback](deploy.md))
-- [ ] If the host is a sops recipient: re-key secrets if its host key changed
+- [ ] If the host is a sops recipient: re-key secrets if its host key changed,
+      so it can decrypt `secrets/*.yaml`
       (see [Secrets](secrets.md#adding-a-new-host-as-a-recipient))
-- [ ] Commit `hosts/<host>/` changes and `flake.lock`
+- [ ] Commit the `hosts/<host>/` changes, `flake.lock`, and any re-keyed
+      `secrets/*.yaml`
+- [ ] Switch to the normal deploy model: open a PR and let CI/CD take over
+      (see [Deploy & rollback](deploy.md)). Merging triggers CD, so do this only
+      after the re-key is committed, or the rebuilt host cannot decrypt its
+      secrets.
 
 ## Validation
 
@@ -138,5 +142,5 @@ With the host booting and reachable, build it out one change at a time:
 
 - Configure its secrets with sops-nix (see [Secrets](secrets.md)).
 - Add and expose services (see [Adding a new service](add-service.md)).
-- Every change follows the same loop: edit the repo, `just test <host>`,
-  `just switch <host>`, then commit.
+- Every change follows the same loop: edit the repo, open a PR, let CI build,
+  merge once green, then let CD deploy.

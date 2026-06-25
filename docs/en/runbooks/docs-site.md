@@ -62,12 +62,9 @@ docs/
     # open http://127.0.0.1:8000
     ```
 
-4. Commit, then deploy. The docs are part of the system closure and update
-   together.
-
-    ```bash
-    just switch yggdrasil
-    ```
+4. Commit and open a PR. Once CI is green, merge it and let CD deploy the
+   docs with the rest of the system closure. Do not run a local `just switch`
+   unless an operator explicitly asks for it.
 
 !!! note "flakes and git"
     Flake builds only see files tracked by git. New files must be

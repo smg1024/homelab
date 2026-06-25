@@ -4,8 +4,8 @@ icon: fontawesome/solid/map
 
 # 로드맵
 
-이 홈랩이 향하는 곳. 체크된 항목은 완료된 작업으로 연결되고 미체크 항목은
-의도이며 각 구간 안에서 대략 우선순위 순입니다.
+이 홈랩이 향하는 곳. 체크된 항목은 완료된 작업으로 연결되고, 미체크 항목은
+아직 하려는 일입니다. 각 구간 안에서는 대략 우선순위 순으로 적었습니다.
 
 ## 지금 (운영 공백)
 
@@ -15,7 +15,7 @@ icon: fontawesome/solid/map
     - [ ] midgard `/var/lib`를 호스트 밖으로 보내는 백업 작업 (restic/borgbackup)
 - [ ] **알림 전달**: Prometheus 규칙은 있지만 Alertmanager가 미구성이라
       알림이 UI에서만 보임 ([상세](services/monitoring.md))
-- [ ] **이 문서 사이트 배포**: docs 브랜치 머지, `just switch yggdrasil`,
+- [ ] **이 문서 사이트 배포**: docs 브랜치 머지, CD로 배포,
       `docs.ridewithmin.com` DNS 레코드 추가
 
 ## 다음

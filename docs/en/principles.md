@@ -54,5 +54,7 @@ a container and the target host deliberately has Podman enabled.
 
 ## One change at a time
 
-Small, focused changes: validate locally → `just test` → `just switch` →
-commit. Two unrelated changes never ride in the same deploy.
+Small, focused changes: edit the repo, open a PR, let CI build every host,
+merge once green, then let CD deploy. Local `just test` / `just switch` is only
+for explicit break-glass or bootstrap requests. Two unrelated changes never
+ride in the same deploy.

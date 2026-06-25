@@ -56,15 +56,25 @@ the agent should keep in mind.
 
 ## Workflow
 
-Validate locally before deploying:
+Normal changes go through GitHub Actions CI/CD, never a direct host edit:
+
+1. Edit the repo on a branch and open a PR.
+2. CI builds every host (`yggdrasil`, `midgard`, `alfheim`); merge only once the
+   required `build …` checks are green.
+3. CD switches all three hosts on merge to `main`, running the same
+   `nixos-rebuild switch` on each.
+
+Validate locally before opening the PR (CI is the authoritative check):
 
 ```bash
 nix flake check --no-build
 nix flake show --all-systems
 ```
 
-Deploy with the `Justfile` (builds and activates **on the target host** over SSH
-— this is an outward, hard-to-reverse action; confirm with the user first):
+`just test` / `just switch` are **break-glass / bootstrap only** — local
+activation that builds and activates **on the target host** over SSH. This is an
+outward, hard-to-reverse action: use it only when the operator explicitly asks,
+never as the default deploy path, and confirm with the user first.
 
 ```bash
 just test <host>     # activate without making it the boot default
@@ -76,7 +86,9 @@ Hosts: `yggdrasil`, `midgard`, `alfheim`. Roll back on a host with
 
 ## Don't
 
-- Don't deploy (`just test`/`just switch`) without explicit confirmation — it
-  touches live hosts.
+- Don't use `just test`/`just switch` for normal changes — that path is
+  break-glass/bootstrap only and touches live hosts. Normal deploys go through
+  CI/CD (PR → merge), and any manual `just` activation needs explicit
+  confirmation.
 - Don't edit `flake.lock` by hand; use `nix flake update`.
 - Don't commit or push unless asked.

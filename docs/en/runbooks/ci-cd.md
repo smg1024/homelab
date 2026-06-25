@@ -5,14 +5,15 @@ icon: fontawesome/solid/robot
 # CI/CD pipeline
 
 GitHub Actions builds every change and, once it lands on `main`, deploys it to
-the hosts automatically. The manual [`just` workflow](deploy.md) stays as the
+the hosts automatically. This is the default validation and deployment path.
+The manual [`just` workflow](deploy.md) stays as the explicit-request
 break-glass path. The pipeline runs the same `nixos-rebuild`, just unattended.
 
 The split is deliberate:
 
 - **CI** proves every host *builds*, on a throwaway runner that touches no host.
-- **CD** rolls merged changes out, joining the tailnet and running the exact
-  same `nixos-rebuild switch` you would run by hand.
+- **CD** rolls merged changes out, joining the tailnet and running the same
+  `nixos-rebuild switch` used by the explicit manual path.
 
 ## Flow
 
@@ -59,9 +60,9 @@ Each host is handled by a job that:
     ```
 
 Because `--build-host` and `--target-host` are both the node, **each host builds
-itself**, exactly like a manual deploy. The runner only evaluates the flake and
-orchestrates, so there is no cross-architecture build problem (`alfheim`
-compiles its own `aarch64` closure) and no binary cache to maintain. A
+itself**, matching the explicit manual path. The runner only evaluates the
+flake and orchestrates, so there is no cross-architecture build problem
+(`alfheim` compiles its own `aarch64` closure) and no binary cache to maintain. A
 `concurrency` group serializes deploys so two merges never race.
 
 All three hosts are switched on every merge; an unaffected host simply
@@ -82,8 +83,8 @@ no extra host-side setup is required.
 
 !!! warning "Bootstrap order"
     The runner can only log in once the hosts already trust the deploy key. The
-    first rollout of that key is manual: [`just switch`](deploy.md) each host,
-    *then* let CD take over. After that, merges deploy on their own.
+    first rollout of that key may need an explicit manual
+    [`just switch`](deploy.md). After that, merges deploy on their own.
 
 ## Day to day
 
@@ -102,8 +103,9 @@ no extra host-side setup is required.
   CI proves a config *builds*, not that it *runs*. Keep an eye on the
   [monitoring stack](../services/monitoring.md) after a deploy, and roll back by
   hand if a service misbehaves.
-- **Break-glass stays manual.** If the pipeline is stuck or a host needs an
-  urgent fix, deploy directly with [`just switch`](deploy.md) and roll back with
+- **Break-glass stays explicit.** Local `just test` / `just switch` commands
+  are not part of the normal flow. Use them only when an operator explicitly
+  asks for a local activation, and roll back with
   `sudo nixos-rebuild switch --rollback`.
 - **Keep changes flowing through PRs.** A direct push to `main` skips CI;
   enforce the build checks with branch protection so `main` stays deployable.

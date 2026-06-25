@@ -4,8 +4,8 @@ icon: fontawesome/solid/chart-line
 
 # Monitoring
 
-The metrics and log stack runs on `yggdrasil`. Uptime Kuma is responsible for
-public endpoint checks and the public status page.
+The metrics and log stack runs on `yggdrasil`. Uptime Kuma runs the public
+endpoint checks and serves the status page.
 
 ## Components
 

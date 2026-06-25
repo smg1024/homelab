@@ -15,9 +15,9 @@ icon: fontawesome/solid/key
   `secrets/[^/]+\.yaml` 패턴 파일은 `poby`, `yggdrasil`, `midgard`,
   `alfheim` age 수신자로 암호화됩니다.
 - 각 호스트는 자신의 SSH 호스트 키(`/etc/ssh/ssh_host_ed25519_key`)를 age
-  신원으로 사용해 복호화합니다. 호스트는 해당 호스트의 age 수신자가 SOPS
-  메타데이터에 포함된 파일만 읽을 수 있으므로, 새로 추가한 호스트가 기존
-  파일을 복호화해야 한다면 먼저 `sops updatekeys`가 필요할 수 있습니다.
+  신원으로 사용해 복호화합니다. 호스트는 자기 age 수신자가 SOPS
+  메타데이터에 들어 있는 파일만 읽습니다. 그래서 새로 추가한 호스트로 기존
+  파일을 복호화하려면 먼저 `sops updatekeys`를 돌려야 할 수 있습니다.
 - 활성화/런타임 시 sops-nix가 `/run/secrets` 아래 파일 또는 서비스별
   템플릿으로 비밀을 구체화하고 owner/group/mode를 적용합니다.
 

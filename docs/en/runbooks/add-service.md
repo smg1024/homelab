@@ -63,8 +63,10 @@ Two questions first:
           ```
 - [ ] Monitoring: add an Uptime Kuma check for public endpoints
 - [ ] Validate: `nix flake check --no-build`
-- [ ] Deploy: `just test <host>`, verify, then `just switch <host>`
-- [ ] Commit
+- [ ] Commit and open a PR
+- [ ] Wait for CI to build every host
+- [ ] Merge once green; CD deploys the change
+- [ ] Verify the service after CD completes
 
 ## Verify
 
@@ -79,9 +81,10 @@ curl -fsS https://<name>.ridewithmin.com/
 
 ## If it goes wrong
 
-`just test` activations disappear on reboot. For a switched deploy, roll
-back on the host:
+Roll back on the host:
 
 ```bash
 sudo nixos-rebuild switch --rollback
 ```
+
+If an explicit manual `just test` activation was used, it disappears on reboot.

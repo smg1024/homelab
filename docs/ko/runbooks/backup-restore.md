@@ -49,7 +49,7 @@ icon: fontawesome/solid/box-archive
 
 ## 앞으로 갈 방향
 
-가치 순서대로, 자연스러운 첫 단계들:
+가치가 큰 순서대로, 무리 없이 밟을 수 있는 첫 단계입니다:
 
 1. `services.vaultwarden.backupDir`: 모듈에 SQLite 백업이 내장되어 있어
    가장 비용이 낮은 첫 단계

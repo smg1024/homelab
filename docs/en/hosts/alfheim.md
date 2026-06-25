@@ -53,10 +53,13 @@ address does not accept SSH.
 ssh poby@alfheim.tail6fc192.ts.net
 ```
 
-!!! note "SSH key for deploys"
-    The `Justfile` uses `~/.config/sops-nix/secrets/github_ssh_key` as the
-    SSH key when deploying to alfheim. Unlike the other hosts, the target
-    address is also the full MagicDNS name.
+!!! note "SSH for deploys"
+    GitHub Actions CD uses the repository deploy key secret. A local break-glass
+    deploy relies on the operator's SSH client config: `just` and
+    `nixos-rebuild` pass the bare host name (`alfheim`), and an alias in
+    `~/.ssh/config` resolves it to `alfheim.tail6fc192.ts.net` with the right
+    key, the same way the other hosts are reached. The `Justfile` itself sets no
+    SSH identity or hostname.
 
 ## Health checks
 
