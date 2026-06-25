@@ -53,11 +53,13 @@ SSH는 의도적으로 tailnet으로만 노출됩니다. OCI 공인 주소로는
 ssh poby@alfheim.tail6fc192.ts.net
 ```
 
-!!! note "배포 시 SSH 키"
-    GitHub Actions CD는 저장소의 배포 키 비밀을 사용합니다. 명시적인 로컬
-    비상 배포가 요청된 경우 `Justfile`은 alfheim용 SSH 키로
-    `~/.config/sops-nix/secrets/github_ssh_key`를 사용합니다. 다른 호스트와
-    달리 대상 주소도 MagicDNS 전체 이름을 사용합니다.
+!!! note "배포 시 SSH"
+    GitHub Actions CD는 저장소의 배포 키 비밀을 사용합니다. 로컬 비상 배포는
+    운영자의 SSH 클라이언트 설정에 의존합니다. `just`와 `nixos-rebuild`는 호스트
+    이름(`alfheim`)을 그대로 넘기고, `~/.ssh/config`의 alias가 이를
+    `alfheim.tail6fc192.ts.net`과 알맞은 키로 연결합니다. 다른 호스트도 같은
+    방식으로 접근합니다. `Justfile` 자체는 SSH 키나 호스트 이름을 지정하지
+    않습니다.
 
 ## 점검
 
