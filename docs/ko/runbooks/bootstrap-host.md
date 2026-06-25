@@ -113,11 +113,12 @@ USB를 제거하고 내부 디스크로 부팅한 뒤:
 - [ ] `ssh poby@<host>` 성공, `ssh root@<host>`와 패스워드 로그인은
       **실패해야 정상**
 - [ ] tailnet 합류: `sudo tailscale up`, `tailscale status`로 확인
-- [ ] 이후부터는 평범한 배포 모델로: 호스트 변경을 커밋하고 PR을 열어 CI/CD에
-      맡깁니다 ([배포와 롤백](deploy.md) 참고)
-- [ ] 호스트가 sops 수신자라면: 호스트 키가 바뀐 경우 비밀 재암호화
-      ([비밀 관리](secrets.md))
-- [ ] `hosts/<host>/` 변경과 `flake.lock` 커밋
+- [ ] 호스트가 sops 수신자라면: 호스트 키가 바뀐 경우 비밀을 재암호화해
+      `secrets/*.yaml`을 복호화할 수 있게 합니다 ([비밀 관리](secrets.md))
+- [ ] `hosts/<host>/` 변경과 `flake.lock`, 재암호화한 `secrets/*.yaml` 커밋
+- [ ] 이후부터는 평범한 배포 모델로: PR을 열어 CI/CD에 맡깁니다
+      ([배포와 롤백](deploy.md) 참고). 병합하면 CD가 배포되므로, 재암호화를
+      먼저 커밋한 뒤에 진행해야 호스트가 비밀을 복호화할 수 있습니다.
 
 ## 검증
 

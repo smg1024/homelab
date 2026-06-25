@@ -115,11 +115,15 @@ Remove the USB and boot from the internal disk, then:
 
 - [ ] `ssh poby@<host>` works; `ssh root@<host>` and password login **fail**
 - [ ] Join the tailnet: `sudo tailscale up`, verify with `tailscale status`
-- [ ] Switch to the normal deploy model: commit the host changes, open a PR,
-      and let CI/CD take over (see [Deploy & rollback](deploy.md))
-- [ ] If the host is a sops recipient: re-key secrets if its host key changed
+- [ ] If the host is a sops recipient: re-key secrets if its host key changed,
+      so it can decrypt `secrets/*.yaml`
       (see [Secrets](secrets.md#adding-a-new-host-as-a-recipient))
-- [ ] Commit `hosts/<host>/` changes and `flake.lock`
+- [ ] Commit the `hosts/<host>/` changes, `flake.lock`, and any re-keyed
+      `secrets/*.yaml`
+- [ ] Switch to the normal deploy model: open a PR and let CI/CD take over
+      (see [Deploy & rollback](deploy.md)). Merging triggers CD, so do this only
+      after the re-key is committed, or the rebuilt host cannot decrypt its
+      secrets.
 
 ## Validation
 
