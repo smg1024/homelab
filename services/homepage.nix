@@ -10,19 +10,79 @@
       headerStyle = "clean";
     };
 
+    bookmarks = [
+      {
+        Personal = [
+          {
+            GitHub = [
+              {
+                abbr = "GH";
+                href = "https://github.com/smg1024";
+              }
+            ];
+          }
+          {
+            LinkedIn = [
+              {
+                abbr = "LI";
+                href = "https://www.linkedin.com/in/sangmin-poby";
+              }
+            ];
+          }
+        ];
+      }
+    ];
+
     services = [
       {
-        "Homelab" = [
+        Applications = [
           {
-            "Yggdrasil" = {
-              description = "Ingress node";
-              href = "https://home.ridewithmin.com";
+            Forgejo = {
+              description = "Git hosting";
+              href = "https://git.ridewithmin.com";
+              icon = "forgejo.png";
             };
           }
           {
-            "Midgard" = {
-              description = "Application host";
-              href = "https://home.ridewithmin.com";
+            Vaultwarden = {
+              description = "Password manager";
+              href = "https://vault.ridewithmin.com";
+              icon = "vaultwarden.png";
+            };
+          }
+          {
+            "jamye-plz" = {
+              description = "Social PWA on alfheim";
+              href = "https://jamye-plz.ridewithmin.com";
+            };
+          }
+        ];
+      }
+      {
+        Monitoring = [
+          {
+            "Uptime Kuma" = {
+              description = "Public status page";
+              href = "https://status.ridewithmin.com";
+              icon = "uptime-kuma.png";
+            };
+          }
+          {
+            Grafana = {
+              description = "Metrics dashboards (tailnet only)";
+              href = "https://grafana.ridewithmin.com";
+              icon = "grafana.png";
+            };
+          }
+        ];
+      }
+      {
+        Documentation = [
+          {
+            Docs = {
+              description = "Homelab runbooks and architecture";
+              href = "https://docs.ridewithmin.com";
+              icon = "mdi-book-open-page-variant";
             };
           }
         ];
