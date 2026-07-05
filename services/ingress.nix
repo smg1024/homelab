@@ -81,6 +81,16 @@
       respond 404
     '';
 
+    virtualHosts."beszel.ridewithmin.com".extraConfig = ''
+      @tailnet remote_ip 100.64.0.0/10 fd7a:115c:a1e0::/48
+
+      handle @tailnet {
+        reverse_proxy http://127.0.0.1:8090
+      }
+
+      respond 404
+    '';
+
     virtualHosts."http://yggdrasil.tail6fc192.ts.net:3002".extraConfig = ''
       reverse_proxy http://127.0.0.1:3001
     '';
