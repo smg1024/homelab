@@ -7,6 +7,7 @@
     ../../services/uptime-kuma.nix
     ../../services/prometheus
     ../../services/loki.nix
+    ../../services/victorialogs.nix
     ../../services/grafana
     ../../services/docs-site.nix
   ];
