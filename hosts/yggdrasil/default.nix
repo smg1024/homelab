@@ -8,6 +8,7 @@
     ../../services/prometheus
     ../../services/loki.nix
     ../../services/victorialogs.nix
+    ../../services/beszel/hub.nix
     ../../services/grafana
     ../../services/docs-site.nix
   ];
