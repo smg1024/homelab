@@ -32,7 +32,7 @@ icon: fontawesome/solid/pen-nib
 | 구분 | 표기 | 비고 |
 | --- | --- | --- |
 | 영어 그대로 | `tailnet`, `flake`, `PR`, `SSH`, `DNS`, `CI/CD`, `OCI`, `RAM`, `API`, `PWA`, `JWT`, `OAuth`, `ACL`, `sops`, `MagicDNS` | 한글 음차(테일넷·플레이크·풀 리퀘스트) 금지 |
-| 제품·도구명 | `Cloudflare Tunnel`, `Caddy`, `Tailscale`, `NixOS`, `Podman`, `Prometheus`, `Grafana`, `Loki`, `Forgejo`, `Vaultwarden`, `Zensical` | 원 표기 유지 |
+| 제품·도구명 | `Cloudflare Tunnel`, `Caddy`, `Tailscale`, `NixOS`, `Podman`, `Beszel`, `VictoriaLogs`, `Forgejo`, `Vaultwarden`, `Zensical` | 원 표기 유지 |
 | 한글 통일 | 저장소(not 리포지토리), 워크플로(not 워크플로우), 디렉토리, 데이터베이스 | |
 
 조사는 영어 표기에 바로 붙입니다: `tailnet에`, `flake를`, `PR을`.

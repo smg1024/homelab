@@ -29,7 +29,8 @@ services/jamye-plz.nix
 | 포트 | 서비스 | 공개 URL |
 | --- | --- | --- |
 | `8080` | jamye-plz full-stack PWA 엔트리포인트 | `https://jamye-plz.ridewithmin.com` |
-| `9100` | node_exporter | 미개방 (Prometheus가 tailnet으로 수집) |
+| `9429` | vlagent | 공개 미노출 (신뢰 인터페이스 경유 tailnet 도달 가능); journald 로그를 VictoriaLogs로 버퍼링 전송 |
+| `45876` | beszel-agent | 미개방 (에이전트가 tailnet으로 Beszel 허브에 먼저 접속) |
 
 ## jamye-plz 메모
 

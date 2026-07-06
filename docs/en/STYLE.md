@@ -42,7 +42,7 @@ words use the plain English term, spelled the same way every time.
 | Kind | Spelling | Notes |
 | --- | --- | --- |
 | Keep as-is | `tailnet`, `flake`, `PR`, `SSH`, `DNS`, `CI/CD`, `OCI`, `RAM`, `API`, `PWA`, `JWT`, `OAuth`, `ACL`, `sops`, `MagicDNS` | Initialisms uppercase; `sops-nix` stays lowercase |
-| Product / tool names | `Cloudflare Tunnel`, `Caddy`, `Tailscale`, `NixOS`, `Podman`, `Prometheus`, `Grafana`, `Loki`, `Forgejo`, `Vaultwarden`, `Zensical` | Keep upstream casing |
+| Product / tool names | `Cloudflare Tunnel`, `Caddy`, `Tailscale`, `NixOS`, `Podman`, `Beszel`, `VictoriaLogs`, `Forgejo`, `Vaultwarden`, `Zensical` | Keep upstream casing |
 | House spellings | "repo" (short for the Git repository), "tailnet" (lowercase), "public Internet" (capital I), host names lowercase (`yggdrasil`, `midgard`, `alfheim`) | |
 
 Host names are lowercase everywhere, in prose and in code. Wrap a host name in
@@ -55,7 +55,7 @@ otherwise ("midgard runs Forgejo").
   `512 MB`.
 - Config literals (`512M`, `15d`, `3m`) keep their raw form and go in
   `inline code`.
-- Ports go in inline code: `:8080`, `127.0.0.1:9090`.
+- Ports go in inline code: `:8080`, `127.0.0.1:8090`.
 
 ## 4. Lists and structure
 

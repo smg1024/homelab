@@ -25,9 +25,8 @@ icon: fontawesome/solid/box-archive
 | Vaultwarden DB + 첨부파일 | midgard | `/var/lib/vaultwarden` | **치명적**: 모든 비밀번호 |
 | Forgejo 저장소 + DB | midgard | `/var/lib/forgejo` | **치명적**: 다른 곳에 push 안 된 Git 히스토리 전부 |
 | Uptime Kuma 설정/이력 | yggdrasil | `/var/lib/private/uptime-kuma` | 성가심: 체크를 손으로 재생성 |
-| Grafana 대시보드 (비프로비저닝) | yggdrasil | `/var/lib/grafana` | 낮음: 주 대시보드는 저장소에서 프로비저닝됨 |
-| Prometheus TSDB | yggdrasil | `/var/lib/prometheus2` | 수용 가능: 보존 15d 메트릭 |
-| Loki 로그 | yggdrasil | Loki `dataDir` | 수용 가능 |
+| Beszel 허브 DB (사용자, 시스템, 알림 설정) | yggdrasil | `/var/lib/beszel-hub` | 성가심: 알림과 알림 채널을 손으로 재설정 |
+| VictoriaLogs 로그 | yggdrasil | `/var/lib/victorialogs` | 수용 가능: 보존 14d 로그 |
 
 키 두 가지는 특별히 신경 써야 합니다:
 

@@ -24,7 +24,7 @@ closed and the attack surface is the tunnel, not the hosts. See the
 ## The tailnet is the internal boundary
 
 Hosts talk to each other over Tailscale, and tailnet membership is what makes
-a machine "inside". Operator-only surfaces such as Grafana are gated by
+a machine "inside". Operator-only surfaces such as Beszel are gated by
 tailnet address ranges, not passwords on public endpoints.
 
 ## Secrets never touch the store

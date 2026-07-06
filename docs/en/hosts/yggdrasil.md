@@ -12,9 +12,8 @@ of RAM, so the rule is to **keep it lightweight**. No applications run here.
 - Maintain the Cloudflare Tunnel (`cloudflared`)
 - Run the Caddy reverse proxy to route public domains to internal services
 - Serve the Uptime Kuma public status page
-- Run Prometheus for node metrics and alert rule evaluation
-- Serve Grafana dashboards (tailnet-restricted Caddy route)
-- Run the Loki log store
+- Run the Beszel hub for metrics and alerting (tailnet-restricted Caddy route)
+- Run the VictoriaLogs log store and query UI (tailnet-restricted Caddy route)
 
 ## Loaded service modules
 
@@ -22,9 +21,8 @@ of RAM, so the rule is to **keep it lightweight**. No applications run here.
 services/ingress.nix      # Caddy + Cloudflare DNS plugin
 services/cloudflared.nix  # Cloudflare Tunnel
 services/uptime-kuma.nix
-services/prometheus/
-services/loki.nix
-services/grafana/
+services/victorialogs.nix
+services/beszel/hub.nix
 ```
 
 ## Local ports
@@ -33,16 +31,16 @@ services/grafana/
 | --- | --- | --- |
 | `443` | Caddy | public (Tunnel origin) |
 | `3001` | Uptime Kuma | localhost |
-| `3003` | Grafana | localhost |
-| `8081` | Grafana image renderer | localhost |
-| `9090` | Prometheus | localhost |
-| `9100` | node_exporter | not opened on the firewall |
+| `8090` | Beszel hub | all interfaces; reachable only via the trusted `tailscale0` interface |
+| `9428` | VictoriaLogs | all interfaces; reachable only via the trusted `tailscale0` interface |
+| `9429` | vlagent | all interfaces; tailnet-reachable via the trusted `tailscale0` interface, fed by journal-upload via localhost |
+| `45876` | beszel-agent | not opened on the firewall (agent dials the hub outbound) |
 
 ## Health checks
 
 ```bash
 systemctl is-active caddy cloudflared-tunnel-* uptime-kuma
-systemctl is-active prometheus grafana loki
-curl -fsS http://127.0.0.1:9090/-/ready
-curl -fsS http://127.0.0.1:3003/api/health | jq
+systemctl is-active beszel-hub victorialogs beszel-agent vlagent
+curl -fsS http://127.0.0.1:8090/api/health
+curl -fsS http://127.0.0.1:9428/ping
 ```

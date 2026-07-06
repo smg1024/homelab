@@ -37,7 +37,8 @@ Caddy selects the internal backend by public hostname.
 | `docs.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8084` | Static docs site on midgard |
 | `jamye-plz.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | jamye-plz on alfheim |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | status-page paths only, `404` otherwise |
-| `grafana.ridewithmin.com` | `http://127.0.0.1:3003` | tailnet clients only, `404` otherwise |
+| `beszel.ridewithmin.com` | `http://127.0.0.1:8090` | tailnet clients only, `404` otherwise |
+| `logs.ridewithmin.com` | `http://127.0.0.1:9428` | tailnet clients only, `/` redirects to the VictoriaLogs web UI |
 
 Certificates are issued through ACME DNS challenges using Caddy's Cloudflare
 DNS plugin. The Cloudflare API token is injected as an environment variable
@@ -45,8 +46,8 @@ from the `cloudflare/caddy_env` SOPS secret.
 
 ## The tailnet-only route pattern
 
-Grafana is not part of the tunnel's public hostname list; Caddy restricts it
-to Tailscale address ranges.
+Beszel and the VictoriaLogs UI are not part of the tunnel's public hostname
+list; Caddy restricts them to Tailscale address ranges.
 
 ```caddy
 @tailnet remote_ip 100.64.0.0/10 fd7a:115c:a1e0::/48

@@ -37,7 +37,8 @@ modules/podman.nix      # 호스트 전용 모듈
 | `8084` | 홈랩 문서 사이트 | `https://docs.ridewithmin.com` |
 | `3000` | Forgejo | `https://git.ridewithmin.com` |
 | `8222` | Vaultwarden | `https://vault.ridewithmin.com` |
-| `9100` | node_exporter | 미개방 (Prometheus가 tailnet으로 수집) |
+| `9429` | vlagent | 공개 미노출 (신뢰 인터페이스 경유 tailnet 도달 가능); journald 로그를 VictoriaLogs로 버퍼링 전송 |
+| `45876` | beszel-agent | 미개방 (에이전트가 tailnet으로 Beszel 허브에 먼저 접속) |
 
 ## 컨테이너 런타임
 

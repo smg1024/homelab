@@ -10,7 +10,7 @@ Secrets are managed with `sops-nix`. **Plaintext secrets never go into
 ## How it works
 
 - Encrypted files: `secrets/*.yaml` (currently `ingress.yaml`,
-  `vaultwarden.yaml`, `jamye-plz.yaml`, ...)
+  `vaultwarden.yaml`, `jamye-plz.yaml`, `beszel.yaml`, ...)
 - Encryption policy `.sops.yaml`: new or re-keyed files matching
   `secrets/[^/]+\.yaml` are encrypted for the `poby`, `yggdrasil`,
   `midgard`, and `alfheim` age recipients.
@@ -50,7 +50,8 @@ Secrets are managed with `sops-nix`. **Plaintext secrets never go into
 | --- | --- | --- |
 | `cloudflare/caddy_env` | Caddy | Cloudflare API token for DNS challenges |
 | `cloudflare/cloudflared_tunnel_credentials` | cloudflared | Tunnel credential |
-| `grafana/admin_password` | Grafana | administrator password |
+| `beszel/admin_email`, `beszel/admin_password` | Beszel hub | first-admin seed rendered into `beszel-hub.env` |
+| `beszel/hub_key`, `beszel/universal_token` | Beszel agents | agent registration credentials rendered into `beszel-agent.env` |
 | `jamye-plz/*` | jamye-plz | JWT and OAuth client settings rendered into `jamye-plz.env` |
 | `vaultwarden/admin_token` | Vaultwarden | admin token (`ADMIN_TOKEN`) |
 

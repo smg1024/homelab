@@ -37,7 +37,8 @@ modules/podman.nix      # host-specific module
 | `8084` | Homelab docs site | `https://docs.ridewithmin.com` |
 | `3000` | Forgejo | `https://git.ridewithmin.com` |
 | `8222` | Vaultwarden | `https://vault.ridewithmin.com` |
-| `9100` | node_exporter | Not exposed; scraped by Prometheus over the tailnet |
+| `9429` | vlagent | No public exposure (tailnet-reachable via trusted interface); buffers journald logs to VictoriaLogs |
+| `45876` | beszel-agent | Not exposed; the agent dials the Beszel hub over the tailnet |
 
 ## Container runtime
 

@@ -13,8 +13,9 @@ icon: fontawesome/solid/map
     - [ ] Vaultwarden SQLite DB용 `services.vaultwarden.backupDir`
     - [ ] Forgejo dump 또는 외부 원격 미러링
     - [ ] midgard `/var/lib`를 호스트 밖으로 보내는 백업 작업 (restic/borgbackup)
-- [ ] **알림 전달**: Prometheus 규칙은 있지만 Alertmanager가 미구성이라
-      알림이 UI에서만 보임 ([상세](services/monitoring.md))
+- [x] **알림 전달**: Beszel이 시스템별 임계값으로 이메일 알림을 보내며,
+      연결돼 있지 않던 기존 Prometheus 규칙을 대체
+      ([상세](services/monitoring.md))
 
 ## 다음
 
@@ -24,6 +25,9 @@ icon: fontawesome/solid/map
 - [x] 이 문서를 공개 서빙:
       [docs.ridewithmin.com](https://docs.ridewithmin.com/)은 Cloudflare
       Tunnel을 거쳐 midgard의 static-web-server가 제공합니다
+- [x] Grafana/Prometheus/Loki/Alloy 스택을 **Beszel + VictoriaLogs**로
+      교체: yggdrasil 4 GB에 더 가볍고, UI가 더 친절하고, 알림 전달이
+      실제로 동작 ([상세](services/monitoring.md))
 - [ ] 이 사이트에 페이지별 **편집 버튼** (`content.action.edit` +
       Forgejo `edit_uri`)
 - [ ] tailnet 전용 화면 중 **Cloudflare Access**를 2차 방어로 둘 곳이
@@ -33,7 +37,8 @@ icon: fontawesome/solid/map
 
 - [ ] midgard의 Hermes Agent 선언적 구성 (안정화되면 변경 가능한 `~/.hermes`에서
       승격)
-- [ ] Grafana 대시보드 코드화 확대 (프로비저닝 대시보드 추가)
+- [ ] Beszel 알림 임계값의 선언적 구성 (현재는 UI에서 관리하는 상태;
+      업스트림이 DB 밖 설정을 지원하게 되면)
 
 !!! tip "이 페이지 사용법"
     항목이 완료되면 체크하고 관련 페이지나 커밋을 링크하세요. 우선순위가
