@@ -69,6 +69,7 @@
           ./services/node-exporter.nix
           ./services/alloy.nix
           ./services/log-shipper.nix
+          ./services/beszel/agent.nix
 
           disko.nixosModules.disko
           sops-nix.nixosModules.sops
