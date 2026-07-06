@@ -29,7 +29,7 @@ services/jamye-plz.nix
 | 포트 | 서비스 | 공개 URL |
 | --- | --- | --- |
 | `8080` | jamye-plz full-stack PWA 엔트리포인트 | `https://jamye-plz.ridewithmin.com` |
-| `9429` | vlagent | localhost 전용; journald 로그를 VictoriaLogs로 버퍼링 전송 |
+| `9429` | vlagent | 미개방; journald 로그를 VictoriaLogs로 버퍼링 전송 (localhost로 입력받음) |
 | `45876` | beszel-agent | 미개방 (에이전트가 tailnet으로 Beszel 허브에 먼저 접속) |
 
 ## jamye-plz 메모

@@ -33,7 +33,7 @@ services/beszel/hub.nix
 | `3001` | Uptime Kuma | localhost |
 | `8090` | Beszel 허브 | 전체 인터페이스, 신뢰된 `tailscale0` 경유만 도달 가능 |
 | `9428` | VictoriaLogs | 전체 인터페이스, 신뢰된 `tailscale0` 경유만 도달 가능 |
-| `9429` | vlagent | localhost |
+| `9429` | vlagent | 전체 인터페이스, 방화벽 미개방 (journal-upload가 localhost로 전송) |
 | `45876` | beszel-agent | 방화벽 미개방 (에이전트가 허브로 먼저 접속) |
 
 ## 점검

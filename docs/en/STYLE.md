@@ -55,7 +55,7 @@ otherwise ("midgard runs Forgejo").
   `512 MB`.
 - Config literals (`512M`, `15d`, `3m`) keep their raw form and go in
   `inline code`.
-- Ports go in inline code: `:8080`, `127.0.0.1:9090`.
+- Ports go in inline code: `:8080`, `127.0.0.1:8090`.
 
 ## 4. Lists and structure
 

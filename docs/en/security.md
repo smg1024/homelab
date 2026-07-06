@@ -13,7 +13,7 @@ Internet, tailnet, and localhost.
 | --- | --- | --- |
 | **Public Internet** | anyone | Only hostnames routed through Cloudflare Tunnel: `home`, `blog`, `git`, `vault`, `jamye-plz`, `status`, `docs` |
 | **Tailnet** | devices in the Tailscale tailnet | Everything above, plus the `beszel` and `logs` routes, plus direct host/port access per Tailscale ACLs (the trusted `tailscale0` interface exposes e.g. Beszel `:8090` and VictoriaLogs `:9428`) |
-| **Localhost** | processes on the host itself | Uptime Kuma and vlagent backends bound to `127.0.0.1` |
+| **Localhost** | processes on the host itself | Uptime Kuma bound to `127.0.0.1`; journald → vlagent hand-off on each host |
 
 ## Ingress path
 
@@ -35,7 +35,7 @@ for everything else.
 The NixOS firewall is enabled on every host. Home hosts allow SSH `22`
 directly; `alfheim` accepts SSH only through the trusted `tailscale0`
 interface. Its public OCI address does not answer SSH at all. Application
-and monitoring ports (`3000`, `3001`, `8080`, `8082`, `8083`, `8084`, `8090`, `8222`, `9428`, ...)
+and monitoring ports (`3000`, `3001`, `8080`, `8082`, `8083`, `8084`, `8090`, `8222`, `9428`, `9429`, ...)
 are never opened publicly; tailnet-internal traffic reaches them through the
 trusted `tailscale0` interface.
 

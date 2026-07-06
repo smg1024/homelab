@@ -33,7 +33,7 @@ services/beszel/hub.nix
 | `3001` | Uptime Kuma | localhost |
 | `8090` | Beszel hub | all interfaces; reachable only via the trusted `tailscale0` interface |
 | `9428` | VictoriaLogs | all interfaces; reachable only via the trusted `tailscale0` interface |
-| `9429` | vlagent | localhost |
+| `9429` | vlagent | all interfaces; firewall closed, fed by journal-upload via localhost |
 | `45876` | beszel-agent | not opened on the firewall (agent dials the hub outbound) |
 
 ## Health checks

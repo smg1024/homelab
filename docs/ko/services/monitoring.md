@@ -15,7 +15,7 @@ icon: fontawesome/solid/chart-line
 | `services/beszel/hub.nix` | Beszel 허브: 메트릭 UI, 이력, 알림 | `0.0.0.0:8090` (신뢰 인터페이스 경유 tailnet 전용) |
 | `services/beszel/agent.nix` | Beszel 에이전트: 호스트별 메트릭 소스 (전 호스트 공통) | 허브로 나가는 WebSocket |
 | `services/victorialogs.nix` | VictoriaLogs 로그 저장소 + 조회 UI, `14d` 보존 | `:9428` (신뢰 인터페이스 경유 tailnet 전용) |
-| `services/log-shipper.nix` | journald → VictoriaLogs 전송 (전 호스트 공통) | vlagent `127.0.0.1:9429` |
+| `services/log-shipper.nix` | journald → VictoriaLogs 전송 (전 호스트 공통) | vlagent `:9429` (방화벽 미개방, localhost로 입력받음) |
 | `services/uptime-kuma.nix` | 공개 엔드포인트 체크 + 상태 페이지 | `127.0.0.1:3001` |
 
 ## 메트릭 흐름
