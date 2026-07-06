@@ -15,7 +15,7 @@ changes are made in the repo, committed, then deployed.
 | Host | Role | Architecture | Notes |
 | --- | --- | --- | --- |
 | `yggdrasil` | Edge/infra node: Cloudflare Tunnel, Caddy, monitoring stack | `x86_64-linux` | 4 GB RAM, keep it lightweight |
-| `midgard` | Application host: Forgejo, Vaultwarden, Homepage, Podman | `x86_64-linux` | |
+| `midgard` | Application host: static sites, Forgejo, Vaultwarden, Homepage, Podman | `x86_64-linux` | |
 | `alfheim` | OCI ARM application node: jamye-plz | `aarch64-linux` | SSH over the tailnet only |
 
 ## Repository layout
@@ -35,6 +35,7 @@ docs/            # this documentation site (Zensical)
 | URL | Service | Access |
 | --- | --- | --- |
 | `https://home.ridewithmin.com` | Homepage dashboard | Public (Cloudflare Tunnel) |
+| `https://blog.ridewithmin.com` | Dev with Min blog | Public (Cloudflare Tunnel) |
 | `https://git.ridewithmin.com` | Forgejo | Public (Cloudflare Tunnel) |
 | `https://vault.ridewithmin.com` | Vaultwarden | Public (Cloudflare Tunnel) |
 | `https://jamye-plz.ridewithmin.com` | jamye-plz | Public (Cloudflare Tunnel) |

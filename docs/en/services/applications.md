@@ -13,6 +13,18 @@ traffic over the tailnet.
 The homelab dashboard. Runs on `:8082`, exposed at
 `https://home.ridewithmin.com`.
 
+## Dev with Min blog (`services/blog-site.nix`)
+
+Static Astro personal blog. Built from the `blog` flake input and served by
+static-web-server on midgard at `:8083`, exposed at
+`https://blog.ridewithmin.com`.
+
+## Docs site (`services/docs-site.nix`)
+
+Static homelab documentation site. Built from this flake's `docs` package and
+served by static-web-server on midgard at `:8084`, exposed at
+`https://docs.ridewithmin.com`.
+
 ## Forgejo (`services/forgejo.nix`)
 
 Git hosting. Runs on `:3000`, exposed at `https://git.ridewithmin.com`.

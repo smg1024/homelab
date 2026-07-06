@@ -14,6 +14,7 @@ Tunnel은 다음 공개 호스트네임을 yggdrasil의 로컬 Caddy(`https://lo
 맞게 설정됩니다.
 
 - `home.ridewithmin.com`
+- `blog.ridewithmin.com`
 - `git.ridewithmin.com`
 - `vault.ridewithmin.com`
 - `jamye-plz.ridewithmin.com`
@@ -30,12 +31,13 @@ Caddy는 공개 호스트네임별로 내부 백엔드를 선택합니다.
 | 호스트네임 | 백엔드 | 비고 |
 | --- | --- | --- |
 | `home.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8082` | |
+| `blog.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8083` | midgard의 정적 Astro 블로그 |
 | `git.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:3000` | |
 | `vault.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8222` | |
+| `docs.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8084` | midgard의 정적 문서 사이트 |
 | `jamye-plz.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | alfheim의 jamye-plz |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | 상태 페이지 경로만 허용, 그 외 `404` |
 | `grafana.ridewithmin.com` | `http://127.0.0.1:3003` | tailnet 클라이언트만, 그 외 `404` |
-| `docs.ridewithmin.com` | 정적 파일 (`file_server`) | 공개 |
 
 인증서는 Caddy의 Cloudflare DNS 플러그인으로 ACME DNS 챌린지를 거쳐
 발급합니다. Cloudflare API 토큰은 `cloudflare/caddy_env` SOPS 비밀에서

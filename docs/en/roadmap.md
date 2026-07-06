@@ -16,13 +16,14 @@ items are intentions, roughly ordered by priority within each horizon.
 - [ ] **Alert delivery:** Prometheus rules exist but Alertmanager is not
       configured, so alerts are visible only in the UI
       ([details](services/monitoring.md))
-- [ ] **Deploy this docs site:** merge the docs branch, let CD deploy it,
-      add the `docs.ridewithmin.com` DNS record
 
 ## Next
 
 - [x] Give **alfheim** a real job: [jamye-plz](services/applications.md)
       now runs on the OCI node and validates the cloud-host pattern
+- [x] Serve this documentation publicly:
+      [docs.ridewithmin.com](https://docs.ridewithmin.com/) is routed through
+      Cloudflare Tunnel and backed by static-web-server on midgard
 - [ ] Per-page **edit buttons** on this site (`content.action.edit` +
       Forgejo `edit_uri`)
 - [ ] Review whether any tailnet-only surface deserves **Cloudflare Access**
@@ -30,7 +31,6 @@ items are intentions, roughly ordered by priority within each horizon.
 
 ## Someday / ideas
 
-- [ ] Public (read-only) version of this documentation
 - [ ] Declarative Hermes Agent setup on midgard (promote from mutable
       `~/.hermes` once stable)
 - [ ] Dashboards-as-code expansion in Grafana (more provisioned dashboards)

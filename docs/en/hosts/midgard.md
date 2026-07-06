@@ -11,6 +11,8 @@ ports are never opened on the public firewall.
 ## Responsibilities
 
 - Run the Homepage dashboard
+- Run the Dev with Min static blog
+- Run the homelab docs static site
 - Run Forgejo (Git hosting)
 - Run Vaultwarden (password manager)
 - Provide the Podman runtime for containerized application services
@@ -18,6 +20,8 @@ ports are never opened on the public firewall.
 ## Loaded modules
 
 ```text
+services/blog-site.nix
+services/docs-site.nix
 services/homepage.nix
 services/forgejo.nix
 services/vaultwarden.nix
@@ -29,6 +33,8 @@ modules/podman.nix      # host-specific module
 | Port | Service | Public URL |
 | --- | --- | --- |
 | `8082` | Homepage | `https://home.ridewithmin.com` |
+| `8083` | Dev with Min blog | `https://blog.ridewithmin.com` |
+| `8084` | Homelab docs site | `https://docs.ridewithmin.com` |
 | `3000` | Forgejo | `https://git.ridewithmin.com` |
 | `8222` | Vaultwarden | `https://vault.ridewithmin.com` |
 | `9100` | node_exporter | Not exposed; scraped by Prometheus over the tailnet |

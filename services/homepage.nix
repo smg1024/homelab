@@ -37,6 +37,13 @@
       {
         Applications = [
           {
+            "Dev with Min" = {
+              description = "Personal developer blog";
+              href = "https://blog.ridewithmin.com";
+              icon = "mdi-post-outline";
+            };
+          }
+          {
             Forgejo = {
               description = "Git hosting";
               href = "https://git.ridewithmin.com";

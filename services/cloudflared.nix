@@ -18,6 +18,14 @@
         };
       };
 
+      ingress."blog.ridewithmin.com" = {
+        service = "https://localhost:443";
+        originRequest = {
+          httpHostHeader = "blog.ridewithmin.com";
+          originServerName = "blog.ridewithmin.com";
+        };
+      };
+
       ingress."git.ridewithmin.com" = {
         service = "https://localhost:443";
         originRequest = {
