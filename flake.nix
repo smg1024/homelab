@@ -66,8 +66,6 @@
           ./modules/ssh.nix
           ./modules/tailscale.nix
           ./modules/secrets.nix
-          ./services/node-exporter.nix
-          ./services/alloy.nix
           ./services/log-shipper.nix
           ./services/beszel/agent.nix
 
