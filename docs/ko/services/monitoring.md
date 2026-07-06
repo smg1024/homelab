@@ -15,7 +15,7 @@ icon: fontawesome/solid/chart-line
 | `services/beszel/hub.nix` | Beszel 허브: 메트릭 UI, 이력, 알림 | `0.0.0.0:8090` (신뢰 인터페이스 경유 tailnet 전용) |
 | `services/beszel/agent.nix` | Beszel 에이전트: 호스트별 메트릭 소스 (전 호스트 공통) | 허브로 나가는 WebSocket |
 | `services/victorialogs.nix` | VictoriaLogs 로그 저장소 + 조회 UI, `14d` 보존 | `:9428` (신뢰 인터페이스 경유 tailnet 전용) |
-| `services/log-shipper.nix` | journald → VictoriaLogs 전송 (전 호스트 공통) | vlagent `:9429` (방화벽 미개방, localhost로 입력받음) |
+| `services/log-shipper.nix` | journald → VictoriaLogs 전송 (전 호스트 공통) | vlagent `:9429` (신뢰 인터페이스 경유 tailnet 도달 가능, localhost로 입력받음) |
 | `services/uptime-kuma.nix` | 공개 엔드포인트 체크 + 상태 페이지 | `127.0.0.1:3001` |
 
 ## 메트릭 흐름
@@ -24,7 +24,10 @@ icon: fontawesome/solid/chart-line
 (WebSocket). 수집용 인바운드 포트가 필요 없습니다. 에이전트는
 `secrets/beszel.yaml`의 허브 공개 키와 universal token으로 스스로 등록하며
 (`SYSTEM_NAME`은 호스트네임), CPU·메모리·디스크·네트워크·로드·온도·systemd
-서비스 상태·Podman 컨테이너 통계(midgard)를 보고합니다.
+서비스 상태를 보고합니다. Podman 컨테이너 통계는 수집되지 **않습니다**:
+에이전트가 midgard의 Podman docker 호환
+소켓(`virtualisation.podman.dockerSocket.enable`)을 필요로 하는데, 현재
+활성화되어 있지 않습니다.
 
 ```text
 beszel-agent (yggdrasil) ──┐

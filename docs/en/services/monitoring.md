@@ -15,7 +15,7 @@ status page.
 | `services/beszel/hub.nix` | Beszel hub: metrics UI, history, alerts | `0.0.0.0:8090` (tailnet only via trusted interface) |
 | `services/beszel/agent.nix` | Beszel agent: per-host metrics source (all hosts) | outbound WebSocket to the hub |
 | `services/victorialogs.nix` | VictoriaLogs log store + query UI, `14d` retention | `:9428` (tailnet only via trusted interface) |
-| `services/log-shipper.nix` | journald → VictoriaLogs shipping (all hosts) | vlagent on `:9429` (firewall closed; fed via localhost) |
+| `services/log-shipper.nix` | journald → VictoriaLogs shipping (all hosts) | vlagent on `:9429` (tailnet-reachable via trusted interface; fed via localhost) |
 | `services/uptime-kuma.nix` | public endpoint checks + status page | `127.0.0.1:3001` |
 
 ## Metrics flow
@@ -31,8 +31,10 @@ beszel-agent (midgard)   ──┼── WebSocket ──> beszel-hub :8090 (ygg
 beszel-agent (alfheim)   ──┘
 ```
 
-Agents report CPU, memory, disk, network, load, temperature, systemd service
-status, and Podman container stats (midgard).
+Agents report CPU, memory, disk, network, load, temperature, and systemd
+service status. Podman container stats are **not** collected: the agent
+would need midgard's Podman docker-compatible socket
+(`virtualisation.podman.dockerSocket.enable`), which is not enabled.
 
 !!! note "Universal token must be active for registration"
     An agent can self-register only while the hub's universal token is

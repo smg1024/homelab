@@ -12,7 +12,7 @@ icon: fontawesome/solid/shield-halved
 | 계층 | 누가 | 접근 대상 |
 | --- | --- | --- |
 | **공개 인터넷** | 누구나 | Cloudflare Tunnel로 라우팅된 호스트네임만: `home`, `blog`, `git`, `vault`, `jamye-plz`, `status`, `docs` |
-| **tailnet** | Tailscale tailnet에 속한 기기 | 위 전부 + `beszel`·`logs` 라우트 + Tailscale ACL에 따른 호스트/포트 직접 접근 (신뢰된 `tailscale0` 인터페이스로 Beszel `:8090`, VictoriaLogs `:9428` 등 도달 가능) |
+| **tailnet** | Tailscale tailnet에 속한 기기 | 위 전부 + `beszel`·`logs` 라우트 + Tailscale ACL에 따른 호스트/포트 직접 접근 (신뢰된 `tailscale0` 인터페이스로 Beszel `:8090`, VictoriaLogs `:9428`, vlagent `:9429` 등 도달 가능) |
 | **localhost** | 호스트 위의 프로세스 | `127.0.0.1`에 바인딩된 Uptime Kuma, 각 호스트의 journald → vlagent 전달 경로 |
 
 ## 인그레스 경로

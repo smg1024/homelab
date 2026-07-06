@@ -12,7 +12,7 @@ Internet, tailnet, and localhost.
 | Tier | Who | What they can reach |
 | --- | --- | --- |
 | **Public Internet** | anyone | Only hostnames routed through Cloudflare Tunnel: `home`, `blog`, `git`, `vault`, `jamye-plz`, `status`, `docs` |
-| **Tailnet** | devices in the Tailscale tailnet | Everything above, plus the `beszel` and `logs` routes, plus direct host/port access per Tailscale ACLs (the trusted `tailscale0` interface exposes e.g. Beszel `:8090` and VictoriaLogs `:9428`) |
+| **Tailnet** | devices in the Tailscale tailnet | Everything above, plus the `beszel` and `logs` routes, plus direct host/port access per Tailscale ACLs (the trusted `tailscale0` interface exposes e.g. Beszel `:8090`, VictoriaLogs `:9428`, and vlagent `:9429`) |
 | **Localhost** | processes on the host itself | Uptime Kuma bound to `127.0.0.1`; journald → vlagent hand-off on each host |
 
 ## Ingress path

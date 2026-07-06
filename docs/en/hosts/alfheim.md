@@ -29,7 +29,7 @@ services/jamye-plz.nix
 | Port | Service | Public URL |
 | --- | --- | --- |
 | `8080` | jamye-plz full-stack PWA entrypoint | `https://jamye-plz.ridewithmin.com` |
-| `9429` | vlagent | Not exposed; buffers journald logs to VictoriaLogs (fed via localhost) |
+| `9429` | vlagent | No public exposure (tailnet-reachable via trusted interface); buffers journald logs to VictoriaLogs |
 | `45876` | beszel-agent | Not exposed; the agent dials the Beszel hub over the tailnet |
 
 ## jamye-plz notes
