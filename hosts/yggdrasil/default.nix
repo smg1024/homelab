@@ -10,7 +10,6 @@
     ../../services/victorialogs.nix
     ../../services/beszel/hub.nix
     ../../services/grafana
-    ../../services/docs-site.nix
   ];
 
   networking.hostName = "yggdrasil";

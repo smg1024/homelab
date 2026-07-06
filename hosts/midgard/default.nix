@@ -6,6 +6,7 @@
     ./disko.nix
     ../../modules/podman.nix
     ../../services/blog-site.nix
+    ../../services/docs-site.nix
     ../../services/homepage.nix
     ../../services/forgejo.nix
     ../../services/vaultwarden.nix
