@@ -25,6 +25,8 @@
     };
 
     jamye-plz.url = "github:jamye-plz/jamye-plz/main";
+
+    blog.url = "github:smg1024/blog/master";
   };
 
   outputs = inputs @ {
