@@ -18,9 +18,9 @@ flowchart TD
         cloudflared["cloudflared<br/>Cloudflare Tunnel 클라이언트"]
         caddy["Caddy<br/>HTTPS 인그레스 / 리버스 프록시"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
-        prometheus["Prometheus<br/>127.0.0.1:9090"]
-        grafana["Grafana<br/>127.0.0.1:3003"]
-        yNodeExporter["node_exporter<br/>:9100"]
+        beszelHub["Beszel 허브<br/>:8090"]
+        vlogs["VictoriaLogs<br/>:9428"]
+        yShipper["beszel-agent / vlagent"]
     end
 
     subgraph tailnet["Tailscale tailnet"]
@@ -33,12 +33,12 @@ flowchart TD
             docsSite["문서 사이트<br/>:8084"]
             forgejo["Forgejo<br/>:3000"]
             vaultwarden["Vaultwarden<br/>:8222"]
-            mNodeExporter["node_exporter<br/>:9100"]
+            mShipper["beszel-agent / vlagent"]
         end
 
         subgraph alfheim["alfheim: OCI ARM 애플리케이션 호스트"]
             jamyePlz["jamye-plz<br/>:8080"]
-            aNodeExporter["node_exporter<br/>:9100"]
+            aShipper["beszel-agent / vlagent"]
         end
     end
 
@@ -52,7 +52,8 @@ flowchart TD
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
     caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
-    caddy -->|"grafana.ridewithmin.com<br/>tailnet 전용"| grafana
+    caddy -->|"beszel.ridewithmin.com<br/>tailnet 전용"| beszelHub
+    caddy -->|"logs.ridewithmin.com<br/>tailnet 전용"| vlogs
     caddy -->|"docs.ridewithmin.com"| docsSite
 
     caddy -.->|Tailscale 경유 백엔드 접근| midgardDns
@@ -64,10 +65,12 @@ flowchart TD
     midgardDns -.-> vaultwarden
     alfheimDns -.-> jamyePlz
 
-    prometheus --> yNodeExporter
-    prometheus -.->|Tailscale 경유 수집| mNodeExporter
-    prometheus -.->|Tailscale 경유 수집| aNodeExporter
-    grafana --> prometheus
+    yShipper --> beszelHub
+    yShipper --> vlogs
+    mShipper -.->|"메트릭 WebSocket + journald 로그<br/>Tailscale 경유"| beszelHub
+    mShipper -.-> vlogs
+    aShipper -.->|"메트릭 WebSocket + journald 로그<br/>Tailscale 경유"| beszelHub
+    aShipper -.-> vlogs
 ```
 
 이 경계들(공개 인터넷, tailnet, localhost)을 누가 넘는지는
@@ -86,8 +89,8 @@ flowchart TD
 | `modules/ssh.nix` | OpenSSH, 패스워드/루트 로그인 비활성 |
 | `modules/tailscale.nix` | Tailscale |
 | `modules/secrets.nix` | sops-nix 기본 설정 |
-| `services/node-exporter.nix` | 모든 호스트의 node_exporter (`:9100`) |
-| `services/alloy.nix` | 로그 수집 (Loki로 전송) |
+| `services/log-shipper.nix` | 모든 호스트의 journald → VictoriaLogs 전송 (journal-upload + vlagent) |
+| `services/beszel/agent.nix` | 모든 호스트의 Beszel 메트릭 에이전트 |
 
 ## 스토리지
 

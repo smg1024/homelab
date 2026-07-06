@@ -29,7 +29,8 @@ services/jamye-plz.nix
 | Port | Service | Public URL |
 | --- | --- | --- |
 | `8080` | jamye-plz full-stack PWA entrypoint | `https://jamye-plz.ridewithmin.com` |
-| `9100` | node_exporter | Not exposed; scraped by Prometheus over the tailnet |
+| `9429` | vlagent | localhost only; buffers journald logs to VictoriaLogs |
+| `45876` | beszel-agent | Not exposed; the agent dials the Beszel hub over the tailnet |
 
 ## jamye-plz notes
 

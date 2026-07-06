@@ -24,9 +24,8 @@ host. A machine can be rebuilt from scratch with the
 | Vaultwarden DB + attachments | midgard | `/var/lib/vaultwarden` | **Critical**: all passwords |
 | Forgejo repos + DB | midgard | `/var/lib/forgejo` | **Critical**: all Git history not pushed elsewhere |
 | Uptime Kuma config/history | yggdrasil | `/var/lib/private/uptime-kuma` | Annoying: checks recreated by hand |
-| Grafana dashboards (non-provisioned) | yggdrasil | `/var/lib/grafana` | Low: main dashboard is provisioned from the repo |
-| Prometheus TSDB | yggdrasil | `/var/lib/prometheus2` | Acceptable: 15d retention metrics |
-| Loki logs | yggdrasil | Loki `dataDir` | Acceptable |
+| Beszel hub DB (users, systems, alert config) | yggdrasil | `/var/lib/beszel-hub` | Annoying: alerts and notifications reconfigured by hand |
+| VictoriaLogs logs | yggdrasil | `/var/lib/victorialogs` | Acceptable: 14d retention logs |
 
 **Keys.** Two items deserve explicit care:
 

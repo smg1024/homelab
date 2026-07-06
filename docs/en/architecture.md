@@ -19,9 +19,9 @@ flowchart TD
         cloudflared["cloudflared<br/>Cloudflare Tunnel client"]
         caddy["Caddy<br/>HTTPS ingress / reverse proxy"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
-        prometheus["Prometheus<br/>127.0.0.1:9090"]
-        grafana["Grafana<br/>127.0.0.1:3003"]
-        yNodeExporter["node_exporter<br/>:9100"]
+        beszelHub["Beszel hub<br/>:8090"]
+        vlogs["VictoriaLogs<br/>:9428"]
+        yShipper["beszel-agent / vlagent"]
     end
 
     subgraph tailnet["Tailscale tailnet"]
@@ -34,12 +34,12 @@ flowchart TD
             docsSite["Docs site<br/>:8084"]
             forgejo["Forgejo<br/>:3000"]
             vaultwarden["Vaultwarden<br/>:8222"]
-            mNodeExporter["node_exporter<br/>:9100"]
+            mShipper["beszel-agent / vlagent"]
         end
 
         subgraph alfheim["alfheim: OCI ARM application host"]
             jamyePlz["jamye-plz<br/>:8080"]
-            aNodeExporter["node_exporter<br/>:9100"]
+            aShipper["beszel-agent / vlagent"]
         end
     end
 
@@ -53,7 +53,8 @@ flowchart TD
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
     caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
-    caddy -->|"grafana.ridewithmin.com<br/>tailnet only"| grafana
+    caddy -->|"beszel.ridewithmin.com<br/>tailnet only"| beszelHub
+    caddy -->|"logs.ridewithmin.com<br/>tailnet only"| vlogs
     caddy -->|"docs.ridewithmin.com"| docsSite
 
     caddy -.->|backend access over Tailscale| midgardDns
@@ -65,10 +66,12 @@ flowchart TD
     midgardDns -.-> vaultwarden
     alfheimDns -.-> jamyePlz
 
-    prometheus --> yNodeExporter
-    prometheus -.->|scrape over Tailscale| mNodeExporter
-    prometheus -.->|scrape over Tailscale| aNodeExporter
-    grafana --> prometheus
+    yShipper --> beszelHub
+    yShipper --> vlogs
+    mShipper -.->|metrics WebSocket + journald logs<br/>over Tailscale| beszelHub
+    mShipper -.-> vlogs
+    aShipper -.->|metrics WebSocket + journald logs<br/>over Tailscale| beszelHub
+    aShipper -.-> vlogs
 ```
 
 Who can reach what across these boundaries (public Internet, tailnet,
@@ -87,8 +90,8 @@ All hosts load the same common modules through `flake.nix`.
 | `modules/ssh.nix` | OpenSSH, password/root login disabled |
 | `modules/tailscale.nix` | Tailscale |
 | `modules/secrets.nix` | sops-nix base configuration |
-| `services/node-exporter.nix` | node_exporter on every host (`:9100`) |
-| `services/alloy.nix` | log collection (shipped to Loki) |
+| `services/log-shipper.nix` | journald → VictoriaLogs shipping on every host (journal-upload + vlagent) |
+| `services/beszel/agent.nix` | Beszel metrics agent on every host |
 
 ## Storage
 

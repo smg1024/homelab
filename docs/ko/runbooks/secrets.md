@@ -10,7 +10,7 @@ icon: fontawesome/solid/key
 ## 동작 방식
 
 - 암호화된 파일: `secrets/*.yaml` (현재 `ingress.yaml`, `vaultwarden.yaml`,
-  `jamye-plz.yaml` 등)
+  `jamye-plz.yaml`, `beszel.yaml` 등)
 - 암호화 정책 `.sops.yaml`: 새로 만들거나 키를 갱신한
   `secrets/[^/]+\.yaml` 패턴 파일은 `poby`, `yggdrasil`, `midgard`,
   `alfheim` age 수신자로 암호화됩니다.
@@ -49,7 +49,8 @@ icon: fontawesome/solid/key
 | --- | --- | --- |
 | `cloudflare/caddy_env` | Caddy | DNS 챌린지용 Cloudflare API 토큰 |
 | `cloudflare/cloudflared_tunnel_credentials` | cloudflared | Tunnel 자격 증명 |
-| `grafana/admin_password` | Grafana | 관리자 비밀번호 |
+| `beszel/admin_email`, `beszel/admin_password` | Beszel 허브 | `beszel-hub.env`로 렌더링되는 최초 관리자 시드 |
+| `beszel/hub_key`, `beszel/universal_token` | Beszel 에이전트 | `beszel-agent.env`로 렌더링되는 에이전트 등록 자격 증명 |
 | `jamye-plz/*` | jamye-plz | `jamye-plz.env`로 렌더링되는 JWT/OAuth 클라이언트 설정 |
 | `vaultwarden/admin_token` | Vaultwarden | 관리자 토큰 (`ADMIN_TOKEN`) |
 

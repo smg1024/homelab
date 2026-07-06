@@ -40,7 +40,8 @@ docs/            # this documentation site (Zensical)
 | `https://vault.ridewithmin.com` | Vaultwarden | Public (Cloudflare Tunnel) |
 | `https://jamye-plz.ridewithmin.com` | jamye-plz | Public (Cloudflare Tunnel) |
 | `https://status.ridewithmin.com` | Uptime Kuma status page | Public (status-page paths only) |
-| `https://grafana.ridewithmin.com` | Grafana | Tailnet only |
+| `https://beszel.ridewithmin.com` | Beszel (metrics + alerts) | Tailnet only |
+| `https://logs.ridewithmin.com` | VictoriaLogs (log search) | Tailnet only |
 | `https://docs.ridewithmin.com` | This documentation site | Public (Cloudflare Tunnel) |
 
 ## Read next
