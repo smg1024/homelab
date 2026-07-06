@@ -75,10 +75,17 @@
             };
           }
           {
-            Grafana = {
+            Beszel = {
               description = "Metrics dashboards (tailnet only)";
-              href = "https://grafana.ridewithmin.com";
-              icon = "grafana.png";
+              href = "https://beszel.ridewithmin.com";
+              icon = "beszel.png";
+            };
+          }
+          {
+            VictoriaLogs = {
+              description = "Log search (tailnet only)";
+              href = "https://logs.ridewithmin.com";
+              icon = "victoriametrics.png";
             };
           }
         ];

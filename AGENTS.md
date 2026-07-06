@@ -17,8 +17,8 @@ the agent should keep in mind.
   `midgard`, `alfheim` (alfheim is `aarch64-linux`).
 - `modules/` — shared system modules loaded on every host (base, gc, swap,
   users, ssh, tailscale, secrets).
-- `services/` — service modules (ingress, cloudflared, prometheus, grafana,
-  loki, alloy, forgejo, vaultwarden, homepage, uptime-kuma, node-exporter).
+- `services/` — service modules (ingress, cloudflared, beszel, victorialogs,
+  log-shipper, forgejo, vaultwarden, homepage, uptime-kuma).
 - `hosts/<host>/` — `default.nix` + `hardware-configuration.nix` + `disko.nix`.
 - `home/poby/` — Home Manager profiles for the `poby` operator (not for
   long-running services).
@@ -26,8 +26,8 @@ the agent should keep in mind.
 
 ## Host roles
 
-- **yggdrasil** — edge/infra node: Cloudflare Tunnel, Caddy ingress, Prometheus,
-  Grafana, Loki, Uptime Kuma. Keep it lightweight (4 GB RAM).
+- **yggdrasil** — edge/infra node: Cloudflare Tunnel, Caddy ingress, Beszel hub,
+  VictoriaLogs, Uptime Kuma. Keep it lightweight (4 GB RAM).
 - **midgard** — application host: Forgejo, Vaultwarden, Homepage, Podman.
 - **alfheim** — experimental OCI ARM VM. SSH only over the tailnet.
 

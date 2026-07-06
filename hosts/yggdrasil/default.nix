@@ -5,11 +5,8 @@
     ../../services/ingress.nix
     ../../services/cloudflared.nix
     ../../services/uptime-kuma.nix
-    ../../services/prometheus
-    ../../services/loki.nix
     ../../services/victorialogs.nix
     ../../services/beszel/hub.nix
-    ../../services/grafana
   ];
 
   networking.hostName = "yggdrasil";
