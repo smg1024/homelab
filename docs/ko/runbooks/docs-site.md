@@ -6,9 +6,9 @@ icon: fontawesome/solid/book-open
 
 이 사이트 자체도 flake로 선언되어 있습니다. 콘텐츠는 `docs/` 아래 Markdown
 파일이고 [Zensical](https://zensical.org/)(Material for MkDocs 팀이 만든
-정적 사이트 생성기)로 빌드되어 yggdrasil의 Caddy가 정적 파일로 서빙합니다
-(Cloudflare Tunnel 공개 라우트). 설정은 Zensical 공식 형식인
-`zensical.toml`을 사용합니다.
+정적 사이트 생성기)로 빌드되어 midgard의 static-web-server가 서빙합니다.
+공개 트래픽은 여전히 Cloudflare Tunnel과 yggdrasil의 Caddy를 거칩니다.
+설정은 Zensical 공식 형식인 `zensical.toml`을 사용합니다.
 
 기본 언어는 영어이며 한국어 번역본이 `/ko/` 아래 별도 서브사이트로
 빌드됩니다. 헤더의 언어 선택기로 전환할 수 있습니다.
@@ -28,7 +28,8 @@ docs/
 
 - flake output `packages.<system>.docs`: 두 언어 모두 `zensical build --strict`로
   빌드, 한국어는 `ko/` 하위 디렉토리에 생성
-- 서빙 모듈 `services/docs-site.nix`: Caddy `file_server`, Cloudflare Tunnel 공개 라우트
+- 서빙 모듈 `services/docs-site.nix`: midgard의 static-web-server가 `:8084`에서
+  서빙, Cloudflare Tunnel과 yggdrasil Caddy를 통해 공개
 
 ## 문서 수정 워크플로
 

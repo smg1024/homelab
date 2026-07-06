@@ -14,6 +14,7 @@ The tunnel sends the following public hostnames to local Caddy on yggdrasil
 name are set to match each public hostname.
 
 - `home.ridewithmin.com`
+- `blog.ridewithmin.com`
 - `git.ridewithmin.com`
 - `vault.ridewithmin.com`
 - `jamye-plz.ridewithmin.com`
@@ -30,12 +31,13 @@ Caddy selects the internal backend by public hostname.
 | Hostname | Backend | Notes |
 | --- | --- | --- |
 | `home.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8082` | |
+| `blog.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8083` | Static Astro blog on midgard |
 | `git.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:3000` | |
 | `vault.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8222` | |
+| `docs.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8084` | Static docs site on midgard |
 | `jamye-plz.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | jamye-plz on alfheim |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | status-page paths only, `404` otherwise |
 | `grafana.ridewithmin.com` | `http://127.0.0.1:3003` | tailnet clients only, `404` otherwise |
-| `docs.ridewithmin.com` | static files (`file_server`) | public |
 
 Certificates are issued through ACME DNS challenges using Caddy's Cloudflare
 DNS plugin. The Cloudflare API token is injected as an environment variable

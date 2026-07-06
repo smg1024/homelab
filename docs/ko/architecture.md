@@ -20,7 +20,6 @@ flowchart TD
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
         prometheus["Prometheus<br/>127.0.0.1:9090"]
         grafana["Grafana<br/>127.0.0.1:3003"]
-        docsSite["문서 사이트<br/>정적 파일"]
         yNodeExporter["node_exporter<br/>:9100"]
     end
 
@@ -30,6 +29,8 @@ flowchart TD
 
         subgraph midgard["midgard: 애플리케이션 호스트"]
             homepage["Homepage 대시보드<br/>:8082"]
+            blog["Dev with Min 블로그<br/>:8083"]
+            docsSite["문서 사이트<br/>:8084"]
             forgejo["Forgejo<br/>:3000"]
             vaultwarden["Vaultwarden<br/>:8222"]
             mNodeExporter["node_exporter<br/>:9100"]
@@ -43,10 +44,11 @@ flowchart TD
 
     internet --> cloudflare
     cloudflare --> cloudflared
-    cloudflared -->|"home/git/vault/jamye-plz/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
+    cloudflared -->|"home/blog/git/vault/jamye-plz/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
 
     caddy -->|"status.ridewithmin.com"| kuma
     caddy -->|"home.ridewithmin.com"| homepage
+    caddy -->|"blog.ridewithmin.com"| blog
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
     caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
@@ -56,6 +58,8 @@ flowchart TD
     caddy -.->|Tailscale 경유 백엔드 접근| midgardDns
     caddy -.->|Tailscale 경유 백엔드 접근| alfheimDns
     midgardDns -.-> homepage
+    midgardDns -.-> blog
+    midgardDns -.-> docsSite
     midgardDns -.-> forgejo
     midgardDns -.-> vaultwarden
     alfheimDns -.-> jamyePlz

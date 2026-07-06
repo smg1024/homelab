@@ -13,6 +13,18 @@ icon: fontawesome/solid/cubes
 홈랩 대시보드. `:8082`에서 실행되며 `https://home.ridewithmin.com`으로
 노출됩니다.
 
+## Dev with Min 블로그 (`services/blog-site.nix`)
+
+정적 Astro 개인 블로그. `blog` flake input에서 빌드하고 midgard의
+static-web-server가 `:8083`에서 서빙하며 `https://blog.ridewithmin.com`으로
+노출됩니다.
+
+## 문서 사이트 (`services/docs-site.nix`)
+
+정적 홈랩 문서 사이트. 이 flake의 `docs` 패키지에서 빌드하고 midgard의
+static-web-server가 `:8084`에서 서빙하며 `https://docs.ridewithmin.com`으로
+노출됩니다.
+
 ## Forgejo (`services/forgejo.nix`)
 
 Git 호스팅. `:3000`에서 실행되며 `https://git.ridewithmin.com`으로
