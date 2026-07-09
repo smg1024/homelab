@@ -23,7 +23,8 @@ items are intentions, roughly ordered by priority within each horizon.
       now runs on the OCI node and validates the cloud-host pattern
 - [x] Serve this documentation publicly:
       [docs.ridewithmin.com](https://docs.ridewithmin.com/) is routed through
-      Cloudflare Tunnel and backed by static-web-server on midgard
+      Cloudflare Tunnel and served by Caddy on yggdrasil straight from the
+      Nix store
 - [x] Replace the Grafana/Prometheus/Loki/Alloy stack with
       **Beszel + VictoriaLogs**: lighter on yggdrasil's 4 GB, friendlier UIs,
       and working alert delivery ([details](services/monitoring.md))

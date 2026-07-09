@@ -6,9 +6,10 @@ icon: fontawesome/solid/book-open
 
 This site itself is declared in the flake. Content lives as Markdown under
 `docs/`, is built with [Zensical](https://zensical.org/) (the static site
-generator by the Material for MkDocs team), and is served by static-web-server
-on midgard. Public traffic still enters through Cloudflare Tunnel and Caddy on
-yggdrasil. Configuration uses Zensical's native `zensical.toml` format.
+generator by the Material for MkDocs team), and is served directly by Caddy
+on yggdrasil with `file_server`, straight from the Nix store. Public traffic
+enters through Cloudflare Tunnel into the same Caddy. Configuration uses
+Zensical's native `zensical.toml` format.
 
 English is the default language; a Korean translation is built as a separate
 subsite under `/ko/`. The language selector in the header switches between
@@ -29,8 +30,9 @@ docs/
 
 - flake output `packages.<system>.docs`: both languages built with
   `zensical build --strict`, Korean into the `ko/` subdirectory
-- serving module `services/docs-site.nix`: static-web-server on midgard at
-  `:8084`, public through Cloudflare Tunnel and yggdrasil Caddy
+- serving: the `docs.ridewithmin.com` vhost in `services/ingress.nix` serves
+  the built package with Caddy `file_server` on yggdrasil, public through
+  Cloudflare Tunnel
 
 ## Editing workflow
 

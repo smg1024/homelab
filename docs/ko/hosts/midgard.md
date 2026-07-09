@@ -11,8 +11,6 @@ icon: fontawesome/solid/server
 ## 책임
 
 - Homepage 대시보드 운영
-- Dev with Min 정적 블로그 운영
-- 홈랩 문서 정적 사이트 운영
 - Forgejo (Git 호스팅) 운영
 - Vaultwarden (비밀번호 관리자) 운영
 - 컨테이너화된 앱을 위한 Podman 런타임 제공
@@ -20,8 +18,6 @@ icon: fontawesome/solid/server
 ## 로드하는 모듈
 
 ```text
-services/blog-site.nix
-services/docs-site.nix
 services/homepage.nix
 services/forgejo.nix
 services/vaultwarden.nix
@@ -33,8 +29,6 @@ modules/podman.nix      # 호스트 전용 모듈
 | 포트 | 서비스 | 공개 URL |
 | --- | --- | --- |
 | `8082` | Homepage | `https://home.ridewithmin.com` |
-| `8083` | Dev with Min 블로그 | `https://blog.ridewithmin.com` |
-| `8084` | 홈랩 문서 사이트 | `https://docs.ridewithmin.com` |
 | `3000` | Forgejo | `https://git.ridewithmin.com` |
 | `8222` | Vaultwarden | `https://vault.ridewithmin.com` |
 | `9429` | vlagent | 공개 미노출 (신뢰 인터페이스 경유 tailnet 도달 가능); journald 로그를 VictoriaLogs로 버퍼링 전송 |

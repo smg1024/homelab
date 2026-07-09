@@ -6,24 +6,27 @@ icon: fontawesome/solid/cubes
 
 애플리케이션 서비스는 호스트별 역할에 맞춰 실행됩니다. 기존 앱 대부분은
 `midgard`에 있고 jamye-plz는 `alfheim`에서 실행됩니다. yggdrasil의 Caddy가
-공개 트래픽을 tailnet으로 전달합니다.
+공개 트래픽을 tailnet으로 전달하고, 정적 블로그와 문서 사이트는 직접
+서빙합니다.
 
 ## Homepage (`services/homepage.nix`)
 
 홈랩 대시보드. `:8082`에서 실행되며 `https://home.ridewithmin.com`으로
 노출됩니다.
 
-## Dev with Min 블로그 (`services/blog-site.nix`)
+## Dev with Min 블로그 (`services/ingress.nix`)
 
-정적 Astro 개인 블로그. `blog` flake input에서 빌드하고 midgard의
-static-web-server가 `:8083`에서 서빙하며 `https://blog.ridewithmin.com`으로
-노출됩니다.
+정적 Astro 개인 블로그. `blog` flake input에서 빌드하고 yggdrasil의 Caddy가
+`file_server`로 Nix 스토어에서 직접 서빙하며
+`https://blog.ridewithmin.com`으로 노출됩니다. 별도 서비스 프로세스가
+없습니다.
 
-## 문서 사이트 (`services/docs-site.nix`)
+## 문서 사이트 (`services/ingress.nix`)
 
-정적 홈랩 문서 사이트. 이 flake의 `docs` 패키지에서 빌드하고 midgard의
-static-web-server가 `:8084`에서 서빙하며 `https://docs.ridewithmin.com`으로
-노출됩니다.
+정적 홈랩 문서 사이트. 이 flake의 `docs` 패키지에서 빌드하고 yggdrasil의
+Caddy가 `file_server`로 Nix 스토어에서 직접 서빙하며
+`https://docs.ridewithmin.com`으로 노출됩니다. 편집 워크플로는
+[문서 사이트 런북](../runbooks/docs-site.md)을 참고하세요.
 
 ## Forgejo (`services/forgejo.nix`)
 
