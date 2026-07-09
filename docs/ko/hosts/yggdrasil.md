@@ -11,6 +11,8 @@ icon: fontawesome/solid/server
 
 - Cloudflare Tunnel 유지 (`cloudflared`)
 - 공개 도메인을 내부 서비스로 라우팅하는 Caddy 리버스 프록시 운영
+- Dev with Min 블로그와 홈랩 문서 사이트를 Caddy가 직접 서빙
+  (Nix 스토어 경로를 `file_server`로 — 별도 프로세스 없음)
 - Uptime Kuma 공개 상태 페이지 서빙
 - Beszel 허브: 메트릭 수집과 알림 (tailnet 제한 Caddy 라우트)
 - VictoriaLogs 로그 저장소 + 조회 UI (tailnet 제한 Caddy 라우트)

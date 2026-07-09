@@ -35,7 +35,7 @@ for everything else.
 The NixOS firewall is enabled on every host. Home hosts allow SSH `22`
 directly; `alfheim` accepts SSH only through the trusted `tailscale0`
 interface. Its public OCI address does not answer SSH at all. Application
-and monitoring ports (`3000`, `3001`, `8080`, `8082`, `8083`, `8084`, `8090`, `8222`, `9428`, `9429`, ...)
+and monitoring ports (`3000`, `3001`, `8080`, `8082`, `8090`, `8222`, `9428`, `9429`, ...)
 are never opened publicly; tailnet-internal traffic reaches them through the
 trusted `tailscale0` interface.
 

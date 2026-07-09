@@ -31,10 +31,10 @@ Caddy selects the internal backend by public hostname.
 | Hostname | Backend | Notes |
 | --- | --- | --- |
 | `home.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8082` | |
-| `blog.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8083` | Static Astro blog on midgard |
+| `blog.ridewithmin.com` | local `file_server` from the Nix store | Static Astro blog, built from the `blog` flake input |
 | `git.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:3000` | |
 | `vault.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8222` | |
-| `docs.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8084` | Static docs site on midgard |
+| `docs.ridewithmin.com` | local `file_server` from the Nix store | This docs site, built from the flake's `docs` package |
 | `jamye-plz.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | jamye-plz on alfheim |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | status-page paths only, `404` otherwise |
 | `beszel.ridewithmin.com` | `http://127.0.0.1:8090` | tailnet clients only, `404` otherwise |

@@ -6,24 +6,25 @@ icon: fontawesome/solid/cubes
 
 Application services run on host-specific nodes. Most existing apps are on
 `midgard`; jamye-plz runs on `alfheim`. Caddy on yggdrasil forwards public
-traffic over the tailnet.
+traffic over the tailnet, and serves the static blog and docs sites itself.
 
 ## Homepage (`services/homepage.nix`)
 
 The homelab dashboard. Runs on `:8082`, exposed at
 `https://home.ridewithmin.com`.
 
-## Dev with Min blog (`services/blog-site.nix`)
+## Dev with Min blog (`services/ingress.nix`)
 
-Static Astro personal blog. Built from the `blog` flake input and served by
-static-web-server on midgard at `:8083`, exposed at
-`https://blog.ridewithmin.com`.
+Static Astro personal blog. Built from the `blog` flake input and served
+directly by Caddy on yggdrasil with `file_server` from the Nix store, exposed
+at `https://blog.ridewithmin.com`. No dedicated service process.
 
-## Docs site (`services/docs-site.nix`)
+## Docs site (`services/ingress.nix`)
 
 Static homelab documentation site. Built from this flake's `docs` package and
-served by static-web-server on midgard at `:8084`, exposed at
-`https://docs.ridewithmin.com`.
+served directly by Caddy on yggdrasil with `file_server` from the Nix store,
+exposed at `https://docs.ridewithmin.com`. See the
+[docs site runbook](../runbooks/docs-site.md) for the editing workflow.
 
 ## Forgejo (`services/forgejo.nix`)
 

@@ -31,10 +31,10 @@ Caddy는 공개 호스트네임별로 내부 백엔드를 선택합니다.
 | 호스트네임 | 백엔드 | 비고 |
 | --- | --- | --- |
 | `home.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8082` | |
-| `blog.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8083` | midgard의 정적 Astro 블로그 |
+| `blog.ridewithmin.com` | 로컬 `file_server` (Nix 스토어) | 정적 Astro 블로그, `blog` flake input에서 빌드 |
 | `git.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:3000` | |
 | `vault.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8222` | |
-| `docs.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8084` | midgard의 정적 문서 사이트 |
+| `docs.ridewithmin.com` | 로컬 `file_server` (Nix 스토어) | 이 문서 사이트, flake의 `docs` 패키지에서 빌드 |
 | `jamye-plz.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | alfheim의 jamye-plz |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | 상태 페이지 경로만 허용, 그 외 `404` |
 | `beszel.ridewithmin.com` | `http://127.0.0.1:8090` | tailnet 클라이언트만, 그 외 `404` |

@@ -11,6 +11,8 @@ of RAM, so the rule is to **keep it lightweight**. No applications run here.
 
 - Maintain the Cloudflare Tunnel (`cloudflared`)
 - Run the Caddy reverse proxy to route public domains to internal services
+- Serve the Dev with Min blog and the homelab docs site directly from Caddy
+  (`file_server` over Nix store paths — no extra processes)
 - Serve the Uptime Kuma public status page
 - Run the Beszel hub for metrics and alerting (tailnet-restricted Caddy route)
 - Run the VictoriaLogs log store and query UI (tailnet-restricted Caddy route)

@@ -17,6 +17,8 @@ flowchart TD
     subgraph yggdrasil["yggdrasil: 엣지 / 인프라 노드"]
         cloudflared["cloudflared<br/>Cloudflare Tunnel 클라이언트"]
         caddy["Caddy<br/>HTTPS 인그레스 / 리버스 프록시"]
+        blog["Dev with Min 블로그<br/>Caddy file_server"]
+        docsSite["문서 사이트<br/>Caddy file_server"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
         beszelHub["Beszel 허브<br/>:8090"]
         vlogs["VictoriaLogs<br/>:9428"]
@@ -29,8 +31,6 @@ flowchart TD
 
         subgraph midgard["midgard: 애플리케이션 호스트"]
             homepage["Homepage 대시보드<br/>:8082"]
-            blog["Dev with Min 블로그<br/>:8083"]
-            docsSite["문서 사이트<br/>:8084"]
             forgejo["Forgejo<br/>:3000"]
             vaultwarden["Vaultwarden<br/>:8222"]
             mShipper["beszel-agent / vlagent"]
@@ -59,8 +59,6 @@ flowchart TD
     caddy -.->|Tailscale 경유 백엔드 접근| midgardDns
     caddy -.->|Tailscale 경유 백엔드 접근| alfheimDns
     midgardDns -.-> homepage
-    midgardDns -.-> blog
-    midgardDns -.-> docsSite
     midgardDns -.-> forgejo
     midgardDns -.-> vaultwarden
     alfheimDns -.-> jamyePlz

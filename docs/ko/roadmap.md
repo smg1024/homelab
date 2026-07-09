@@ -24,7 +24,7 @@ icon: fontawesome/solid/map
       OCI 노드에서 실행되며 클라우드 호스트 패턴을 검증
 - [x] 이 문서를 공개 서빙:
       [docs.ridewithmin.com](https://docs.ridewithmin.com/)은 Cloudflare
-      Tunnel을 거쳐 midgard의 static-web-server가 제공합니다
+      Tunnel을 거쳐 yggdrasil의 Caddy가 Nix 스토어에서 직접 제공합니다
 - [x] Grafana/Prometheus/Loki/Alloy 스택을 **Beszel + VictoriaLogs**로
       교체: yggdrasil 4 GB에 더 가볍고, UI가 더 친절하고, 알림 전달이
       실제로 동작 ([상세](services/monitoring.md))
