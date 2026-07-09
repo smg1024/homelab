@@ -1,8 +1,12 @@
 {
   config,
+  inputs,
   pkgs,
   ...
-}: {
+}: let
+  blog = inputs.blog.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  docs = inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.docs;
+in {
   sops.secrets."cloudflare/caddy_env" = {
     owner = config.services.caddy.user;
     group = config.services.caddy.group;
@@ -35,7 +39,14 @@
     '';
 
     virtualHosts."blog.ridewithmin.com".extraConfig = ''
-      reverse_proxy http://midgard.tail6fc192.ts.net:8083
+      root * ${blog}/${blog.passthru.sitePath}
+      encode zstd gzip
+      file_server
+
+      handle_errors {
+        rewrite * /404.html
+        file_server
+      }
     '';
 
     virtualHosts."git.ridewithmin.com".extraConfig = ''
@@ -47,7 +58,14 @@
     '';
 
     virtualHosts."docs.ridewithmin.com".extraConfig = ''
-      reverse_proxy http://midgard.tail6fc192.ts.net:8084
+      root * ${docs}
+      encode zstd gzip
+      file_server
+
+      handle_errors {
+        rewrite * /404.html
+        file_server
+      }
     '';
 
     virtualHosts."jamye-plz.ridewithmin.com".extraConfig = ''
