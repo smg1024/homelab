@@ -109,6 +109,13 @@
     });
 
     devShells = forAllSystems (pkgs: {
+      default = pkgs.mkShell {
+        packages = with pkgs; [
+          just
+          nh
+        ];
+      };
+
       docs = pkgs.callPackage ./docs/shell.nix {};
     });
   };

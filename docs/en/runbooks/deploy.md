@@ -34,7 +34,11 @@ See [CI/CD pipeline](ci-cd.md) for the workflow details.
 when an operator explicitly asks for a local activation. Building and
 activation still happen remotely **on the target host**.
 
+Run them from the repo's dev shell, which pins the deploy tools (`just` and
+`nh`) so the path works on a fresh checkout without installing anything:
+
 ```bash
+nix develop          # enter the deploy shell (provides just + nh)
 just test <host>     # activate without making it the boot default
 just switch <host>   # activate and set as boot default
 ```
