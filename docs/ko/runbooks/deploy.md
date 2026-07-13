@@ -40,16 +40,22 @@ just switch <host>   # 활성화 + 부팅 기본값으로 설정
 
 호스트: `yggdrasil`, `midgard`, `alfheim`.
 
-내부적으로는 다음과 같이 실행됩니다.
+내부적으로는 `nh`를 실행합니다. 평가는 워크스테이션에서 이뤄지고, 빌드와
+활성화는 대상 호스트에서 원격으로 수행됩니다.
 
 ```text
-nixos-rebuild <test|switch>
-  --no-reexec
-  --flake .#<host>
-  --build-host <host>
-  --target-host <host>
-  --sudo
+nh os <test|switch> .
+  --hostname <host>
+  --build-host <host>            # 노드 자체에서 빌드
+  --target-host <host>           # 노드 자체에서 활성화
+  --elevation-strategy passwordless
+  --ask                          # switch 전용: 활성화 전 확인
 ```
+
+`just switch`는 `--ask`를 추가하므로, nh가 패키지 diff를 출력하고 새 세대를
+부팅 기본값으로 만들기 전에 확인을 기다립니다. `just test`는 확인 없이
+활성화합니다. 무암호 권한 상승은 `wheel`에 `security.sudo.wheelNeedsPassword =
+false`가 설정되어 있어 동작합니다.
 
 !!! tip "수동 test 활성화"
     명시적 수동 경로가 필요한 경우 `just test`는 설정을 부팅 기본값으로

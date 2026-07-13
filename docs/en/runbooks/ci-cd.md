@@ -7,20 +7,20 @@ icon: fontawesome/solid/robot
 GitHub Actions builds every change and, once it lands on `main`, deploys it to
 the hosts automatically. This is the default validation and deployment path.
 The manual [`just` workflow](deploy.md) stays as the explicit-request
-break-glass path. The pipeline runs the same `nixos-rebuild`, just unattended.
+break-glass path. The pipeline runs the same `nh os switch`, just unattended.
 
 The split is deliberate:
 
 - **CI** proves every host *builds*, on a throwaway runner that touches no host.
 - **CD** rolls merged changes out, joining the tailnet and running the same
-  `nixos-rebuild switch` used by the explicit manual path.
+  `nh os switch` used by the explicit manual path.
 
 ## Flow
 
 ```text
 PR / push ──▶ CI: build each host's system closure   (build only, no host touched)
                  └─ required checks gate the merge
-merge to main ──▶ CD: join tailnet → nixos-rebuild switch on every host
+merge to main ──▶ CD: join tailnet → nh os switch on every host
 ```
 
 ## CI: build check
@@ -51,12 +51,12 @@ Each host is handled by a job that:
 2. Loads the deploy key and runs, for that host:
 
     ```text
-    nixos-rebuild switch
-      --no-reexec
-      --flake .#<host>
+    nh os switch .
+      --hostname <host>
       --build-host <host>      # the node itself
       --target-host <host>     # the node itself
-      --sudo
+      --elevation-strategy passwordless
+      -L                       # stream build logs into the Actions log
     ```
 
 Because `--build-host` and `--target-host` are both the node, **each host builds

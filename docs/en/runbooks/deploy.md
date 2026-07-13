@@ -41,16 +41,22 @@ just switch <host>   # activate and set as boot default
 
 Hosts: `yggdrasil`, `midgard`, `alfheim`.
 
-Internally this runs:
+Internally this runs `nh`. Evaluation happens on the workstation; the build and
+activation run remotely on the target host:
 
 ```text
-nixos-rebuild <test|switch>
-  --no-reexec
-  --flake .#<host>
-  --build-host <host>
-  --target-host <host>
-  --sudo
+nh os <test|switch> .
+  --hostname <host>
+  --build-host <host>            # build on the node itself
+  --target-host <host>           # activate on the node itself
+  --elevation-strategy passwordless
+  --ask                          # switch only: confirm before activating
 ```
+
+`just switch` adds `--ask`, so nh prints the package diff and waits for
+confirmation before making the new generation the boot default; `just test`
+activates without prompting. Passwordless elevation works because `wheel` has
+`security.sudo.wheelNeedsPassword = false`.
 
 !!! tip "manual test activation"
     When the explicit manual path is needed, `just test` activates a

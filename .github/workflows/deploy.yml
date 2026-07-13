@@ -1,10 +1,10 @@
 name: Deploy
 
 # Push-based CD. On merge to main, a runner joins the tailnet ephemerally and
-# runs `nixos-rebuild switch` against each node. build-host == target-host ==
+# runs `nh os switch` against each node. build-host == target-host ==
 # the node, so each host builds itself (no arch matrix here, no cache needed) —
 # the runner only evaluates the flake and orchestrates. This mirrors the
-# Justfile `_rebuild` recipe.
+# Justfile `_rebuild` recipe (minus `--ask`, since CD is unattended).
 
 on:
   push:
@@ -55,13 +55,13 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -T 30 "${{ matrix.host }}.tail6fc192.ts.net" >> ~/.ssh/known_hosts
 
-      - name: nixos-rebuild switch ${{ matrix.host }}
+      - name: nh os switch ${{ matrix.host }}
         run: |
           target="poby@${{ matrix.host }}.tail6fc192.ts.net"
-          nix run github:NixOS/nixpkgs/nixos-26.05#nixos-rebuild -- \
-            switch \
-            --no-reexec \
-            --flake ".#${{ matrix.host }}" \
+          nix run github:NixOS/nixpkgs/nixos-26.05#nh -- \
+            os switch . \
+            --hostname "${{ matrix.host }}" \
             --build-host "$target" \
             --target-host "$target" \
-            --sudo
+            --elevation-strategy passwordless \
+            -L
