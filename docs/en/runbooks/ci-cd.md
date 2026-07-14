@@ -56,14 +56,19 @@ Each host is handled by a job that:
       --build-host <host>      # the node itself
       --target-host <host>     # the node itself
       --elevation-strategy passwordless
-      -L                       # stream build logs into the Actions log
+      --use-substitutes        # the node pulls from the cache itself
+      --no-nom                 # plain output: no TUI escapes in the Actions log
+      --diff always            # print what changed / was upgraded
     ```
 
 Because `--build-host` and `--target-host` are both the node, **each host builds
 itself**, matching the explicit manual path. The runner only evaluates the
 flake and orchestrates, so there is no cross-architecture build problem
-(`alfheim` compiles its own `aarch64` closure) and no binary cache to maintain. A
-`concurrency` group serializes deploys so two merges never race.
+(`alfheim` compiles its own `aarch64` closure) and no binary cache to maintain.
+`--use-substitutes` keeps the runner out of the data path: each node pulls store
+paths straight from the binary cache, instead of the whole closure being relayed
+through the runner over the tailnet — which otherwise dominates deploy time on a
+large change. A `concurrency` group serializes deploys so two merges never race.
 
 All three hosts are switched on every merge; an unaffected host simply
 re-activates the same generation, which is a fast no-op.

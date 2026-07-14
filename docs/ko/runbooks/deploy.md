@@ -53,6 +53,8 @@ nh os <test|switch> .
   --build-host <host>            # 노드 자체에서 빌드
   --target-host <host>           # 노드 자체에서 활성화
   --elevation-strategy passwordless
+  --use-substitutes              # 노드가 캐시에서 직접 가져옴
+  --diff always                  # 무엇이 바뀌고 업그레이드됐는지 출력
   --ask                          # switch 전용: 활성화 전 확인
 ```
 
