@@ -80,8 +80,18 @@ jobs:
             # The store paths must expand here, on the runner, so the remote
             # command receives the two concrete generations to compare.
             # shellcheck disable=SC2029
-            summary=$(ssh "$target" nix store diff-closures "$before" "$after" \
+            changes=$(ssh "$target" nix store diff-closures "$before" "$after" \
               || echo "(closure diff unavailable)")
+
+            if [ -n "$changes" ]; then
+              summary="$changes"
+            else
+              # diff-closures only reports version and size changes, so a
+              # content-only rebuild (the docs site, say) leaves it silent.
+              # Report the generation swap rather than printing nothing.
+              summary=$(printf 'Closure changed; no package version changes.\n  %s\n  -> %s' \
+                "$before" "$after")
+            fi
           fi
 
           echo "----- what changed on ${{ matrix.host }} -----"
