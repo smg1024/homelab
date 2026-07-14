@@ -34,35 +34,23 @@ See [CI/CD pipeline](ci-cd.md) for the workflow details.
 when an operator explicitly asks for a local activation. Building and
 activation still happen remotely **on the target host**.
 
-Run them from the repo's dev shell, which pins the deploy tools (`just` and
-`nh`) so the path works on a fresh checkout without installing anything:
-
 ```bash
-nix develop          # enter the deploy shell (provides just + nh)
 just test <host>     # activate without making it the boot default
 just switch <host>   # activate and set as boot default
 ```
 
 Hosts: `yggdrasil`, `midgard`, `alfheim`.
 
-Internally this runs `nh`. Evaluation happens on the workstation; the build and
-activation run remotely on the target host:
+Internally this runs:
 
 ```text
-nh os <test|switch> .
-  --hostname <host>
-  --build-host <host>            # build on the node itself
-  --target-host <host>           # activate on the node itself
-  --elevation-strategy passwordless
-  --use-substitutes              # the node pulls from the cache itself
-  --diff always                  # print what changed / was upgraded
-  --ask                          # switch only: confirm before activating
+nixos-rebuild <test|switch>
+  --no-reexec
+  --flake .#<host>
+  --build-host <host>
+  --target-host <host>
+  --sudo
 ```
-
-`just switch` adds `--ask`, so nh prints the package diff and waits for
-confirmation before making the new generation the boot default; `just test`
-activates without prompting. Passwordless elevation works because `wheel` has
-`security.sudo.wheelNeedsPassword = false`.
 
 !!! tip "manual test activation"
     When the explicit manual path is needed, `just test` activates a

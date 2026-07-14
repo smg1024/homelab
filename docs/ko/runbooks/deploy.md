@@ -33,35 +33,23 @@ nix flake show --all-systems
 활성화를 명시적으로 요청한 경우에만 실행합니다. 이때도 빌드와 활성화는
 **대상 호스트에서** 원격으로 수행됩니다.
 
-저장소의 개발 셸에서 실행하세요. 이 셸은 배포 도구(`just`, `nh`)를 고정하므로
-아무것도 설치하지 않고도 새 체크아웃에서 바로 동작합니다.
-
 ```bash
-nix develop          # 배포 셸 진입 (just + nh 제공)
 just test <host>     # 부팅 기본값으로 만들지 않고 활성화
 just switch <host>   # 활성화 + 부팅 기본값으로 설정
 ```
 
 호스트: `yggdrasil`, `midgard`, `alfheim`.
 
-내부적으로는 `nh`를 실행합니다. 평가는 워크스테이션에서 이뤄지고, 빌드와
-활성화는 대상 호스트에서 원격으로 수행됩니다.
+내부적으로는 다음과 같이 실행됩니다.
 
 ```text
-nh os <test|switch> .
-  --hostname <host>
-  --build-host <host>            # 노드 자체에서 빌드
-  --target-host <host>           # 노드 자체에서 활성화
-  --elevation-strategy passwordless
-  --use-substitutes              # 노드가 캐시에서 직접 가져옴
-  --diff always                  # 무엇이 바뀌고 업그레이드됐는지 출력
-  --ask                          # switch 전용: 활성화 전 확인
+nixos-rebuild <test|switch>
+  --no-reexec
+  --flake .#<host>
+  --build-host <host>
+  --target-host <host>
+  --sudo
 ```
-
-`just switch`는 `--ask`를 추가하므로, nh가 패키지 diff를 출력하고 새 세대를
-부팅 기본값으로 만들기 전에 확인을 기다립니다. `just test`는 확인 없이
-활성화합니다. 무암호 권한 상승은 `wheel`에 `security.sudo.wheelNeedsPassword =
-false`가 설정되어 있어 동작합니다.
 
 !!! tip "수동 test 활성화"
     명시적 수동 경로가 필요한 경우 `just test`는 설정을 부팅 기본값으로
