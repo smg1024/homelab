@@ -11,6 +11,7 @@ test host:
 
 # Activate a host configuration and make it the boot default.
 [group('homelab')]
+[confirm("Activate and set as boot default on the live host? (y/N)")]
 switch host:
     @just _rebuild {{ host }} switch
 
