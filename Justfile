@@ -1,3 +1,5 @@
+nixos_rebuild := "github:NixOS/nixpkgs/nixos-26.05#nixos-rebuild"
+
 # List available homelab commands.
 default:
     @just --list
@@ -39,10 +41,10 @@ upp input:
 
 _rebuild host action:
     @case "{{ host }}" in yggdrasil|midgard|alfheim) ;; *) echo "unknown host: {{ host }}" >&2; exit 2;; esac;
-    nh os {{ action }} . \
-      --hostname "{{ host }}" \
+    nix run {{ nixos_rebuild }} -- \
+      {{ action }} \
+      --no-reexec \
+      --flake ".#{{ host }}" \
       --build-host "{{ host }}" \
       --target-host "{{ host }}" \
-      --elevation-strategy passwordless \
-      --use-substitutes \
-      --diff always {{ if action == "switch" { "--ask" } else { "" } }}
+      --sudo

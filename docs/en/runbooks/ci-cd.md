@@ -7,20 +7,20 @@ icon: fontawesome/solid/robot
 GitHub Actions builds every change and, once it lands on `main`, deploys it to
 the hosts automatically. This is the default validation and deployment path.
 The manual [`just` workflow](deploy.md) stays as the explicit-request
-break-glass path. The pipeline runs the same `nh os switch`, just unattended.
+break-glass path. The pipeline runs the same `nixos-rebuild`, just unattended.
 
 The split is deliberate:
 
 - **CI** proves every host *builds*, on a throwaway runner that touches no host.
 - **CD** rolls merged changes out, joining the tailnet and running the same
-  `nh os switch` used by the explicit manual path.
+  `nixos-rebuild switch` used by the explicit manual path.
 
 ## Flow
 
 ```text
 PR / push ──▶ CI: build each host's system closure   (build only, no host touched)
                  └─ required checks gate the merge
-merge to main ──▶ CD: join tailnet → nh os switch on every host
+merge to main ──▶ CD: join tailnet → nixos-rebuild switch on every host
 ```
 
 ## CI: build check
@@ -51,27 +51,28 @@ Each host is handled by a job that:
 2. Loads the deploy key and runs, for that host:
 
     ```text
-    nh os switch .
-      --hostname <host>
+    nixos-rebuild switch
+      --no-reexec
+      --flake .#<host>
       --build-host <host>      # the node itself
       --target-host <host>     # the node itself
-      --elevation-strategy passwordless
-      --use-substitutes        # the node pulls from the cache itself
-      --no-nom                 # plain output: no TUI escapes in the Actions log
-      --diff always            # print what changed / was upgraded
+      --sudo
     ```
 
 Because `--build-host` and `--target-host` are both the node, **each host builds
 itself**, matching the explicit manual path. The runner only evaluates the
 flake and orchestrates, so there is no cross-architecture build problem
-(`alfheim` compiles its own `aarch64` closure) and no binary cache to maintain.
-`--use-substitutes` keeps the runner out of the data path: each node pulls store
-paths straight from the binary cache, instead of the whole closure being relayed
-through the runner over the tailnet — which otherwise dominates deploy time on a
-large change. A `concurrency` group serializes deploys so two merges never race.
+(`alfheim` compiles its own `aarch64` closure) and no binary cache to maintain. A
+`concurrency` group serializes deploys so two merges never race.
 
 All three hosts are switched on every merge; an unaffected host simply
 re-activates the same generation, which is a fast no-op.
+
+After the switch, `nix store diff-closures` compares the node's previous and new
+system closures and reports what changed — version bumps, additions, removals —
+both in the job log and on the run's summary page. An unaffected host reports no
+change. If a deploy fails, the step aborts before the summary and Nix's error
+output, including the failing build's log tail, stays in the job log.
 
 ## Prerequisites
 

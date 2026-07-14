@@ -1,11 +1,14 @@
 name: Deploy
 
 # Push-based CD. On merge to main, a runner joins the tailnet ephemerally and
-# runs `nh os switch` (from the repo's pinned dev shell) against each node.
-# build-host == target-host == the node, so each host builds itself (no arch
-# matrix here, no cache needed) — the runner only evaluates the flake and
-# orchestrates. This mirrors the Justfile `_rebuild` recipe (minus `--ask`,
-# since CD is unattended).
+# runs `nixos-rebuild switch` against each node. build-host == target-host ==
+# the node, so each host builds itself (no arch matrix here, no cache needed) —
+# the runner only evaluates the flake and orchestrates. This mirrors the
+# Justfile `_rebuild` recipe.
+#
+# After each switch, `nix store diff-closures` records what changed on the node —
+# in the job log and on the run summary page. On failure the step aborts before
+# that, and Nix's error output (including the failing build's log tail) is kept.
 
 on:
   push:
@@ -56,15 +59,37 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -T 30 "${{ matrix.host }}.tail6fc192.ts.net" >> ~/.ssh/known_hosts
 
-      - name: nh os switch ${{ matrix.host }}
+      - name: nixos-rebuild switch ${{ matrix.host }}
         run: |
           target="poby@${{ matrix.host }}.tail6fc192.ts.net"
-          nix develop --command \
-            nh os switch . \
-            --hostname "${{ matrix.host }}" \
+          before=$(ssh "$target" readlink -f /run/current-system)
+
+          nix run github:NixOS/nixpkgs/nixos-26.05#nixos-rebuild -- \
+            switch \
+            --no-reexec \
+            --flake ".#${{ matrix.host }}" \
             --build-host "$target" \
             --target-host "$target" \
-            --elevation-strategy passwordless \
-            --use-substitutes \
-            --no-nom \
-            --diff always
+            --sudo
+
+          after=$(ssh "$target" readlink -f /run/current-system)
+
+          if [ "$before" = "$after" ]; then
+            summary="No change — system closure identical."
+          else
+            # The store paths must expand here, on the runner, so the remote
+            # command receives the two concrete generations to compare.
+            # shellcheck disable=SC2029
+            summary=$(ssh "$target" nix store diff-closures "$before" "$after" \
+              || echo "(closure diff unavailable)")
+          fi
+
+          echo "----- what changed on ${{ matrix.host }} -----"
+          echo "$summary"
+
+          {
+            echo "### ${{ matrix.host }}"
+            echo '```'
+            echo "$summary"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
