@@ -57,13 +57,18 @@ main에 병합 ──▶ CD: tailnet 합류 → 모든 호스트에서 nh os swi
       --build-host <host>      # 노드 자신
       --target-host <host>     # 노드 자신
       --elevation-strategy passwordless
-      -L                       # 빌드 로그를 Actions 로그로 출력
+      --use-substitutes        # 노드가 캐시에서 직접 가져옴
+      --no-nom                 # 평문 출력: Actions 로그에 TUI 이스케이프 없음
+      --diff always            # 무엇이 바뀌고 업그레이드됐는지 출력
     ```
 
 `--build-host`와 `--target-host`가 모두 해당 노드이므로 **각 호스트가 스스로를
 빌드합니다**. 명시적 수동 경로와 같은 방식입니다. 러너는 flake를 평가하고
 오케스트레이션만 하므로 아키텍처 교차 빌드 문제가 없고(`alfheim`은 자신의
-`aarch64` 클로저를 직접 컴파일) 유지할 바이너리 캐시도 없습니다. `concurrency`
+`aarch64` 클로저를 직접 컴파일) 유지할 바이너리 캐시도 없습니다.
+`--use-substitutes`는 러너를 데이터 경로에서 빼줍니다. 클로저 전체가 tailnet을
+거쳐 러너를 통해 중계되는 대신, 각 노드가 바이너리 캐시에서 스토어 경로를 직접
+가져옵니다. 이 중계는 큰 변경에서 배포 시간의 대부분을 차지합니다. `concurrency`
 그룹이 배포를 직렬화해 두 병합이 서로 경쟁하지 않습니다.
 
 모든 병합에서 세 호스트가 전부 switch되지만, 영향이 없는 호스트는 같은 세대를

@@ -65,4 +65,6 @@ jobs:
             --build-host "$target" \
             --target-host "$target" \
             --elevation-strategy passwordless \
-            -L
+            --use-substitutes \
+            --no-nom \
+            --diff always

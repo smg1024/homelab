@@ -43,4 +43,6 @@ _rebuild host action:
       --hostname "{{ host }}" \
       --build-host "{{ host }}" \
       --target-host "{{ host }}" \
-      --elevation-strategy passwordless {{ if action == "switch" { "--ask" } else { "" } }}
+      --elevation-strategy passwordless \
+      --use-substitutes \
+      --diff always {{ if action == "switch" { "--ask" } else { "" } }}

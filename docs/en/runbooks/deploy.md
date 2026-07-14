@@ -54,6 +54,8 @@ nh os <test|switch> .
   --build-host <host>            # build on the node itself
   --target-host <host>           # activate on the node itself
   --elevation-strategy passwordless
+  --use-substitutes              # the node pulls from the cache itself
+  --diff always                  # print what changed / was upgraded
   --ask                          # switch only: confirm before activating
 ```
 
