@@ -114,11 +114,11 @@
         "uv2nix": "uv2nix_3"
       },
       "locked": {
-        "lastModified": 1783331144,
-        "narHash": "sha256-WZWF3nwR9AegGu0f+UHCZxBgYwl1W5dod1hk+oQiWDU=",
+        "lastModified": 1784218614,
+        "narHash": "sha256-SdABWp0cWohq61QF2B658Bdh5kZqNdPtsZ4SPr0y9w0=",
         "owner": "jamye-plz",
         "repo": "jamye-plz",
-        "rev": "c630a00e04ca173d3b9dece5481c9f1dae9d4892",
+        "rev": "9667a65785bef0968a1791c40f34ab88837a56de",
         "type": "github"
       },
       "original": {
