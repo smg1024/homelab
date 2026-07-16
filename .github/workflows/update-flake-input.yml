@@ -1,0 +1,90 @@
+name: Update flake input
+
+# Event-driven flake input bump. Every push to a source repo (smg1024/blog
+# master, jamye-plz/jamye-plz main) fires a repository_dispatch at this repo;
+# this workflow re-pins the matching flake input, opens a PR, and arms
+# auto-merge so the normal CI -> merge -> deploy pipeline ships it. No direct
+# pushes to main: the ruleset (PR + green builds) still gates, so an upstream
+# change that breaks a host build stops at CI instead of at activation time.
+#
+# The dispatch event type encodes the input as `<input>-updated`. New source
+# repo -> add its event type below and the input to the manual choices.
+#
+# Uses HOMELAB_PAT (fine-grained PAT) instead of GITHUB_TOKEN: events created
+# with the default token never trigger other workflows, so a GITHUB_TOKEN
+# push/merge would silently skip both CI and Deploy.
+
+on:
+  repository_dispatch:
+    types: [blog-updated, jamye-plz-updated]
+  workflow_dispatch:
+    inputs:
+      input:
+        description: Flake input to update
+        type: choice
+        options:
+          - blog
+          - jamye-plz
+
+# Rapid consecutive upstream pushes queue rather than fight over the same
+# branch. Groups are per input so a queued bump for one input can't be
+# cancelled by a burst of pushes to another.
+concurrency:
+  group: update-${{ github.event.action || format('{0}-updated', inputs.input) }}
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.HOMELAB_PAT }}
+
+      - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            access-tokens = github.com=${{ secrets.JAMYE_PLZ_REPO }}
+
+      - name: Resolve flake input from event
+        id: target
+        env:
+          RAW: ${{ inputs.input || github.event.action }}
+        run: echo "input=${RAW%-updated}" >> "$GITHUB_OUTPUT"
+
+      - name: Update flake input
+        run: nix flake update "${{ steps.target.outputs.input }}"
+
+      - name: Open PR and arm auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.HOMELAB_PAT }}
+          INPUT: ${{ steps.target.outputs.input }}
+        run: |
+          if git diff --quiet flake.lock; then
+            echo "${INPUT} input already up to date"
+            exit 0
+          fi
+
+          rev="$(jq -r --arg i "$INPUT" '.nodes[$i].locked.rev' flake.lock | cut -c1-12)"
+          repo="$(jq -r --arg i "$INPUT" '.nodes[$i].locked | "\(.owner)/\(.repo)"' flake.lock)"
+          branch="auto/update-${INPUT}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$branch"
+          git add flake.lock
+          git commit -m "flake: update ${INPUT} input to ${rev}"
+          git push --force origin "$branch"
+
+          # Reuse the open PR if a previous bump hasn't merged yet (e.g. CI
+          # was red); the force-push above already updated it.
+          if [ "$(gh pr list --head "$branch" --state open --json number --jq length)" = 0 ]; then
+            gh pr create \
+              --title "flake: update ${INPUT} input to ${rev}" \
+              --body "Automated bump of the \`${INPUT}\` flake input to ${repo}@${rev}. Auto-merges once the required build checks pass."
+          fi
+
+          # Arming twice errors, so only arm if not already armed.
+          if [ "$(gh pr view "$branch" --json autoMergeRequest --jq '.autoMergeRequest != null')" != "true" ]; then
+            gh pr merge "$branch" --auto --squash
+          fi
