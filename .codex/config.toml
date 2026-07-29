@@ -1,17 +1,17 @@
-model = "gpt-5.6-sol"
-model_reasoning_effort = "xhigh"
-personality = "pragmatic"
+model                      = "gpt-5.6-sol"
+model_reasoning_effort     = "xhigh"
+personality                = "pragmatic"
 plan_mode_reasoning_effort = "xhigh"
 
 approval_policy = "on-request"
-sandbox_mode = "workspace-write"
-web_search = "live"
+sandbox_mode    = "workspace-write"
+web_search      = "live"
 
 [features]
-multi_agent = true
+multi_agent        = true
 prevent_idle_sleep = true
-hooks = true
-goals = true
+hooks              = true
+goals              = true
 
 [analytics]
 enabled = false
@@ -21,7 +21,7 @@ enabled = false
 
 [agents]
 max_threads = 6
-max_depth = 1
+max_depth   = 1
 
 [tui]
 status_line = [
@@ -39,4 +39,4 @@ network_access = true
 
 [mcp_servers.mcp-nixos]
 command = "uvx"
-args = ["mcp-nixos"]
+args    = ["mcp-nixos"]
