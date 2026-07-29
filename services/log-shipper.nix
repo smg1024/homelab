@@ -26,6 +26,6 @@ in {
   systemd.services.systemd-journal-upload = {
     after = ["vlagent.service"];
     wants = ["vlagent.service"];
-    serviceConfig.ExecStartPre = "${pkgs.curl}/bin/curl --retry 30 --retry-delay 1 --retry-all-errors -sS -o /dev/null http://localhost:9429/health";
+    serviceConfig.ExecStartPre = "${pkgs.curl}/bin/curl --fail --retry 30 --retry-delay 1 --retry-all-errors -sS -o /dev/null http://localhost:9429/health";
   };
 }
