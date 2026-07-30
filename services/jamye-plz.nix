@@ -2,8 +2,33 @@
   config,
   inputs,
   ...
-}: {
-  imports = [inputs.jamye-plz.nixosModules.default];
+}: let
+  # Remove once the upstream module and frontend package stop using the
+  # deprecated `pkgs.system`.
+  patchedNixpkgs =
+    inputs.jamye-plz.inputs.nixpkgs
+    // {
+      legacyPackages =
+        builtins.mapAttrs (
+          system: pkgs: pkgs // {inherit system;}
+        )
+        inputs.jamye-plz.inputs.nixpkgs.legacyPackages;
+    };
+  jamyePlz =
+    (import "${inputs.jamye-plz}/flake.nix").outputs
+    (inputs.jamye-plz.inputs
+      // {
+        self = jamyePlz;
+        nixpkgs = patchedNixpkgs;
+      });
+  jamyePlzModule = moduleArgs @ {pkgs, ...}:
+    jamyePlz.nixosModules.default
+    (moduleArgs
+      // {
+        pkgs = pkgs // {system = pkgs.stdenv.hostPlatform.system;};
+      });
+in {
+  imports = [jamyePlzModule];
 
   sops.secrets."jamye-plz/jwt_secret" = {sopsFile = ../secrets/jamye-plz.yaml;};
   sops.secrets."jamye-plz/kakao_client_id" = {sopsFile = ../secrets/jamye-plz.yaml;};
