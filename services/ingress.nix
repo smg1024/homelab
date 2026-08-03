@@ -72,6 +72,10 @@ in {
       reverse_proxy http://alfheim.tail6fc192.ts.net:8080
     '';
 
+    virtualHosts."minio.ridewithmin.com".extraConfig = ''
+      reverse_proxy http://alfheim.tail6fc192.ts.net:9000
+    '';
+
     virtualHosts."status.ridewithmin.com".extraConfig = ''
       redir / /status 302
 
