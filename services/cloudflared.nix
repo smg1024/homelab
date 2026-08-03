@@ -50,6 +50,14 @@
         };
       };
 
+      ingress."minio.ridewithmin.com" = {
+        service = "https://localhost:443";
+        originRequest = {
+          httpHostHeader = "minio.ridewithmin.com";
+          originServerName = "minio.ridewithmin.com";
+        };
+      };
+
       ingress."status.ridewithmin.com" = {
         service = "https://localhost:443";
         originRequest = {
