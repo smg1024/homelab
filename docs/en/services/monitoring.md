@@ -4,9 +4,8 @@ icon: fontawesome/solid/chart-line
 
 # Monitoring
 
-Metrics are collected by **Beszel** and logs by **VictoriaLogs**, both running
-on `yggdrasil`. Uptime Kuma runs the public endpoint checks and serves the
-status page.
+Beszel collects metrics and VictoriaLogs stores logs. Both run on `yggdrasil`.
+Uptime Kuma checks public endpoints and serves the status page.
 
 ## Components
 
@@ -20,7 +19,7 @@ status page.
 
 ## Metrics flow
 
-Each host runs a Beszel agent that connects **out** to the hub over the
+Each host runs a Beszel agent that connects to the hub over the
 tailnet (WebSocket); no inbound scrape ports are needed. Agents self-register
 using the hub public key and universal token from `secrets/beszel.yaml`
 (`SYSTEM_NAME` is the hostname).
@@ -32,7 +31,7 @@ beszel-agent (alfheim)   ──┘
 ```
 
 Agents report CPU, memory, disk, network, load, temperature, and systemd
-service status. Podman container stats are **not** collected: the agent
+service status. The agent does not collect Podman container stats because it
 would need midgard's Podman docker-compatible socket
 (`virtualisation.podman.dockerSocket.enable`), which is not enabled.
 
@@ -45,11 +44,11 @@ would need midgard's Podman docker-compatible socket
 
 ## Alerts
 
-Alert thresholds (status, CPU, memory, disk, load average, temperature,
-bandwidth) and email delivery are configured **in the Beszel UI**
+Configure alert thresholds (status, CPU, memory, disk, load average,
+temperature, bandwidth) and email delivery in the Beszel UI
 (Settings → Notifications, shoutrrr URLs), not in the repo. They live in the
-hub database under `/var/lib/beszel-hub` — one of the few pieces of state
-that is not declarative.
+hub database under `/var/lib/beszel-hub`. This database is one of the few
+pieces of state that is not declarative.
 
 ## Logs flow
 
@@ -58,7 +57,7 @@ journald -> systemd-journal-upload -> vlagent :9429 (local buffer)
          -> VictoriaLogs :9428 on yggdrasil (/internal/insert)
 ```
 
-- `systemd-journal-upload` reads the journal on every host. It is ordered
+- `systemd-journal-upload` reads the journal on every host. Its unit starts
   after `vlagent` so cold boots do not race the local listener.
 - `vlagent` buffers on disk and retries, so a hub restart (e.g. a deploy on
   yggdrasil) does not drop logs.
@@ -75,8 +74,8 @@ https://beszel.ridewithmin.com   # metrics + alerts
 https://logs.ridewithmin.com     # log search (VictoriaLogs web UI)
 ```
 
-Both routes are tailnet-gated in Caddy; direct tailnet access also works
-(`yggdrasil.tail6fc192.ts.net:8090` and `:9428/select/vmui/`).
+Caddy restricts both routes to tailnet clients. Direct tailnet access also
+works (`yggdrasil.tail6fc192.ts.net:8090` and `:9428/select/vmui/`).
 
 ## Health checks
 
@@ -90,8 +89,8 @@ curl -fsS http://127.0.0.1:9428/ping
 systemctl is-active beszel-agent vlagent systemd-journal-upload
 ```
 
-Quick log sanity check from any tailnet client — per-host counts for the
-last hour:
+This command returns per-host log counts for the last hour from any tailnet
+client:
 
 ```bash
 curl -s http://yggdrasil.tail6fc192.ts.net:9428/select/logsql/query \

@@ -4,16 +4,17 @@ icon: fontawesome/solid/circle-plus
 
 # Adding a new service
 
-The full path from "I want to run X" to "X is deployed and reachable".
+This runbook covers the path from choosing a host to verifying the deployed
+service.
 
 ## Decide where and how
 
-Two questions first:
+Choose the host and packaging format before writing configuration:
 
-1. **Which host?** Applications go on an application host (`midgard` or
+1. Applications go on an application host (`midgard` or
    `alfheim`). Only ingress/monitoring infrastructure goes on yggdrasil
    ([principles](../principles.md)).
-2. **Module or container?**
+2. Decide whether to use a NixOS module or an OCI container.
 
 === "NixOS module"
 

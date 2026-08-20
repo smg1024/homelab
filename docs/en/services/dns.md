@@ -5,8 +5,8 @@ icon: fontawesome/solid/filter-circle-xmark
 # DNS
 
 AdGuard Home runs on `yggdrasil` and filters DNS for the private home LAN.
-The ipTIME router keeps DHCP authority and advertises the resolver to clients.
-AdGuard Home does not run a DHCP server.
+The ipTIME router remains the DHCP server and advertises the resolver to
+clients. AdGuard Home does not provide DHCP.
 
 ## Network contract
 
@@ -16,7 +16,7 @@ AdGuard Home does not run a DHCP server.
 | LAN | `192.168.0.0/24` |
 | yggdrasil reservation | `192.168.0.53` on `enp2s0` |
 | DNS listener | TCP and UDP `192.168.0.53:53` |
-| Admin UI | `https://adguardhome.ridewithmin.com`, tailnet only |
+| Admin UI | HTTP `:3000`; use `https://adguardhome.ridewithmin.com` over the tailnet |
 
 The firewall matches the LAN source range and the reserved destination
 address. If yggdrasil receives any other address, LAN DNS fails closed. The
@@ -76,20 +76,20 @@ keeps the admin password out of Git and the Nix store.
 5. Select all interfaces and port `53` for DNS.
 6. Create the administrator account with a unique password.
 
-The resulting configuration, credentials, query statistics, and filter state
-live in `/var/lib/AdGuardHome`. They survive deployments but are not currently
-backed up.
+AdGuard Home stores its configuration, credentials, query statistics, and
+filter state in `/var/lib/AdGuardHome`. Deployments preserve this directory,
+but no backup job currently protects it.
 
-After the private Caddy route is deployed, tailnet clients can use
-`https://adguardhome.ridewithmin.com`. The hostname is deliberately absent
-from Cloudflare Tunnel and resolves directly to yggdrasil's Tailscale IPv4
-address. Caddy also rejects requests whose source is outside the tailnet.
+Tailnet clients open the dashboard at
+`https://adguardhome.ridewithmin.com`. The hostname is absent from Cloudflare
+Tunnel and resolves directly to yggdrasil's Tailscale IPv4 address. Caddy
+rejects requests from outside the tailnet.
 
 ## Advertise DNS through DHCP
 
 In the ipTIME DHCP server settings, advertise `192.168.0.53` as the primary
-DNS server. Leave secondary DNS empty. A public secondary resolver allows
-clients to bypass AdGuard Home unpredictably.
+DNS server. Leave secondary DNS empty. If you configure a public secondary
+resolver, clients may bypass AdGuard Home.
 
 Some ipTIME firmware only exposes the router's own upstream DNS setting. In
 that case, set the router's primary DNS to `192.168.0.53`. Filtering still
@@ -121,7 +121,7 @@ sudo journalctl -u adguardhome -n 100 --no-pager
 
 ## Failure behavior
 
-AdGuard Home is a single household resolver. If yggdrasil is down, clients
-lose DNS until it returns or the router DNS setting is changed. Do not add a
-public secondary resolver as a hidden bypass. A second AdGuard Home instance
-is the proper redundancy path.
+AdGuard Home is the only household resolver. If yggdrasil is down, clients
+lose DNS until it returns or someone changes the router DNS setting. Do not
+add a public secondary resolver as a hidden bypass. Run a second AdGuard Home
+instance if the household needs DNS redundancy.

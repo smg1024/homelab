@@ -4,7 +4,7 @@ icon: fontawesome/solid/door-open
 
 # Ingress
 
-All external traffic enters through **Cloudflare Tunnel** instead of directly
+All external traffic enters through Cloudflare Tunnel instead of directly
 exposed ports. Both `cloudflared` and Caddy run on `yggdrasil`.
 
 ## Cloudflare Tunnel (`services/cloudflared.nix`)
@@ -26,7 +26,7 @@ is the `cloudflare/cloudflared_tunnel_credentials` SOPS secret.
 
 ## Caddy (`services/ingress.nix`)
 
-Caddy selects the internal backend by public hostname.
+Caddy selects the internal backend by request hostname.
 
 | Hostname | Backend | Notes |
 | --- | --- | --- |

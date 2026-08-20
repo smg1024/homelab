@@ -4,7 +4,8 @@ icon: fontawesome/solid/box-archive
 
 # Backup & restore
 
-What survives a dead disk, what does not, and how to get back.
+The repo can rebuild host configuration, but it cannot recreate application
+data or private keys.
 
 !!! warning "No automated backups yet"
     As of June 2026 **no automated backup is configured anywhere in this
@@ -13,11 +14,11 @@ What survives a dead disk, what does not, and how to get back.
 
 ## What is reproducible vs. what is data
 
-**Reproducible from the repo:** the entire system configuration of every
-host. A machine can be rebuilt from scratch with the
-[bootstrap runbook](bootstrap-host.md); no backup needed.
+The repo contains the full system configuration for every host. Use the
+[bootstrap runbook](bootstrap-host.md) to rebuild a machine from scratch. This
+configuration does not need a separate backup.
 
-**Actual data** is the state that exists only on the hosts:
+The following data exists only on the hosts:
 
 | Data | Host | Location (NixOS module defaults) | Loss impact |
 | --- | --- | --- | --- |
@@ -28,7 +29,7 @@ host. A machine can be rebuilt from scratch with the
 | AdGuard Home config, credentials, and filter state | yggdrasil | `/var/lib/AdGuardHome` | Annoying: DNS setup and policy recreated by hand |
 | VictoriaLogs logs | yggdrasil | `/var/lib/victorialogs` | Acceptable: 14d retention logs |
 
-**Keys.** Two items deserve explicit care:
+Back up two kinds of keys separately:
 
 - **Host SSH keys** (`/etc/ssh/ssh_host_ed25519_key`): also the sops age
   identity. If a host dies, its key dies with it; recovery relies on the
@@ -47,12 +48,12 @@ host. A machine can be rebuilt from scratch with the
 4. Restore data directories from backup *(once backups exist)*
 5. Verify services per their pages, check Uptime Kuma goes green
 
-## Where this should go
+## Backup priorities
 
-The natural first steps, in order of value:
+Implement backups in this order:
 
 1. `services.vaultwarden.backupDir`: the module has built-in SQLite backup
-   support; cheapest possible win
+   support and is the lowest-effort first step
 2. Forgejo dump or repo mirroring to an external remote
 3. A proper restic/borgbackup job for `/var/lib` state on midgard,
    off-host (e.g., to alfheim or object storage)

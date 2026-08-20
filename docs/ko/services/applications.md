@@ -6,39 +6,39 @@ icon: fontawesome/solid/cubes
 
 애플리케이션 서비스는 호스트별 역할에 맞춰 실행됩니다. 기존 앱 대부분은
 `midgard`에 있고 jamye-plz는 `alfheim`에서 실행됩니다. yggdrasil의 Caddy가
-공개 트래픽을 tailnet으로 전달하고, 정적 블로그와 문서 사이트는 직접
+공개 트래픽을 tailnet으로 전달하고 정적 블로그와 문서 사이트는 직접
 서빙합니다.
 
 ## Homepage (`services/homepage.nix`)
 
-홈랩 대시보드. `:8082`에서 실행되며 `https://home.ridewithmin.com`으로
-노출됩니다.
+Homepage는 홈랩 대시보드입니다. `:8082`에서 실행되며
+`https://home.ridewithmin.com`으로 노출됩니다.
 
 ## Dev with Min 블로그 (`services/ingress.nix`)
 
-정적 Astro 개인 블로그. `blog` flake input에서 빌드하고 yggdrasil의 Caddy가
-`file_server`로 Nix 스토어에서 직접 서빙하며
+Dev with Min은 정적 Astro 개인 블로그입니다. `blog` flake input에서 빌드하고
+yggdrasil의 Caddy가 `file_server`로 Nix 스토어에서 직접 서빙하며
 `https://blog.ridewithmin.com`으로 노출됩니다. 별도 서비스 프로세스가
 없습니다.
 
 ## 문서 사이트 (`services/ingress.nix`)
 
-정적 홈랩 문서 사이트. 이 flake의 `docs` 패키지에서 빌드하고 yggdrasil의
-Caddy가 `file_server`로 Nix 스토어에서 직접 서빙하며
+홈랩 문서는 정적 사이트입니다. 이 flake의 `docs` 패키지에서 빌드하고
+yggdrasil의 Caddy가 `file_server`로 Nix 스토어에서 직접 서빙하며
 `https://docs.ridewithmin.com`으로 노출됩니다. 편집 워크플로는
 [문서 사이트 런북](../runbooks/docs-site.md)을 참고하세요.
 
 ## Forgejo (`services/forgejo.nix`)
 
-Git 호스팅. `:3000`에서 실행되며 `https://git.ridewithmin.com`으로
-노출됩니다.
+Forgejo는 Git 호스팅 서비스입니다. `:3000`에서 실행되며
+`https://git.ridewithmin.com`으로 노출됩니다.
 
 - 공개 회원가입 비활성화
 - Forgejo SSH 비활성화 (HTTPS로만 push/pull)
 
 ## Vaultwarden (`services/vaultwarden.nix`)
 
-Bitwarden 호환 비밀번호 관리자. `:8222`에서 실행되며
+Vaultwarden은 Bitwarden 호환 비밀번호 관리자입니다. `:8222`에서 실행되며
 `https://vault.ridewithmin.com`으로 노출됩니다.
 
 - SQLite 백엔드
@@ -48,8 +48,8 @@ Bitwarden 호환 비밀번호 관리자. `:8222`에서 실행되며
 
 ## jamye-plz (`services/jamye-plz.nix`)
 
-지인 폐쇄 그룹용 full-stack 소셜 PWA. `alfheim`의 `:8080`에서 실행되며
-`https://jamye-plz.ridewithmin.com`으로 노출됩니다.
+jamye-plz는 지인 폐쇄 그룹용 full-stack 소셜 PWA입니다. `alfheim`의
+`:8080`에서 실행되며 `https://jamye-plz.ridewithmin.com`으로 노출됩니다.
 
 - upstream `jamye-plz` flake input에서 가져옵니다.
 - upstream `services.jamye-plz` NixOS 모듈로 활성화합니다.

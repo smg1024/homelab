@@ -4,8 +4,9 @@ icon: fontawesome/solid/shield-halved
 
 # Security model
 
-Who can reach what, and why. The model has four boundaries: public Internet,
-the private home LAN, the tailnet, and localhost.
+The security model defines four network boundaries: public Internet, the
+private home LAN, the tailnet, and localhost. Each boundary has a separate
+access policy.
 
 ## Access tiers
 
@@ -23,17 +24,17 @@ tunnel to Cloudflare; requests arrive through it at local Caddy
 (`https://localhost:443`), which routes by hostname. Anything not explicitly
 routed gets `404`.
 
-`adguardhome.ridewithmin.com`, `beszel.ridewithmin.com`, and
-`logs.ridewithmin.com` are deliberately **not** in the tunnel's hostname list
-and are gated by Caddy to Tailscale address ranges (`100.64.0.0/10`,
-`fd7a:115c:a1e0::/48`). Non-tailnet clients receive `404`.
+Caddy serves `adguardhome.ridewithmin.com`, `beszel.ridewithmin.com`, and
+`logs.ridewithmin.com` outside Cloudflare Tunnel. It accepts these routes only
+from the Tailscale address ranges (`100.64.0.0/10`,
+`fd7a:115c:a1e0::/48`). Other clients receive `404`.
 
 The public Uptime Kuma route allows only status-page paths and returns `404`
 for everything else.
 
 ## Firewall
 
-The NixOS firewall is enabled on every host. The home hosts accept SSH `22` on
+Every host runs the NixOS firewall. The home hosts accept SSH `22` on
 their host interfaces, but the ipTIME NAT router does not expose it to the
 public Internet without a port-forward. Direct administration uses the
 tailnet. `alfheim` accepts SSH only through the trusted `tailscale0` interface,

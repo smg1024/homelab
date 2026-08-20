@@ -4,8 +4,9 @@ icon: fontawesome/solid/map
 
 # 로드맵
 
-이 홈랩이 향하는 곳. 체크된 항목은 완료된 작업으로 연결되고, 미체크 항목은
-아직 하려는 일입니다. 각 구간 안에서는 대략 우선순위 순으로 적었습니다.
+이 페이지에는 홈랩의 향후 작업을 정리합니다. 체크된 항목은 완료된 작업으로
+연결되고 미체크 항목은 예정된 작업입니다. 각 구간 안에서는 대략 우선순위
+순으로 적었습니다.
 
 ## 지금 (운영 공백)
 
@@ -13,7 +14,7 @@ icon: fontawesome/solid/map
     - [ ] Vaultwarden SQLite DB용 `services.vaultwarden.backupDir`
     - [ ] Forgejo dump 또는 외부 원격 미러링
     - [ ] midgard `/var/lib`를 호스트 밖으로 보내는 백업 작업 (restic/borgbackup)
-- [x] **알림 전달**: Beszel이 시스템별 임계값으로 이메일 알림을 보내며,
+- [x] **알림 전달**: Beszel이 시스템별 임계값으로 이메일 알림을 보내며
       연결돼 있지 않던 기존 Prometheus 규칙을 대체
       ([상세](services/monitoring.md))
 
@@ -26,7 +27,7 @@ icon: fontawesome/solid/map
       [docs.ridewithmin.com](https://docs.ridewithmin.com/)은 Cloudflare
       Tunnel을 거쳐 yggdrasil의 Caddy가 Nix 스토어에서 직접 제공합니다
 - [x] Grafana/Prometheus/Loki/Alloy 스택을 **Beszel + VictoriaLogs**로
-      교체: yggdrasil 4 GB에 더 가볍고, UI가 더 친절하고, 알림 전달이
+      교체: yggdrasil 4 GB에 더 가볍고 UI가 더 친절하고 알림 전달이
       실제로 동작 ([상세](services/monitoring.md))
 - [ ] 이 사이트에 페이지별 **편집 버튼** (`content.action.edit` +
       Forgejo `edit_uri`)
@@ -42,5 +43,5 @@ icon: fontawesome/solid/map
 
 !!! tip "이 페이지 사용법"
     항목이 완료되면 체크하고 관련 페이지나 커밋을 링크하세요. 우선순위가
-    바뀌면 순서를 조정하세요. 이 페이지는 약속이 아니라 살아있는
+    바뀌면 순서를 조정하세요. 확정 일정이 아니라 상황에 따라 갱신하는
     문서입니다.

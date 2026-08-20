@@ -16,10 +16,10 @@ AdGuard Home의 DHCP 서버는 사용하지 않습니다.
 | LAN | `192.168.0.0/24` |
 | yggdrasil 예약 주소 | `enp2s0`의 `192.168.0.53` |
 | DNS 리스너 | TCP/UDP `192.168.0.53:53` |
-| 관리 UI | `https://adguardhome.ridewithmin.com`, tailnet 전용 |
+| 관리 UI | HTTP `:3000`; tailnet에서는 `https://adguardhome.ridewithmin.com` 사용 |
 
 방화벽은 LAN 출발지 대역과 예약 목적지 주소를 동시에 검사합니다.
-yggdrasil이 다른 주소를 받으면 LAN DNS는 닫힌 상태로 실패합니다. ipTIME
+yggdrasil이 다른 주소를 받으면 LAN DNS를 허용하지 않습니다. ipTIME
 공유기도 포트 포워딩을 추가하지 않는 한 WAN에서 시작된 트래픽을 차단합니다.
 DNS나 관리 UI 포트 포워딩을 만들지 마세요.
 
@@ -31,7 +31,7 @@ DNS나 관리 UI 포트 포워딩을 만들지 마세요.
 ## 네트워크 변경 후 사전 점검
 
 이사, 공유기 교체, 서브넷 변경 뒤에는 이 모듈을 배포하기 전에 실제
-네트워크를 다시 확인합니다:
+네트워크를 다시 확인합니다.
 
 ```bash
 ssh yggdrasil 'ip -brief address show dev enp2s0; ip -4 route show default'
@@ -50,7 +50,7 @@ ssh yggdrasil 'nmcli -f GENERAL.DEVICE,IP4.ADDRESS,IP4.GATEWAY,DHCP4.OPTION devi
    `192.168.0.1/24`이며 DHCP 서버가 켜져 있는지 확인합니다.
 3. yggdrasil의 `enp2s0` MAC 주소에 `192.168.0.53`을 예약합니다. 현재 MAC은
    `ssh yggdrasil 'cat /sys/class/net/enp2s0/address'`로 확인합니다.
-4. yggdrasil의 연결을 다시 맺거나 임대를 갱신한 뒤 확인합니다:
+4. yggdrasil의 네트워크 연결을 다시 설정하거나 임대를 갱신한 뒤 확인합니다.
 
     ```bash
     ssh yggdrasil 'ip -4 address show dev enp2s0'
@@ -61,8 +61,8 @@ TCP/UDP `:53`이나 관리 UI를 WAN으로 포트 포워딩하지 마세요.
 
 ## 최초 설정
 
-NixOS 모듈은 의도적으로 AdGuard Home의 최초 설정 화면을 남겨 둡니다.
-관리자 비밀번호가 Git이나 Nix 스토어에 들어가지 않게 하기 위해서입니다.
+NixOS 모듈은 관리자 비밀번호가 Git이나 Nix 스토어에 들어가지 않도록
+AdGuard Home의 최초 설정 화면을 의도적으로 남겨 둡니다.
 
 1. 일반 PR 및 CI/CD 흐름으로 배포합니다.
 2. SSH로 설정 UI를 포워딩합니다:
@@ -80,7 +80,7 @@ NixOS 모듈은 의도적으로 AdGuard Home의 최초 설정 화면을 남겨 �
 `/var/lib/AdGuardHome`에 저장됩니다. 배포 후에도 유지되지만 현재는 백업되지
 않습니다.
 
-비공개 Caddy 라우트를 배포한 뒤에는 tailnet 클라이언트에서
+비공개 Caddy 라우트가 배포되면 tailnet 클라이언트에서
 `https://adguardhome.ridewithmin.com`을 사용합니다. 이 호스트네임은
 Cloudflare Tunnel에 넣지 않고 yggdrasil의 Tailscale IPv4 주소를 직접
 가리킵니다. Caddy도 tailnet 밖에서 온 요청을 거부합니다.
@@ -122,5 +122,5 @@ sudo journalctl -u adguardhome -n 100 --no-pager
 
 AdGuard Home은 가정 내 단일 리졸버입니다. yggdrasil이 중단되면 복구되거나
 공유기 DNS 설정을 바꿀 때까지 클라이언트의 DNS도 중단됩니다. 공개 보조
-리졸버를 숨은 우회 경로로 추가하지 마세요. 올바른 이중화 방법은 두 번째
-AdGuard Home 인스턴스를 두는 것입니다.
+리졸버를 숨은 우회 경로로 추가하지 마세요. 올바른 이중화에는 두 번째
+AdGuard Home 인스턴스가 필요합니다.

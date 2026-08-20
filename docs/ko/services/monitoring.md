@@ -20,7 +20,7 @@ icon: fontawesome/solid/chart-line
 
 ## 메트릭 흐름
 
-각 호스트의 Beszel 에이전트가 tailnet을 통해 허브로 **먼저 접속**합니다
+각 호스트의 Beszel 에이전트가 tailnet으로 허브에 **먼저 접속**합니다
 (WebSocket). 수집용 인바운드 포트가 필요 없습니다. 에이전트는
 `secrets/beszel.yaml`의 허브 공개 키와 universal token으로 스스로 등록하며
 (`SYSTEM_NAME`은 호스트네임), CPU·메모리·디스크·네트워크·로드·온도·systemd
@@ -57,7 +57,8 @@ journald -> systemd-journal-upload -> vlagent :9429 (로컬 버퍼)
 ```
 
 - `systemd-journal-upload`가 각 호스트의 저널을 읽습니다. 콜드 부트 시
-  로컬 리스너와 경합하지 않도록 `vlagent` 뒤로 순서를 강제했습니다.
+  로컬 리스너와 경합하지 않도록 `vlagent`가 시작된 뒤 실행되게 순서를
+  고정했습니다.
 - `vlagent`는 디스크에 버퍼링하고 재시도하므로 허브 재시작(예: yggdrasil
   배포) 중에도 로그가 유실되지 않습니다.
 - 보존 기간은 `14d`입니다. journald 필드(`_HOSTNAME`, `_SYSTEMD_UNIT`,
@@ -66,7 +67,7 @@ journald -> systemd-journal-upload -> vlagent :9429 (로컬 버퍼)
 
 ## 접근 방법
 
-tailnet에 연결된 클라이언트에서:
+tailnet에 연결된 클라이언트에서는 다음 주소를 사용합니다.
 
 ```text
 https://beszel.ridewithmin.com   # 메트릭 + 알림
@@ -88,7 +89,8 @@ curl -fsS http://127.0.0.1:9428/ping
 systemctl is-active beszel-agent vlagent systemd-journal-upload
 ```
 
-tailnet 클라이언트에서 최근 1시간 호스트별 로그 수를 빠르게 확인:
+tailnet 클라이언트에서 최근 1시간 동안 호스트별 로그 수를 확인하려면 다음
+명령을 실행합니다.
 
 ```bash
 curl -s http://yggdrasil.tail6fc192.ts.net:9428/select/logsql/query \

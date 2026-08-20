@@ -4,12 +4,11 @@ icon: fontawesome/solid/book-open
 
 # Docs site
 
-This site itself is declared in the flake. Content lives as Markdown under
-`docs/`, is built with [Zensical](https://zensical.org/) (the static site
-generator by the Material for MkDocs team), and is served directly by Caddy
-on yggdrasil with `file_server`, straight from the Nix store. Public traffic
-enters through Cloudflare Tunnel into the same Caddy. Configuration uses
-Zensical's native `zensical.toml` format.
+The flake declares the docs site. Markdown lives under `docs/`, and
+[Zensical](https://zensical.org/), the Material for MkDocs team's static site
+generator, builds it. Caddy serves the result directly from the Nix store on
+yggdrasil with `file_server`. Public traffic reaches Caddy through Cloudflare
+Tunnel. Zensical reads its native `zensical.toml` configuration.
 
 English is the default language; a Korean translation is built as a separate
 subsite under `/ko/`. The language selector in the header switches between
@@ -28,17 +27,17 @@ docs/
 └── ko/               # Korean translation, mirrors en/
 ```
 
-- flake output `packages.<system>.docs`: both languages built with
-  `zensical build --strict`, Korean into the `ko/` subdirectory
-- serving: the `docs.ridewithmin.com` vhost in `services/ingress.nix` serves
-  the built package with Caddy `file_server` on yggdrasil, public through
-  Cloudflare Tunnel
+- The `packages.<system>.docs` flake output builds both languages with
+  `zensical build --strict` and places Korean under the `ko/` subdirectory.
+- The `docs.ridewithmin.com` virtual host in `services/ingress.nix` serves the
+  built package with Caddy `file_server` on yggdrasil. Cloudflare Tunnel carries
+  public requests to Caddy.
 
 ## Editing workflow
 
 1. Edit the English page under `docs/en/` first, then mirror the change in
-   `docs/ko/`. A new page needs two extra touches, in both languages:
-    - add it to the `nav` of `zensical.toml` **and** `zensical.ko.toml`
+   `docs/ko/`. A new page also needs two updates in both languages:
+    - add it to the `nav` of `zensical.toml` and `zensical.ko.toml`
     - give it a navigation icon via front matter at the top of the file:
 
       ```markdown

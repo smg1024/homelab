@@ -4,9 +4,9 @@ icon: fontawesome/solid/server
 
 # midgard
 
-The actual application host. External traffic is forwarded by Caddy on
-yggdrasil over the tailnet (`midgard.tail6fc192.ts.net`); midgard's service
-ports are never opened on the public firewall.
+midgard is the primary application host. Caddy on yggdrasil forwards external
+traffic over the tailnet (`midgard.tail6fc192.ts.net`). The public firewall
+does not expose midgard's service ports.
 
 ## Responsibilities
 
@@ -36,12 +36,12 @@ modules/podman.nix      # host-specific module
 
 ## Container runtime
 
-Podman is enabled only on midgard (`modules/podman.nix`).
+Only midgard enables Podman (`modules/podman.nix`).
 
 - `virtualisation.oci-containers.backend = "podman"`
 - weekly auto-prune (`podman-prune.timer`)
 - registry search path limited to `docker.io` and `ghcr.io`
-- image tags are **always pinned**, never `latest`
+- image tags are pinned, never `latest`
 
 Long-running container services should be declared with
 `virtualisation.oci-containers.containers` instead of ad-hoc compose
@@ -50,7 +50,7 @@ operator workflows.
 
 ## Hermes Agent
 
-Hermes Agent is installed as part of `poby`'s Home Manager environment
-(`home/poby/hermes-agent.nix`), not as a NixOS system service. Runtime state
-and credentials live mutably under `/home/poby/.hermes`; once the setup is
-stable it will be promoted into declarative Nix configuration.
+Hermes Agent is part of `poby`'s Home Manager environment
+(`home/poby/hermes-agent.nix`), not a NixOS system service. Runtime state and
+credentials remain mutable under `/home/poby/.hermes` until the setup is
+stable enough to move into declarative Nix configuration.

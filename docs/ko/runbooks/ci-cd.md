@@ -4,12 +4,10 @@ icon: fontawesome/solid/robot
 
 # CI/CD 파이프라인
 
-GitHub Actions가 모든 변경을 빌드하고, `main`에 반영되면 호스트에 자동으로
+GitHub Actions가 모든 변경을 빌드하고 `main`에 반영되면 호스트에 자동으로
 배포합니다. 이 경로가 기본 검증과 배포 흐름입니다. [수동 `just`
 워크플로](deploy.md)는 명시적 요청이 있을 때 쓰는 비상 수단(break-glass)으로
 남습니다. 파이프라인은 같은 `nixos-rebuild`를 무인으로 실행할 뿐입니다.
-
-이렇게 둘로 나눈 데는 이유가 있습니다.
 
 - **CI**는 어떤 호스트도 건드리지 않는 일회용 러너에서 모든 호스트가
   *빌드되는지* 검증합니다.
@@ -24,7 +22,7 @@ PR / 푸시 ──▶ CI: 각 호스트의 시스템 클로저 빌드   (빌드�
 main에 병합 ──▶ CD: tailnet 합류 → 모든 호스트에서 nixos-rebuild switch
 ```
 
-## CI: 빌드 체크
+## CI 빌드 체크
 
 `.github/workflows/ci.yml`, `main`으로 향하는 PR에서 트리거됩니다.
 
@@ -41,15 +39,15 @@ main에 병합 ──▶ CD: tailnet 합류 → 모든 호스트에서 nixos-reb
 세 개의 `build …` 체크를 브랜치 보호에서 **필수**로 지정해 빌드 가능한 설정만
 `main`에 도달하도록 합니다.
 
-## CD: 병합 시 배포
+## CD 병합 시 배포
 
-`.github/workflows/deploy.yml`, `main`으로의 푸시(병합)에서 트리거됩니다.
+`.github/workflows/deploy.yml`은 `main` 푸시(병합)에서 트리거됩니다.
 
-각 호스트는 잡 하나가 담당하며, 다음을 수행합니다.
+각 호스트는 잡 하나가 담당하며 다음을 수행합니다.
 
 1. Tailscale OAuth 클라이언트로 `tag:ci` 태그가 붙은 **임시(ephemeral)** 노드로
-   tailnet에 합류하고, 대상 노드에 연결될 때까지 기다립니다.
-2. 배포 키를 불러와 해당 호스트에 대해 실행합니다.
+   tailnet에 합류하고 대상 노드에 연결될 때까지 기다립니다.
+2. 배포 키를 불러와 해당 호스트에서 다음 명령을 실행합니다.
 
     ```text
     nixos-rebuild switch
@@ -66,13 +64,13 @@ main에 병합 ──▶ CD: tailnet 합류 → 모든 호스트에서 nixos-reb
 `aarch64` 클로저를 직접 컴파일) 유지할 바이너리 캐시도 없습니다. `concurrency`
 그룹이 배포를 직렬화해 두 병합이 서로 경쟁하지 않습니다.
 
-모든 병합에서 세 호스트가 전부 switch되지만, 영향이 없는 호스트는 같은 세대를
+모든 병합에서 세 호스트가 전부 switch되지만 영향이 없는 호스트는 같은 세대를
 다시 활성화할 뿐이라 금세 끝나는 무동작(no-op)입니다.
 
 switch 후에는 `nix store diff-closures`가 노드의 이전 시스템 클로저와 새 클로저를
 비교해 무엇이 바뀌었는지(버전 변경, 추가, 삭제)를 잡 로그와 실행 요약 페이지에
 기록합니다. 영향이 없는 호스트는 변경 없음으로 표시됩니다. 배포가 실패하면 요약
-전에 스텝이 중단되고, 실패한 빌드의 로그 끝부분을 포함한 Nix 오류 출력이 잡
+전에 스텝이 중단되고 실패한 빌드의 로그 끝부분을 포함한 Nix 오류 출력이 잡
 로그에 남습니다.
 
 ## 사전 준비
@@ -84,12 +82,12 @@ switch 후에는 `nix store diff-closures`가 노드의 이전 시스템 클로�
 | 배포 공개 키 | `modules/users.nix` → `poby` 인증 키 | 모든 호스트에서 러너를 인가 |
 | `tag:ci` + ACL | Tailscale 관리 콘솔 | 태그 선언 및 `tag:ci`에 호스트 22번 포트 접근 허용 |
 
-배포 키는 `poby`의 `authorizedKeys`에 추가되는 항목일 뿐이고, `poby`는 이미
+배포 키는 `poby`의 `authorizedKeys`에 추가되는 항목일 뿐이고 `poby`는 이미
 비밀번호 없는 `sudo`(`security.sudo.wheelNeedsPassword = false`)를 쓰므로
 호스트 쪽 추가 설정은 필요 없습니다.
 
 !!! warning "부트스트랩 순서"
-    러너는 호스트가 배포 키를 이미 신뢰할 때에만 로그인할 수 있습니다. 그 키의
+    러너는 호스트가 배포 키를 이미 신뢰할 때에만 로그인합니다. 그 키의
     첫 배포에는 명시적인 수동 [`just switch`](deploy.md)가 필요할 수 있습니다.
     그 이후로는 병합이 알아서 배포합니다.
 
@@ -105,12 +103,12 @@ switch 후에는 `nix store diff-closures`가 노드의 이전 시스템 클로�
 
 ## 주의사항
 
-- **자동 롤백이 없습니다.** 병합 `switch`에는 매직 롤백이 없고, 초록색 CI는
+- **자동 롤백이 없습니다.** 병합 `switch`에는 자동 롤백이 없고 CI 통과는
   설정이 *빌드된다*는 뜻이지 *동작한다*는 보장은 아닙니다. 배포 후
-  [모니터링 스택](../services/monitoring.md)을 확인하고, 서비스가 이상하면 손으로
+  [모니터링 스택](../services/monitoring.md)을 확인하고 서비스가 이상하면 손으로
   롤백합니다.
 - **비상 수단은 명시적으로만 씁니다.** 로컬 `just test` / `just switch`는
   일반 흐름에 포함되지 않습니다. 운영자가 로컬 활성화를 명시적으로 요청한
-  경우에만 사용하고, `sudo nixos-rebuild switch --rollback`으로 되돌립니다.
-- **변경은 PR로 흐르게 유지합니다.** `main`으로의 직접 푸시는 CI를 건너뜁니다.
+  경우에만 사용하고 `sudo nixos-rebuild switch --rollback`으로 되돌립니다.
+- **변경은 PR로 흐르게 유지합니다.** `main`에 직접 푸시하면 CI를 건너뜁니다.
   브랜치 보호로 빌드 체크를 강제해 `main`이 배포 가능한 상태를 유지하도록 합니다.

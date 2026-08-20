@@ -4,11 +4,10 @@ icon: fontawesome/solid/house
 
 # Homelab
 
-This site is the operations documentation for a homelab made up of NixOS
-machines. Everything is declared in a single Nix flake in the
-[Git repository](https://git.ridewithmin.com). **The repo is the single
-source of truth.** Machines are never fixed by editing config on a host;
-changes are made in the repo, committed, then deployed.
+This site documents a NixOS homelab. A single Nix flake in the
+[Git repository](https://git.ridewithmin.com) declares the full system. The
+repo is the source of truth: edit and validate changes there, commit them, and
+then deploy. Do not fix configuration directly on a host.
 
 ## Hosts at a glance
 

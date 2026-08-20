@@ -4,15 +4,15 @@ icon: fontawesome/solid/server
 
 # yggdrasil
 
-The public entry point and lightweight infrastructure node. It only has 4 GB
-of RAM, so the rule is to **keep it lightweight**. No applications run here.
+yggdrasil is the public entry point and lightweight infrastructure node. It
+has 4 GB of RAM, so applications run elsewhere.
 
 ## Responsibilities
 
 - Maintain the Cloudflare Tunnel (`cloudflared`)
 - Run the Caddy reverse proxy to route public domains to internal services
 - Serve the Dev with Min blog and the homelab docs site directly from Caddy
-  (`file_server` over Nix store paths — no extra processes)
+  (`file_server` over Nix store paths, with no extra processes)
 - Serve the Uptime Kuma public status page
 - Resolve and filter DNS for the private home LAN with AdGuard Home
 - Run the Beszel hub for metrics and alerting (tailnet-restricted Caddy route)
@@ -35,7 +35,7 @@ services/adguardhome.nix
 | --- | --- | --- |
 | `443` | Caddy | public (Tunnel origin) |
 | `53` TCP/UDP | AdGuard Home DNS | `192.168.0.0/24` clients querying `192.168.0.53` only |
-| `3000` | AdGuard Home admin/setup UI | `https://adguardhome.ridewithmin.com`, tailnet only |
+| `3000` | AdGuard Home HTTP admin/setup UI | all interfaces; direct and Caddy-proxied access limited to the tailnet |
 | `3001` | Uptime Kuma | localhost |
 | `8090` | Beszel hub | all interfaces; reachable only via the trusted `tailscale0` interface |
 | `9428` | VictoriaLogs | all interfaces; reachable only via the trusted `tailscale0` interface |

@@ -21,7 +21,7 @@ Tunnel은 다음 공개 호스트네임을 yggdrasil의 로컬 Caddy(`https://lo
 - `status.ridewithmin.com`
 - `docs.ridewithmin.com`
 
-매칭되지 않는 요청은 `http_status:404`로 떨어집니다. Tunnel 자격 증명은
+일치하는 규칙이 없는 요청에는 `http_status:404`를 반환합니다. Tunnel 자격 증명은
 `cloudflare/cloudflared_tunnel_credentials` SOPS 비밀입니다.
 
 ## Caddy (`services/ingress.nix`)
@@ -41,8 +41,8 @@ Caddy는 공개 호스트네임별로 내부 백엔드를 선택합니다.
 | `beszel.ridewithmin.com` | `http://127.0.0.1:8090` | tailnet 클라이언트만, 그 외 `404` |
 | `logs.ridewithmin.com` | `http://127.0.0.1:9428` | tailnet 클라이언트만, `/`는 VictoriaLogs 웹 UI로 리다이렉트 |
 
-인증서는 Caddy의 Cloudflare DNS 플러그인으로 ACME DNS 챌린지를 거쳐
-발급합니다. Cloudflare API 토큰은 `cloudflare/caddy_env` SOPS 비밀에서
+인증서는 Caddy가 Cloudflare DNS 플러그인으로 ACME DNS 챌린지를 거쳐
+발급받습니다. Cloudflare API 토큰은 `cloudflare/caddy_env` SOPS 비밀에서
 환경 변수로 주입됩니다.
 
 ## tailnet 전용 라우트 패턴

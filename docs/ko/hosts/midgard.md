@@ -4,7 +4,7 @@ icon: fontawesome/solid/server
 
 # midgard
 
-실제 애플리케이션 호스트입니다. 외부 트래픽은 yggdrasil의 Caddy가 tailnet의
+애플리케이션을 실행하는 호스트입니다. 외부 트래픽은 yggdrasil의 Caddy가 tailnet의
 `midgard.tail6fc192.ts.net`으로 전달합니다. midgard의 서비스 포트는 공개
 방화벽에서 열지 않습니다.
 
@@ -43,7 +43,7 @@ Podman은 midgard에만 활성화됩니다 (`modules/podman.nix`).
 - 레지스트리 검색 경로: `docker.io`, `ghcr.io`로 제한
 - 이미지 태그는 **반드시 고정**, `latest` 금지
 
-장기 실행 컨테이너 서비스는 ad-hoc compose 명령 대신
+장기 실행 컨테이너 서비스는 임시 compose 명령 대신
 `virtualisation.oci-containers.containers`로 선언합니다.
 `podman-compose`는 임시 테스트와 수동 운영 용도로만 유지합니다.
 

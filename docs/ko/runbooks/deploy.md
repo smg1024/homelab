@@ -9,7 +9,7 @@ icon: fontawesome/solid/rocket
 ## PR 전 검증
 
 GitHub Actions CI가 기준 빌드 체크입니다. PR을 열기 전에 로컬에서 확인하면
-빠르게 문제를 잡을 수 있습니다.
+문제를 빨리 찾습니다.
 
 ```bash
 nix flake check --no-build
@@ -72,5 +72,5 @@ sudo nixos-rebuild switch --rollback
 - `flake.lock`은 손으로 편집하지 않고 `nix flake update`를 사용합니다.
 - `system.stateVersion`은 초기 설치 시점의 기본값 기록입니다. 릴리스 노트가
   명시적으로 요구하지 않는 한 올리지 않습니다.
-- 배포는 라이브 호스트를 건드리는 작업입니다. 일반 변경은 CI/CD에 맡기고,
+- 배포는 라이브 호스트를 건드리는 작업입니다. 일반 변경은 CI/CD에 맡기고
   로컬 `just test` / `just switch`는 명시적 요청이 있을 때만 실행합니다.
