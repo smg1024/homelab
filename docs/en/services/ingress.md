@@ -4,7 +4,7 @@ icon: fontawesome/solid/door-open
 
 # Ingress
 
-All external traffic enters through **Cloudflare Tunnel** instead of directly
+All external traffic enters through Cloudflare Tunnel instead of directly
 exposed ports. Both `cloudflared` and Caddy run on `yggdrasil`.
 
 ## Cloudflare Tunnel (`services/cloudflared.nix`)
@@ -26,7 +26,7 @@ is the `cloudflare/cloudflared_tunnel_credentials` SOPS secret.
 
 ## Caddy (`services/ingress.nix`)
 
-Caddy selects the internal backend by public hostname.
+Caddy selects the internal backend by request hostname.
 
 | Hostname | Backend | Notes |
 | --- | --- | --- |
@@ -37,6 +37,7 @@ Caddy selects the internal backend by public hostname.
 | `docs.ridewithmin.com` | local `file_server` from the Nix store | This docs site, built from the flake's `docs` package |
 | `jamye-plz.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | jamye-plz on alfheim |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | status-page paths only, `404` otherwise |
+| `adguardhome.ridewithmin.com` | `http://127.0.0.1:3000` | tailnet clients only, `404` otherwise |
 | `beszel.ridewithmin.com` | `http://127.0.0.1:8090` | tailnet clients only, `404` otherwise |
 | `logs.ridewithmin.com` | `http://127.0.0.1:9428` | tailnet clients only, `/` redirects to the VictoriaLogs web UI |
 
@@ -46,8 +47,8 @@ from the `cloudflare/caddy_env` SOPS secret.
 
 ## The tailnet-only route pattern
 
-Beszel and the VictoriaLogs UI are not part of the tunnel's public hostname
-list; Caddy restricts them to Tailscale address ranges.
+AdGuard Home, Beszel, and the VictoriaLogs UI are not part of the tunnel's
+public hostname list; Caddy restricts them to Tailscale address ranges.
 
 ```caddy
 @tailnet remote_ip 100.64.0.0/10 fd7a:115c:a1e0::/48

@@ -4,12 +4,12 @@ icon: fontawesome/solid/network-wired
 
 # Architecture
 
-The setup is split into an edge/infra node (`yggdrasil`), a primary
-application node (`midgard`), and a cloud ARM application node (`alfheim`).
-External traffic enters only through **Cloudflare Tunnel → Caddy** instead of
-directly exposed ports, and the **Tailscale tailnet** is the internal network
-boundary between hosts. Household clients reach AdGuard Home over a separate,
-private LAN boundary.
+The homelab has three roles: `yggdrasil` is the edge and infrastructure node,
+`midgard` is the primary application node, and `alfheim` is the cloud ARM
+application node. External traffic enters through Cloudflare Tunnel → Caddy,
+with no directly exposed application ports. The Tailscale tailnet carries
+traffic between hosts. Household clients reach AdGuard Home through the
+separate private LAN.
 
 ```mermaid
 flowchart TD
@@ -22,7 +22,7 @@ flowchart TD
         blog["Dev with Min blog<br/>Caddy file_server"]
         docsSite["Docs site<br/>Caddy file_server"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
-        adguard["AdGuard Home<br/>192.168.0.53:53"]
+        adguard["AdGuard Home<br/>192.168.0.53:53 / :3000"]
         beszelHub["Beszel hub<br/>:8090"]
         vlogs["VictoriaLogs<br/>:9428"]
         yShipper["beszel-agent / vlagent"]
@@ -62,6 +62,7 @@ flowchart TD
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
     caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
+    caddy -->|"adguardhome.ridewithmin.com<br/>tailnet only"| adguard
     caddy -->|"beszel.ridewithmin.com<br/>tailnet only"| beszelHub
     caddy -->|"logs.ridewithmin.com<br/>tailnet only"| vlogs
     caddy -->|"docs.ridewithmin.com"| docsSite
@@ -81,8 +82,8 @@ flowchart TD
     aShipper -.-> vlogs
 ```
 
-Who can reach what across these boundaries (public Internet, tailnet,
-localhost) is covered in the [security model](security.md).
+The [security model](security.md) explains who can cross each boundary: public
+Internet, home LAN, tailnet, and localhost.
 
 ## Shared system configuration
 
@@ -102,7 +103,7 @@ All hosts load the same common modules through `flake.nix`.
 
 ## Storage
 
-Disk layout is declared with `disko`. All hosts use a simple single-disk GPT
+`disko` declares the disk layout. All hosts use a simple single-disk GPT
 layout.
 
 ```text
@@ -113,8 +114,8 @@ remaining disk             -> /, ext4
 
 ## User environment
 
-Home Manager is enabled through the NixOS module and applied as part of each
-host switch. It is used **only for the `poby` operator environment**, not for
-long-running services. The shared profiles (`home/poby/base.nix`, `ops.nix`)
-carry shell/Git/tmux configuration and operator tools such as `age`, `sops`,
-and `just`; per-host profiles add host-specific aliases.
+The NixOS module enables Home Manager and applies it during each host switch.
+It configures only the `poby` operator environment, not long-running services.
+The shared profiles (`home/poby/base.nix`, `ops.nix`) contain shell, Git, and
+tmux configuration plus operator tools such as `age`, `sops`, and `just`.
+Per-host profiles add host-specific aliases.

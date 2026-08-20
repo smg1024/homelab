@@ -6,9 +6,9 @@ icon: fontawesome/solid/network-wired
 
 구성은 엣지/인프라 노드(`yggdrasil`), 주 애플리케이션 노드(`midgard`),
 클라우드 ARM 애플리케이션 노드(`alfheim`)로 나뉩니다. 외부 트래픽은 포트를
-직접 열지 않고 Cloudflare Tunnel → Caddy 경로로만 들어오며, 호스트 간 내부
-통신은 Tailscale tailnet을 경계로 삼습니다. 가정 내 클라이언트는 별도의
-사설 LAN 경계를 통해 AdGuard Home에 접근합니다.
+직접 열지 않고 Cloudflare Tunnel → Caddy 경로로만 들어오며 호스트 간 내부
+통신은 Tailscale tailnet 안에서 이루어집니다. 가정 내 클라이언트는 별도의
+사설 LAN에서 AdGuard Home에 접근합니다.
 
 ```mermaid
 flowchart TD
@@ -21,7 +21,7 @@ flowchart TD
         blog["Dev with Min 블로그<br/>Caddy file_server"]
         docsSite["문서 사이트<br/>Caddy file_server"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
-        adguard["AdGuard Home<br/>192.168.0.53:53"]
+        adguard["AdGuard Home<br/>192.168.0.53:53 / :3000"]
         beszelHub["Beszel 허브<br/>:8090"]
         vlogs["VictoriaLogs<br/>:9428"]
         yShipper["beszel-agent / vlagent"]
@@ -61,6 +61,7 @@ flowchart TD
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
     caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
+    caddy -->|"adguardhome.ridewithmin.com<br/>tailnet 전용"| adguard
     caddy -->|"beszel.ridewithmin.com<br/>tailnet 전용"| beszelHub
     caddy -->|"logs.ridewithmin.com<br/>tailnet 전용"| vlogs
     caddy -->|"docs.ridewithmin.com"| docsSite
@@ -80,7 +81,7 @@ flowchart TD
     aShipper -.-> vlogs
 ```
 
-이 경계들(공개 인터넷, tailnet, localhost)을 누가 넘는지는
+공개 인터넷, 홈 LAN, tailnet, localhost 경계별 접근 주체는
 [보안 모델](security.md)에서 다룹니다.
 
 ## 공유 시스템 구성
@@ -112,8 +113,8 @@ GPT 파티션 테이블
 
 ## 사용자 환경
 
-Home Manager는 NixOS 모듈로 활성화되어 호스트 switch 시 함께 적용되며
-`poby` 운영자 환경 전용입니다. 장기 실행 서비스에는 사용하지 않습니다.
+Home Manager는 NixOS 모듈로 활성화되며 호스트 switch 시 함께 적용됩니다.
+`poby` 운영자 환경 전용이므로 장기 실행 서비스에는 사용하지 않습니다.
 공유 프로필(`home/poby/base.nix`, `ops.nix`)에는 셸/Git/tmux 설정과
-`age`·`sops`·`just` 같은 운영 도구가 들어가고, 호스트별 프로필이 각 호스트에
+`age`·`sops`·`just` 같은 운영 도구가 들어가고 호스트별 프로필이 각 호스트에
 맞는 별칭을 더합니다.

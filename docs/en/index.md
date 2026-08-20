@@ -4,11 +4,10 @@ icon: fontawesome/solid/house
 
 # Homelab
 
-This site is the operations documentation for a homelab made up of NixOS
-machines. Everything is declared in a single Nix flake in the
-[Git repository](https://git.ridewithmin.com). **The repo is the single
-source of truth.** Machines are never fixed by editing config on a host;
-changes are made in the repo, committed, then deployed.
+This site documents a NixOS homelab. A single Nix flake in the
+[Git repository](https://git.ridewithmin.com) declares the full system. The
+repo is the source of truth: edit and validate changes there, commit them, and
+then deploy. Do not fix configuration directly on a host.
 
 ## Hosts at a glance
 
@@ -30,7 +29,7 @@ secrets/         # sops-nix encrypted YAML
 docs/            # this documentation site (Zensical)
 ```
 
-## Public URLs
+## Service URLs
 
 | URL | Service | Access |
 | --- | --- | --- |
@@ -40,6 +39,7 @@ docs/            # this documentation site (Zensical)
 | `https://vault.ridewithmin.com` | Vaultwarden | Public (Cloudflare Tunnel) |
 | `https://jamye-plz.ridewithmin.com` | jamye-plz | Public (Cloudflare Tunnel) |
 | `https://status.ridewithmin.com` | Uptime Kuma status page | Public (status-page paths only) |
+| `https://adguardhome.ridewithmin.com` | AdGuard Home dashboard | Tailnet only |
 | `https://beszel.ridewithmin.com` | Beszel (metrics + alerts) | Tailnet only |
 | `https://logs.ridewithmin.com` | VictoriaLogs (log search) | Tailnet only |
 | `https://docs.ridewithmin.com` | This documentation site | Public (Cloudflare Tunnel) |

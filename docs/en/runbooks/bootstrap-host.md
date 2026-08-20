@@ -4,15 +4,14 @@ icon: fontawesome/solid/hard-drive
 
 # Bootstrapping a host
 
-Installing NixOS on a new (or dead) machine from this repo, using
-`nixos-anywhere` over an installer USB. This is the generic per-host
-procedure. Do one host at a time and verify it before starting the next,
-rather than installing two machines in parallel.
+Use this runbook to install NixOS from the repo on a new or failed machine.
+The process uses `nixos-anywhere` over an installer USB. Install one host at a
+time and verify it before starting another.
 
-The procedure itself is simple: the **first** install always goes through
-`nixos-anywhere`. After the host is reachable and trusts the deploy key, normal
-changes go through GitHub Actions CI/CD. Local `just test` / `just switch` is
-reserved for explicit bootstrap or break-glass requests.
+The first install always uses `nixos-anywhere`. After the host is reachable and
+trusts the deploy key, normal changes go through GitHub Actions CI/CD. Reserve
+local `just test` and `just switch` for explicit bootstrap or break-glass
+requests.
 
 !!! danger "This wipes the target disk"
     `disko` repartitions and formats the disk it is pointed at. Triple-check

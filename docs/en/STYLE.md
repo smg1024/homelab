@@ -4,14 +4,14 @@ icon: fontawesome/solid/pen-nib
 
 # Documentation style guide
 
-The writing conventions the English docs (`docs/en/`) follow. Use this when you
-write a new page or revise an old one, or when you translate from or to the
-Korean tree. The goal is not spell-checking but **consistency across the whole
-site**.
+This guide defines the writing conventions for the English docs (`docs/en/`).
+Use it when writing or revising a page and when translating between the English
+and Korean trees. Its purpose is consistency across the site, not merely
+spell-checking.
 
-These are **technical docs**: commands, paths, ports, code blocks, and tables
-do most of the work. Keep the tone plain and neutral, and leave tool and
-protocol names in their original spelling.
+These are technical docs. Commands, paths, ports, code blocks, and tables do
+most of the work. Keep the tone plain and neutral, and leave tool and protocol
+names in their original spelling.
 
 ## 1. Voice and register
 
@@ -28,15 +28,15 @@ protocol names in their original spelling.
   instead. (The em dash is the single most common AI-writing tell.)
 
 ```text
-✅ yggdrasil is the public entry point. It has 4 GB of RAM, so keep it light.
-✅ Caddy selects the backend by hostname.
-⚠️ yggdrasil serves as the entry point — a testament to lightweight design.
-   (copula avoidance + em dash + puffery)
+GOOD: yggdrasil is the public entry point. It has 4 GB of RAM, so keep it light.
+GOOD: Caddy selects the backend by hostname.
+BAD:  yggdrasil serves as the entry point, a testament to lightweight design.
+      (copula avoidance and puffery)
 ```
 
 ## 2. Terminology
 
-Tool, protocol, and command names keep their **original spelling**. General
+Tool, protocol, and command names keep their original spelling. General
 words use the plain English term, spelled the same way every time.
 
 | Kind | Spelling | Notes |
@@ -51,7 +51,7 @@ otherwise ("midgard runs Forgejo").
 
 ## 3. Numbers and units
 
-- Capacities and sizes in prose use **number + space + unit**: `4 GB`,
+- Capacities and sizes in prose use number + space + unit: `4 GB`,
   `512 MB`.
 - Config literals (`512M`, `15d`, `3m`) keep their raw form and go in
   `inline code`.
@@ -60,7 +60,7 @@ otherwise ("midgard runs Forgejo").
 ## 4. Lists and structure
 
 - Bullets use `-`, numbered steps use `1.` `2.`, tasks use `- [ ]` checklists.
-- Headings are **sentence case**: "Design principles", not "Design Principles".
+- Headings use sentence case: "Design principles", not "Design Principles".
 - Every code block declares its language: ` ```bash `, ` ```nix `, ` ```text `,
   ` ```mermaid `.
 - Every page starts with navigation-icon front matter.

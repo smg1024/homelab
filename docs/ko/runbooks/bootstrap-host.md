@@ -4,25 +4,25 @@ icon: fontawesome/solid/hard-drive
 
 # 호스트 부트스트랩
 
-새(또는 죽은) 머신에 이 저장소로 NixOS를 설치하는 절차입니다. installer USB
-환경에서 `nixos-anywhere`를 사용합니다. 이 페이지는 generic 호스트 절차입니다.
+새 머신이나 고장 난 머신에 이 저장소로 NixOS를 설치하는 절차입니다. 설치 USB
+환경에서 `nixos-anywhere`를 사용합니다. 모든 호스트에 적용되는 공통 절차입니다.
 한 번에 한 호스트씩, 다음 호스트로 넘어가기 전에 검증하세요. 두 머신을 동시에
 설치하지 않습니다.
 
-절차 자체는 간단합니다. **최초** 설치는 항상 `nixos-anywhere`로 합니다. 호스트가
-접속 가능하고 배포 키를 신뢰하게 된 뒤의 일반 변경은 GitHub Actions CI/CD로
-흘립니다. 로컬 `just test` / `just switch`는 명시적인 부트스트랩 또는 비상
+**최초** 설치는 항상 `nixos-anywhere`로 합니다. 호스트에 접속 가능하고 배포
+키를 신뢰하도록 설정한 뒤에는 일반 변경을 GitHub Actions CI/CD로 처리합니다.
+로컬 `just test` / `just switch`는 명시적인 부트스트랩 또는 비상
 요청이 있을 때만 사용합니다.
 
 !!! danger "대상 디스크가 지워집니다"
     `disko`는 지정된 디스크를 재파티션하고 포맷합니다. 설치 전에 디스크 ID를
-    반드시 거듭 확인하고, USB installer 자체 디스크를 가리키지 않도록 합니다.
+    반드시 거듭 확인하고 설치 USB 자체 디스크를 가리키지 않도록 합니다.
 
 ## 준비
 
-- [ ] 대상 머신을 NixOS installer USB로 부팅합니다.
+- [ ] 대상 머신을 NixOS 설치 USB로 부팅합니다.
 - [ ] 콘솔에서 임시 root 비밀번호를 설정하고 SSH를 시작한 뒤 LAN IP를
-      기록합니다. 이 비밀번호는 installer 환경에서만 쓰이며, 설치된 시스템은
+      기록합니다. 이 비밀번호는 설치 환경에서만 쓰이며 설치된 시스템은
       root·패스워드 로그인을 비활성화합니다.
 
     ```bash
@@ -53,7 +53,7 @@ icon: fontawesome/solid/hard-drive
       단일 디스크 GPT 레이아웃을 만듭니다. 512M EFI 파티션이 `/boot`(vfat),
       나머지가 `/`(ext4)입니다.
 
-- [ ] 대상 머신에서 하드웨어 설정을 생성하고, 그대로 믿지 말고 검토합니다.
+- [ ] 대상 머신에서 하드웨어 설정을 생성하고 그대로 믿지 말고 검토합니다.
 
     ```bash
     ssh root@<INSTALLER_IP> 'nixos-generate-config --show-hardware-config' \
@@ -64,7 +64,7 @@ icon: fontawesome/solid/hard-drive
     microcode 항목은 남깁니다. `fileSystems."/"`, `fileSystems."/boot"`,
     `swapDevices`는 제거합니다. `/`와 `/boot`는 `disko`가, 스왑은
     `modules/swap.nix`의 zram이 담당합니다. 이 항목들은 보통 `disko`와 충돌하는
-    live 환경 값입니다.
+    설치 환경의 값입니다.
 
 - [ ] `hosts/<host>/default.nix`의 `imports`를 활성화(주석 해제)합니다.
 
@@ -93,7 +93,7 @@ nix run github:nix-community/nixos-anywhere -- \
   root@<INSTALLER_IP>
 ```
 
-이 명령은 `disko`로 파티션을 나눠 포맷한 뒤 시스템 클로저를 복사·설치하고,
+이 명령은 `disko`로 파티션을 나눠 포맷한 뒤 시스템 클로저를 복사·설치하고
 부트로더를 올린 다음 초기 설정을 적용합니다. 이 단계에서 디스크가 지워지므로
 디스크 ID를 마지막으로 한 번 더 확인합니다.
 
@@ -114,10 +114,10 @@ USB를 제거하고 내부 디스크로 부팅한 뒤:
       **실패해야 정상**
 - [ ] tailnet 합류: `sudo tailscale up`, `tailscale status`로 확인
 - [ ] 호스트가 sops 수신자라면: 호스트 키가 바뀐 경우 비밀을 재암호화해
-      `secrets/*.yaml`을 복호화할 수 있게 합니다 ([비밀 관리](secrets.md))
+      `secrets/*.yaml`을 복호화하도록 합니다 ([비밀 관리](secrets.md))
 - [ ] `hosts/<host>/` 변경과 `flake.lock`, 재암호화한 `secrets/*.yaml` 커밋
-- [ ] 이후부터는 평범한 배포 모델로: PR을 열어 CI/CD에 맡깁니다
-      ([배포와 롤백](deploy.md) 참고). 병합하면 CD가 배포되므로, 재암호화를
+- [ ] 이후 변경은 PR을 열어 CI/CD에 맡깁니다
+      ([배포와 롤백](deploy.md) 참고). 병합하면 CD가 배포되므로 재암호화를
       먼저 커밋한 뒤에 진행해야 호스트가 비밀을 복호화할 수 있습니다.
 
 ## 검증
@@ -128,8 +128,8 @@ systemctl is-active sshd tailscaled
 zramctl && df -h && bootctl status
 ```
 
-기대값: `poby` + passwordless sudo, 두 서비스 active, zram 스왑 존재,
-vfat `/boot`, ext4 `/`.
+정상이라면 `poby`가 passwordless sudo를 사용하고 두 서비스가 active 상태이며
+zram 스왑과 vfat `/boot`, ext4 `/`가 존재합니다.
 
 ## 베이스 설치 이후
 

@@ -4,8 +4,8 @@ icon: fontawesome/solid/server
 
 # alfheim
 
-Oracle Cloud Infrastructure ARM VM (`aarch64-linux`). It is the first
-cloud-hosted application node in the homelab and runs jamye-plz.
+alfheim is an Oracle Cloud Infrastructure ARM VM (`aarch64-linux`). It is the
+homelab's cloud application node and runs jamye-plz.
 
 ## Responsibilities
 
@@ -64,9 +64,8 @@ ssh poby@alfheim.tail6fc192.ts.net
 
 ## Health checks
 
-The application systemd unit is named `jamye-plz-backend`, but the public
-service is the full PWA served through Caddy with its local PostgreSQL
-database.
+The `jamye-plz-backend` systemd unit runs the application backend. Caddy serves
+the complete public PWA, backed by the local PostgreSQL database.
 
 ```bash
 systemctl is-active jamye-plz-backend caddy postgresql

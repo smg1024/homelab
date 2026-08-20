@@ -10,8 +10,8 @@
  * instant navigation) via Material's `document$` observable. Doing it on
  * render, rather than only on hover/pointerdown, means the target is always
  * right even for touch taps, keyboard activation, prefetch, middle-click, and
- * right-click "copy link" — the cases where the old pointer-only fix let the
- * stale "/" href slip through and land on the overview.
+ * right-click "copy link." The old pointer-only fix could leave the stale "/"
+ * href in place and send readers to the overview.
  *
  * A plain left-click additionally forces a full reload, so <html lang>, the
  * search index, and the nav tree all switch cleanly rather than via instant

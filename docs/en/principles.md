@@ -4,15 +4,15 @@ icon: fontawesome/solid/scale-balanced
 
 # Design principles
 
-The rules this homelab is run by. When a new decision comes up, check it
-against this list first.
+These rules guide changes to the homelab. Check new decisions against them
+before editing the configuration.
 
 ## The repo is the server
 
-The Git repository is the single source of truth. Machines are never fixed by
-editing config on a host. Changes are made in the repo, validated, deployed,
-and committed. If a host and the repo disagree, the repo wins; the host gets
-rebuilt to match.
+The Git repository is the single source of truth. Do not fix machines by
+editing configuration on a host. Edit and validate changes in the repo,
+commit them, and then deploy. If a host differs from the repo, rebuild the host
+to match the repo.
 
 ## Zero open ports
 
@@ -32,9 +32,9 @@ AdGuard Home `:53` is opened there, with source and destination restrictions.
 
 ## Secrets never touch the store
 
-Plaintext secrets never go into `.nix` files or the Nix store. Everything
-sensitive lives in sops-encrypted YAML, decrypted at activation time by each
-host's own SSH key. A leaked repo leaks nothing.
+Plaintext secrets never go into `.nix` files or the Nix store. Sensitive values
+live in sops-encrypted YAML, and each host decrypts them at activation time
+with its own SSH key. A leaked repo does not expose the plaintext values.
 
 ## Pin everything
 
@@ -51,13 +51,13 @@ new service is not ingress or monitoring, it does not belong on yggdrasil.
 
 ## NixOS modules first
 
-Prefer NixOS modules for infrastructure and apps that package cleanly that
-way. Reach for OCI containers only when upstream genuinely packages better as
-a container and the target host deliberately has Podman enabled.
+Prefer NixOS modules for infrastructure and applications that package cleanly
+that way. Use OCI containers only when upstream packages the software better
+as a container and the target host has Podman enabled.
 
 ## One change at a time
 
-Small, focused changes: edit the repo, open a PR, let CI build every host,
-merge once green, then let CD deploy. Local `just test` / `just switch` is only
-for explicit break-glass or bootstrap requests. Two unrelated changes never
-ride in the same deploy.
+Keep changes small and focused. Edit the repo, open a PR, let CI build every
+host, merge once the checks pass, and let CD deploy. Use local `just test` or
+`just switch` only for explicit break-glass or bootstrap requests. Put
+unrelated changes in separate deployments.

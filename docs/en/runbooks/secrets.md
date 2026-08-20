@@ -4,8 +4,8 @@ icon: fontawesome/solid/key
 
 # Secrets
 
-Secrets are managed with `sops-nix`. **Plaintext secrets never go into
-`.nix` files or the Nix store.**
+`sops-nix` manages secrets. **Plaintext secrets never go into `.nix` files or
+the Nix store.**
 
 ## How it works
 

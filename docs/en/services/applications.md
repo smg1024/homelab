@@ -4,38 +4,39 @@ icon: fontawesome/solid/cubes
 
 # Applications
 
-Application services run on host-specific nodes. Most existing apps are on
-`midgard`; jamye-plz runs on `alfheim`. Caddy on yggdrasil forwards public
-traffic over the tailnet, and serves the static blog and docs sites itself.
+Application services run on host-specific nodes. Most existing applications
+run on `midgard`, while jamye-plz runs on `alfheim`. Caddy on yggdrasil
+forwards public traffic over the tailnet and serves the static blog and docs
+sites locally.
 
 ## Homepage (`services/homepage.nix`)
 
-The homelab dashboard. Runs on `:8082`, exposed at
+Homepage is the homelab dashboard. It runs on `:8082` and is available at
 `https://home.ridewithmin.com`.
 
 ## Dev with Min blog (`services/ingress.nix`)
 
-Static Astro personal blog. Built from the `blog` flake input and served
-directly by Caddy on yggdrasil with `file_server` from the Nix store, exposed
-at `https://blog.ridewithmin.com`. No dedicated service process.
+The Dev with Min blog is a static Astro site built from the `blog` flake input.
+Caddy on yggdrasil serves it directly from the Nix store with `file_server` at
+`https://blog.ridewithmin.com`; it has no dedicated service process.
 
 ## Docs site (`services/ingress.nix`)
 
-Static homelab documentation site. Built from this flake's `docs` package and
-served directly by Caddy on yggdrasil with `file_server` from the Nix store,
-exposed at `https://docs.ridewithmin.com`. See the
+The homelab documentation is a static site built from this flake's `docs`
+package. Caddy on yggdrasil serves it directly from the Nix store with
+`file_server` at `https://docs.ridewithmin.com`. See the
 [docs site runbook](../runbooks/docs-site.md) for the editing workflow.
 
 ## Forgejo (`services/forgejo.nix`)
 
-Git hosting. Runs on `:3000`, exposed at `https://git.ridewithmin.com`.
+Forgejo provides Git hosting on `:3000` at `https://git.ridewithmin.com`.
 
 - Public registration disabled
 - Forgejo SSH disabled (push/pull over HTTPS only)
 
 ## Vaultwarden (`services/vaultwarden.nix`)
 
-Bitwarden-compatible password manager. Runs on `:8222`, exposed at
+Vaultwarden is a Bitwarden-compatible password manager. It runs on `:8222` at
 `https://vault.ridewithmin.com`.
 
 - SQLite backend
@@ -45,8 +46,8 @@ Bitwarden-compatible password manager. Runs on `:8222`, exposed at
 
 ## jamye-plz (`services/jamye-plz.nix`)
 
-Closed-group full-stack social PWA. Runs on `alfheim` at `:8080`, exposed at
-`https://jamye-plz.ridewithmin.com`.
+jamye-plz is a closed-group, full-stack social PWA. It runs on `alfheim` at
+`:8080` and is available at `https://jamye-plz.ridewithmin.com`.
 
 - Imported from the upstream `jamye-plz` flake input
 - Enabled through the upstream `services.jamye-plz` NixOS module

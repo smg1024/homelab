@@ -4,8 +4,9 @@ icon: fontawesome/solid/shield-halved
 
 # Security model
 
-Who can reach what, and why. The model has four boundaries: public Internet,
-the private home LAN, the tailnet, and localhost.
+The security model defines four network boundaries: public Internet, the
+private home LAN, the tailnet, and localhost. Each boundary has a separate
+access policy.
 
 ## Access tiers
 
@@ -13,7 +14,7 @@ the private home LAN, the tailnet, and localhost.
 | --- | --- | --- |
 | **Public Internet** | anyone | Only hostnames routed through Cloudflare Tunnel: `home`, `blog`, `git`, `vault`, `jamye-plz`, `status`, `docs` |
 | **Home LAN** | devices on `192.168.0.0/24` | AdGuard Home DNS at `192.168.0.53:53` |
-| **Tailnet** | devices in the Tailscale tailnet | Everything above, plus the `beszel` and `logs` routes, plus direct host/port access per Tailscale ACLs (the trusted `tailscale0` interface exposes e.g. Beszel `:8090`, VictoriaLogs `:9428`, and vlagent `:9429`) |
+| **Tailnet** | devices in the Tailscale tailnet | Everything above, plus the `adguardhome`, `beszel`, and `logs` routes, plus direct host/port access per Tailscale ACLs (the trusted `tailscale0` interface exposes e.g. AdGuard Home `:3000`, Beszel `:8090`, VictoriaLogs `:9428`, and vlagent `:9429`) |
 | **Localhost** | processes on the host itself | Uptime Kuma bound to `127.0.0.1`; journald → vlagent hand-off on each host |
 
 ## Ingress path
@@ -23,17 +24,17 @@ tunnel to Cloudflare; requests arrive through it at local Caddy
 (`https://localhost:443`), which routes by hostname. Anything not explicitly
 routed gets `404`.
 
-`beszel.ridewithmin.com` and `logs.ridewithmin.com` are deliberately **not**
-in the tunnel's hostname list and are gated by Caddy to Tailscale address
-ranges (`100.64.0.0/10`, `fd7a:115c:a1e0::/48`). Non-tailnet clients receive
-`404`.
+Caddy serves `adguardhome.ridewithmin.com`, `beszel.ridewithmin.com`, and
+`logs.ridewithmin.com` outside Cloudflare Tunnel. It accepts these routes only
+from the Tailscale address ranges (`100.64.0.0/10`,
+`fd7a:115c:a1e0::/48`). Other clients receive `404`.
 
 The public Uptime Kuma route allows only status-page paths and returns `404`
 for everything else.
 
 ## Firewall
 
-The NixOS firewall is enabled on every host. The home hosts accept SSH `22` on
+Every host runs the NixOS firewall. The home hosts accept SSH `22` on
 their host interfaces, but the ipTIME NAT router does not expose it to the
 public Internet without a port-forward. Direct administration uses the
 tailnet. `alfheim` accepts SSH only through the trusted `tailscale0` interface,

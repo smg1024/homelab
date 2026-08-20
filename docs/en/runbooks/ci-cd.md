@@ -9,10 +9,10 @@ the hosts automatically. This is the default validation and deployment path.
 The manual [`just` workflow](deploy.md) stays as the explicit-request
 break-glass path. The pipeline runs the same `nixos-rebuild`, just unattended.
 
-The split is deliberate:
+CI and CD have separate jobs:
 
-- **CI** proves every host *builds*, on a throwaway runner that touches no host.
-- **CD** rolls merged changes out, joining the tailnet and running the same
+- CI proves every host *builds* on a throwaway runner that touches no host.
+- CD rolls merged changes out, joining the tailnet and running the same
   `nixos-rebuild switch` used by the explicit manual path.
 
 ## Flow
@@ -29,7 +29,7 @@ merge to main ──▶ CD: join tailnet → nixos-rebuild switch on every host
 
 - One job per host builds
   `nixosConfigurations.<host>.config.system.build.toplevel`.
-- It **only builds**: no activation, no tailnet, no secrets. A config that
+- It only builds: no activation, no tailnet, no secrets. A config that
   fails to evaluate or compile fails here, before it can reach a host.
 - `yggdrasil` and `midgard` build on `ubuntu-latest`; `alfheim` builds on a
   native `ubuntu-24.04-arm` runner, so its `aarch64` closure is built natively
@@ -46,7 +46,7 @@ buildable configs can reach `main`.
 
 Each host is handled by a job that:
 
-1. Joins the tailnet as an **ephemeral** node tagged `tag:ci` (via a Tailscale
+1. Joins the tailnet as an ephemeral node tagged `tag:ci` (via a Tailscale
    OAuth client) and waits until the target node is reachable before continuing.
 2. Loads the deploy key and runs, for that host:
 
@@ -59,9 +59,9 @@ Each host is handled by a job that:
       --sudo
     ```
 
-Because `--build-host` and `--target-host` are both the node, **each host builds
-itself**, matching the explicit manual path. The runner only evaluates the
-flake and orchestrates, so there is no cross-architecture build problem
+Because `--build-host` and `--target-host` are both the node, each host builds
+itself, matching the explicit manual path. The runner only evaluates the flake
+and orchestrates, so there is no cross-architecture build problem
 (`alfheim` compiles its own `aarch64` closure) and no binary cache to maintain. A
 `concurrency` group serializes deploys so two merges never race.
 
@@ -69,10 +69,10 @@ All three hosts are switched on every merge; an unaffected host simply
 re-activates the same generation, which is a fast no-op.
 
 After the switch, `nix store diff-closures` compares the node's previous and new
-system closures and reports what changed — version bumps, additions, removals —
-both in the job log and on the run's summary page. An unaffected host reports no
-change. If a deploy fails, the step aborts before the summary and Nix's error
-output, including the failing build's log tail, stays in the job log.
+system closures. It reports version bumps, additions, and removals in the job
+log and on the run's summary page. An unaffected host reports no change. If a
+deploy fails, the step aborts before the summary. Nix leaves the error output,
+including the failing build's log tail, in the job log.
 
 ## Prerequisites
 
@@ -105,13 +105,13 @@ no extra host-side setup is required.
 
 ## Caveats
 
-- **No automatic rollback.** A merge `switch` has no magic rollback, and green
-  CI proves a config *builds*, not that it *runs*. Keep an eye on the
+- A merge `switch` does not roll back automatically. Green CI proves a config
+  *builds*, not that it *runs*. Check the
   [monitoring stack](../services/monitoring.md) after a deploy, and roll back by
   hand if a service misbehaves.
-- **Break-glass stays explicit.** Local `just test` / `just switch` commands
-  are not part of the normal flow. Use them only when an operator explicitly
-  asks for a local activation, and roll back with
+- Local `just test` and `just switch` commands are not part of the normal flow.
+  Use them only when an operator explicitly asks for a local activation, and
+  roll back with
   `sudo nixos-rebuild switch --rollback`.
-- **Keep changes flowing through PRs.** A direct push to `main` skips CI;
-  enforce the build checks with branch protection so `main` stays deployable.
+- A direct push to `main` skips CI. Enforce the build checks with branch
+  protection so `main` stays deployable.
