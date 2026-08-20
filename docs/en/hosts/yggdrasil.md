@@ -35,7 +35,7 @@ services/adguardhome.nix
 | --- | --- | --- |
 | `443` | Caddy | public (Tunnel origin) |
 | `53` TCP/UDP | AdGuard Home DNS | `192.168.0.0/24` clients querying `192.168.0.53` only |
-| `3000` | AdGuard Home admin/setup UI | tailnet only via the trusted `tailscale0` interface |
+| `3000` | AdGuard Home admin/setup UI | `https://adguardhome.ridewithmin.com`, tailnet only |
 | `3001` | Uptime Kuma | localhost |
 | `8090` | Beszel hub | all interfaces; reachable only via the trusted `tailscale0` interface |
 | `9428` | VictoriaLogs | all interfaces; reachable only via the trusted `tailscale0` interface |

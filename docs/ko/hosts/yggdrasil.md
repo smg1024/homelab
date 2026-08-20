@@ -35,7 +35,7 @@ services/adguardhome.nix
 | --- | --- | --- |
 | `443` | Caddy | 공개 (Tunnel 오리진) |
 | `53` TCP/UDP | AdGuard Home DNS | `192.168.0.53`에 질의하는 `192.168.0.0/24` 클라이언트 전용 |
-| `3000` | AdGuard Home 관리/초기 설정 UI | 신뢰된 `tailscale0` 인터페이스 경유 tailnet 전용 |
+| `3000` | AdGuard Home 관리/초기 설정 UI | `https://adguardhome.ridewithmin.com`, tailnet 전용 |
 | `3001` | Uptime Kuma | localhost |
 | `8090` | Beszel 허브 | 전체 인터페이스, 신뢰된 `tailscale0` 경유만 도달 가능 |
 | `9428` | VictoriaLogs | 전체 인터페이스, 신뢰된 `tailscale0` 경유만 도달 가능 |

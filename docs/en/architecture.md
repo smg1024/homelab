@@ -22,7 +22,7 @@ flowchart TD
         blog["Dev with Min blog<br/>Caddy file_server"]
         docsSite["Docs site<br/>Caddy file_server"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
-        adguard["AdGuard Home<br/>192.168.0.53:53"]
+        adguard["AdGuard Home<br/>192.168.0.53:53 / :3000"]
         beszelHub["Beszel hub<br/>:8090"]
         vlogs["VictoriaLogs<br/>:9428"]
         yShipper["beszel-agent / vlagent"]
@@ -62,6 +62,7 @@ flowchart TD
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
     caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
+    caddy -->|"adguardhome.ridewithmin.com<br/>tailnet only"| adguard
     caddy -->|"beszel.ridewithmin.com<br/>tailnet only"| beszelHub
     caddy -->|"logs.ridewithmin.com<br/>tailnet only"| vlogs
     caddy -->|"docs.ridewithmin.com"| docsSite
@@ -81,8 +82,8 @@ flowchart TD
     aShipper -.-> vlogs
 ```
 
-Who can reach what across these boundaries (public Internet, tailnet,
-localhost) is covered in the [security model](security.md).
+Who can reach what across these boundaries (public Internet, home LAN,
+tailnet, localhost) is covered in the [security model](security.md).
 
 ## Shared system configuration
 

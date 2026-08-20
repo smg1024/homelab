@@ -29,7 +29,7 @@ secrets/         # sops-nix 암호화 YAML
 docs/            # 이 문서 사이트 (Zensical)
 ```
 
-## 공개 URL
+## 서비스 URL
 
 | URL | 서비스 | 접근 범위 |
 | --- | --- | --- |
@@ -39,6 +39,7 @@ docs/            # 이 문서 사이트 (Zensical)
 | `https://vault.ridewithmin.com` | Vaultwarden | 공개 (Cloudflare Tunnel) |
 | `https://jamye-plz.ridewithmin.com` | jamye-plz | 공개 (Cloudflare Tunnel) |
 | `https://status.ridewithmin.com` | Uptime Kuma 상태 페이지 | 공개 (상태 페이지 경로만) |
+| `https://adguardhome.ridewithmin.com` | AdGuard Home 대시보드 | tailnet 전용 |
 | `https://beszel.ridewithmin.com` | Beszel (메트릭 + 알림) | tailnet 전용 |
 | `https://logs.ridewithmin.com` | VictoriaLogs (로그 검색) | tailnet 전용 |
 | `https://docs.ridewithmin.com` | 이 문서 사이트 | 공개 (Cloudflare Tunnel) |

@@ -30,7 +30,7 @@ secrets/         # sops-nix encrypted YAML
 docs/            # this documentation site (Zensical)
 ```
 
-## Public URLs
+## Service URLs
 
 | URL | Service | Access |
 | --- | --- | --- |
@@ -40,6 +40,7 @@ docs/            # this documentation site (Zensical)
 | `https://vault.ridewithmin.com` | Vaultwarden | Public (Cloudflare Tunnel) |
 | `https://jamye-plz.ridewithmin.com` | jamye-plz | Public (Cloudflare Tunnel) |
 | `https://status.ridewithmin.com` | Uptime Kuma status page | Public (status-page paths only) |
+| `https://adguardhome.ridewithmin.com` | AdGuard Home dashboard | Tailnet only |
 | `https://beszel.ridewithmin.com` | Beszel (metrics + alerts) | Tailnet only |
 | `https://logs.ridewithmin.com` | VictoriaLogs (log search) | Tailnet only |
 | `https://docs.ridewithmin.com` | This documentation site | Public (Cloudflare Tunnel) |

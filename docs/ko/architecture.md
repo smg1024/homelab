@@ -21,7 +21,7 @@ flowchart TD
         blog["Dev with Min 블로그<br/>Caddy file_server"]
         docsSite["문서 사이트<br/>Caddy file_server"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
-        adguard["AdGuard Home<br/>192.168.0.53:53"]
+        adguard["AdGuard Home<br/>192.168.0.53:53 / :3000"]
         beszelHub["Beszel 허브<br/>:8090"]
         vlogs["VictoriaLogs<br/>:9428"]
         yShipper["beszel-agent / vlagent"]
@@ -61,6 +61,7 @@ flowchart TD
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
     caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
+    caddy -->|"adguardhome.ridewithmin.com<br/>tailnet 전용"| adguard
     caddy -->|"beszel.ridewithmin.com<br/>tailnet 전용"| beszelHub
     caddy -->|"logs.ridewithmin.com<br/>tailnet 전용"| vlogs
     caddy -->|"docs.ridewithmin.com"| docsSite
@@ -80,7 +81,7 @@ flowchart TD
     aShipper -.-> vlogs
 ```
 
-이 경계들(공개 인터넷, tailnet, localhost)을 누가 넘는지는
+이 경계들(공개 인터넷, 홈 LAN, tailnet, localhost)을 누가 넘는지는
 [보안 모델](security.md)에서 다룹니다.
 
 ## 공유 시스템 구성

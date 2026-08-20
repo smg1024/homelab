@@ -16,7 +16,7 @@ AdGuard Home의 DHCP 서버는 사용하지 않습니다.
 | LAN | `192.168.0.0/24` |
 | yggdrasil 예약 주소 | `enp2s0`의 `192.168.0.53` |
 | DNS 리스너 | TCP/UDP `192.168.0.53:53` |
-| 관리 UI | `:3000`, tailnet 또는 SSH 터널로 접근 |
+| 관리 UI | `https://adguardhome.ridewithmin.com`, tailnet 전용 |
 
 방화벽은 LAN 출발지 대역과 예약 목적지 주소를 동시에 검사합니다.
 yggdrasil이 다른 주소를 받으면 LAN DNS는 닫힌 상태로 실패합니다. ipTIME
@@ -79,6 +79,11 @@ NixOS 모듈은 의도적으로 AdGuard Home의 최초 설정 화면을 남겨 �
 생성된 설정, 인증 정보, 질의 통계, 필터 상태는
 `/var/lib/AdGuardHome`에 저장됩니다. 배포 후에도 유지되지만 현재는 백업되지
 않습니다.
+
+비공개 Caddy 라우트를 배포한 뒤에는 tailnet 클라이언트에서
+`https://adguardhome.ridewithmin.com`을 사용합니다. 이 호스트네임은
+Cloudflare Tunnel에 넣지 않고 yggdrasil의 Tailscale IPv4 주소를 직접
+가리킵니다. Caddy도 tailnet 밖에서 온 요청을 거부합니다.
 
 ## DHCP로 DNS 배포
 

@@ -13,7 +13,7 @@ icon: fontawesome/solid/shield-halved
 | --- | --- | --- |
 | **공개 인터넷** | 누구나 | Cloudflare Tunnel로 라우팅된 호스트네임만: `home`, `blog`, `git`, `vault`, `jamye-plz`, `status`, `docs` |
 | **홈 LAN** | `192.168.0.0/24`의 기기 | `192.168.0.53:53`의 AdGuard Home DNS |
-| **tailnet** | Tailscale tailnet에 속한 기기 | 위 전부 + `beszel`·`logs` 라우트 + Tailscale ACL에 따른 호스트/포트 직접 접근 (신뢰된 `tailscale0` 인터페이스로 Beszel `:8090`, VictoriaLogs `:9428`, vlagent `:9429` 등 도달 가능) |
+| **tailnet** | Tailscale tailnet에 속한 기기 | 위 전부 + `adguardhome`·`beszel`·`logs` 라우트 + Tailscale ACL에 따른 호스트/포트 직접 접근 (신뢰된 `tailscale0` 인터페이스로 AdGuard Home `:3000`, Beszel `:8090`, VictoriaLogs `:9428`, vlagent `:9429` 등 도달 가능) |
 | **localhost** | 호스트 위의 프로세스 | `127.0.0.1`에 바인딩된 Uptime Kuma, 각 호스트의 journald → vlagent 전달 경로 |
 
 ## 인그레스 경로
@@ -23,10 +23,11 @@ icon: fontawesome/solid/shield-halved
 Caddy(`https://localhost:443`)에 도착해 호스트네임별로 라우팅됩니다.
 명시적으로 라우팅되지 않은 요청은 전부 `404`입니다.
 
-`beszel.ridewithmin.com`과 `logs.ridewithmin.com`은 의도적으로 터널
-호스트네임 목록에 **없고**, Caddy에서 Tailscale 주소
-대역(`100.64.0.0/10`, `fd7a:115c:a1e0::/48`)으로 제한됩니다. tailnet 밖
-클라이언트는 `404`를 받습니다.
+`adguardhome.ridewithmin.com`, `beszel.ridewithmin.com`,
+`logs.ridewithmin.com`은 의도적으로 터널 호스트네임 목록에 **없고**,
+Caddy에서 Tailscale 주소 대역(`100.64.0.0/10`,
+`fd7a:115c:a1e0::/48`)으로 제한됩니다. tailnet 밖 클라이언트는 `404`를
+받습니다.
 
 공개 Uptime Kuma 라우트는 상태 페이지 경로만 허용하고 나머지는 모두
 `404`를 반환합니다.

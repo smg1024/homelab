@@ -16,7 +16,7 @@ AdGuard Home does not run a DHCP server.
 | LAN | `192.168.0.0/24` |
 | yggdrasil reservation | `192.168.0.53` on `enp2s0` |
 | DNS listener | TCP and UDP `192.168.0.53:53` |
-| Admin UI | `:3000`, reachable through the tailnet or an SSH tunnel |
+| Admin UI | `https://adguardhome.ridewithmin.com`, tailnet only |
 
 The firewall matches the LAN source range and the reserved destination
 address. If yggdrasil receives any other address, LAN DNS fails closed. The
@@ -79,6 +79,11 @@ keeps the admin password out of Git and the Nix store.
 The resulting configuration, credentials, query statistics, and filter state
 live in `/var/lib/AdGuardHome`. They survive deployments but are not currently
 backed up.
+
+After the private Caddy route is deployed, tailnet clients can use
+`https://adguardhome.ridewithmin.com`. The hostname is deliberately absent
+from Cloudflare Tunnel and resolves directly to yggdrasil's Tailscale IPv4
+address. Caddy also rejects requests whose source is outside the tailnet.
 
 ## Advertise DNS through DHCP
 
