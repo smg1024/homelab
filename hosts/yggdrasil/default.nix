@@ -7,6 +7,7 @@
     ../../services/uptime-kuma.nix
     ../../services/victorialogs.nix
     ../../services/beszel/hub.nix
+    ../../services/adguardhome.nix
   ];
 
   networking.hostName = "yggdrasil";
