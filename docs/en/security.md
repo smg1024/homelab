@@ -4,14 +4,15 @@ icon: fontawesome/solid/shield-halved
 
 # Security model
 
-Who can reach what, and why. The model is three concentric rings: public
-Internet, tailnet, and localhost.
+Who can reach what, and why. The model has four boundaries: public Internet,
+the private home LAN, the tailnet, and localhost.
 
 ## Access tiers
 
 | Tier | Who | What they can reach |
 | --- | --- | --- |
 | **Public Internet** | anyone | Only hostnames routed through Cloudflare Tunnel: `home`, `blog`, `git`, `vault`, `jamye-plz`, `status`, `docs` |
+| **Home LAN** | devices on `192.168.0.0/24` | AdGuard Home DNS at `192.168.0.53:53` |
 | **Tailnet** | devices in the Tailscale tailnet | Everything above, plus the `beszel` and `logs` routes, plus direct host/port access per Tailscale ACLs (the trusted `tailscale0` interface exposes e.g. Beszel `:8090`, VictoriaLogs `:9428`, and vlagent `:9429`) |
 | **Localhost** | processes on the host itself | Uptime Kuma bound to `127.0.0.1`; journald → vlagent hand-off on each host |
 
@@ -32,12 +33,18 @@ for everything else.
 
 ## Firewall
 
-The NixOS firewall is enabled on every host. Home hosts allow SSH `22`
-directly; `alfheim` accepts SSH only through the trusted `tailscale0`
-interface. Its public OCI address does not answer SSH at all. Application
-and monitoring ports (`3000`, `3001`, `8080`, `8082`, `8090`, `8222`, `9428`, `9429`, ...)
+The NixOS firewall is enabled on every host. The home hosts accept SSH `22` on
+their host interfaces, but the ipTIME NAT router does not expose it to the
+public Internet without a port-forward. Direct administration uses the
+tailnet. `alfheim` accepts SSH only through the trusted `tailscale0` interface,
+and its public OCI address does not answer SSH. Application and monitoring
+ports (`3000`, `3001`, `8080`, `8082`, `8090`, `8222`, `9428`, `9429`, ...)
 are never opened publicly; tailnet-internal traffic reaches them through the
 trusted `tailscale0` interface.
+
+AdGuard Home is the only service opened to the physical home LAN. Its TCP and
+UDP `:53` rules require both a source in `192.168.0.0/24` and the reserved
+destination `192.168.0.53`. The admin UI on `:3000` is not opened to the LAN.
 
 ## SSH policy
 
@@ -60,3 +67,6 @@ identity. Only hosts registered as recipients in `.sops.yaml` (plus the
   Tailscale admin console, not declared here.
 - **Cloudflare-side policies.** DNS records and any Cloudflare Access rules
   live in the Cloudflare dashboard.
+- **ipTIME router state.** DHCP reservations, advertised DNS servers, NAT, and
+  port-forwarding rules live in the router. Do not forward AdGuard Home ports
+  from the WAN.

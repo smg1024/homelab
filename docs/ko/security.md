@@ -4,14 +4,15 @@ icon: fontawesome/solid/shield-halved
 
 # 보안 모델
 
-누가 무엇에 접근하는지, 왜 그런지. 모델은 동심원 세 겹입니다: 공개
-인터넷, tailnet, localhost.
+누가 무엇에 접근하는지, 왜 그런지. 경계는 네 가지입니다: 공개 인터넷,
+사설 홈 LAN, tailnet, localhost.
 
 ## 접근 계층
 
 | 계층 | 누가 | 접근 대상 |
 | --- | --- | --- |
 | **공개 인터넷** | 누구나 | Cloudflare Tunnel로 라우팅된 호스트네임만: `home`, `blog`, `git`, `vault`, `jamye-plz`, `status`, `docs` |
+| **홈 LAN** | `192.168.0.0/24`의 기기 | `192.168.0.53:53`의 AdGuard Home DNS |
 | **tailnet** | Tailscale tailnet에 속한 기기 | 위 전부 + `beszel`·`logs` 라우트 + Tailscale ACL에 따른 호스트/포트 직접 접근 (신뢰된 `tailscale0` 인터페이스로 Beszel `:8090`, VictoriaLogs `:9428`, vlagent `:9429` 등 도달 가능) |
 | **localhost** | 호스트 위의 프로세스 | `127.0.0.1`에 바인딩된 Uptime Kuma, 각 호스트의 journald → vlagent 전달 경로 |
 
@@ -32,12 +33,17 @@ Caddy(`https://localhost:443`)에 도착해 호스트네임별로 라우팅됩�
 
 ## 방화벽
 
-모든 호스트에서 NixOS 방화벽이 켜져 있습니다. 집 안의 호스트들은 SSH
-`22`를 직접 허용하지만 `alfheim`은 신뢰된 `tailscale0` 인터페이스에서만
-SSH를 받습니다. 공개 OCI 주소로는 SSH가 아예 응답하지 않습니다.
-애플리케이션/모니터링 포트(`3000`, `3001`, `8080`, `8082`,
+모든 호스트에서 NixOS 방화벽이 켜져 있습니다. 집 안의 호스트들은 호스트
+인터페이스에서 SSH `22`를 받지만 ipTIME NAT 공유기에 포트 포워딩이 없으면
+공개 인터넷에는 노출되지 않습니다. 직접 관리는 tailnet을 사용합니다.
+`alfheim`은 신뢰된 `tailscale0` 인터페이스에서만 SSH를 받고 공개 OCI
+주소로는 응답하지 않습니다. 애플리케이션/모니터링 포트(`3000`, `3001`, `8080`, `8082`,
 `8090`, `8222`, `9428`, `9429`, ...)는 공개로 열지 않으며, tailnet 내부 트래픽은
 신뢰된 `tailscale0` 인터페이스를 통해 도달합니다.
+
+AdGuard Home은 물리 홈 LAN에 여는 유일한 서비스입니다. TCP/UDP `:53`
+규칙은 출발지가 `192.168.0.0/24`이고 목적지가 예약 주소
+`192.168.0.53`일 때만 허용합니다. `:3000` 관리 UI는 LAN에 열지 않습니다.
 
 ## SSH 정책
 
@@ -59,3 +65,6 @@ SSH를 받습니다. 공개 OCI 주소로는 SSH가 아예 응답하지 않습�
   설정하며 여기에 선언되지 않습니다.
 - **Cloudflare 쪽 정책**. DNS 레코드와 Cloudflare Access 규칙은
   Cloudflare 대시보드에 있습니다.
+- **ipTIME 공유기 상태**. DHCP 고정 할당, 배포하는 DNS 서버, NAT, 포트
+  포워딩 규칙은 공유기에 있습니다. AdGuard Home 포트를 WAN에서 포워딩하지
+  마세요.

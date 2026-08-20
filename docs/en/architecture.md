@@ -8,7 +8,8 @@ The setup is split into an edge/infra node (`yggdrasil`), a primary
 application node (`midgard`), and a cloud ARM application node (`alfheim`).
 External traffic enters only through **Cloudflare Tunnel → Caddy** instead of
 directly exposed ports, and the **Tailscale tailnet** is the internal network
-boundary between hosts.
+boundary between hosts. Household clients reach AdGuard Home over a separate,
+private LAN boundary.
 
 ```mermaid
 flowchart TD
@@ -21,10 +22,14 @@ flowchart TD
         blog["Dev with Min blog<br/>Caddy file_server"]
         docsSite["Docs site<br/>Caddy file_server"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
+        adguard["AdGuard Home<br/>192.168.0.53:53"]
         beszelHub["Beszel hub<br/>:8090"]
         vlogs["VictoriaLogs<br/>:9428"]
         yShipper["beszel-agent / vlagent"]
     end
+
+    homeLan["Home LAN clients<br/>192.168.0.0/24"]
+    iptime["ipTIME router<br/>DHCP / NAT"]
 
     subgraph tailnet["Tailscale tailnet"]
         midgardDns["midgard.tail6fc192.ts.net"]
@@ -44,6 +49,10 @@ flowchart TD
     end
 
     internet --> cloudflare
+    iptime -->|"DHCP advertises 192.168.0.53"| homeLan
+    homeLan -->|"outbound traffic"| iptime
+    iptime -->|"NAT"| internet
+    homeLan -->|"DNS"| adguard
     cloudflare --> cloudflared
     cloudflared -->|"home/blog/git/vault/jamye-plz/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
 
