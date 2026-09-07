@@ -1,7 +1,8 @@
 name: Update flake input
 
 # Event-driven flake input bump. Every push to a source repo (smg1024/blog
-# master, jamye-plz/jamye-plz main) fires a repository_dispatch at this repo;
+# master, jamye-plz/jamye-plz main, jamye-plz/jamye-server main) fires a
+# repository_dispatch at this repo;
 # this workflow re-pins the matching flake input, opens a PR, and arms
 # auto-merge so the normal CI -> merge -> deploy pipeline ships it. No direct
 # pushes to main: the ruleset (PR + green builds) still gates, so an upstream
@@ -16,7 +17,7 @@ name: Update flake input
 
 on:
   repository_dispatch:
-    types: [blog-updated, jamye-plz-updated]
+    types: [blog-updated, jamye-plz-updated, jamye-server-updated]
   workflow_dispatch:
     inputs:
       input:
@@ -25,6 +26,7 @@ on:
         options:
           - blog
           - jamye-plz
+          - jamye-server
 
 # Rapid consecutive upstream pushes queue rather than fight over the same
 # branch. Groups are per input so a queued bump for one input can't be
