@@ -73,6 +73,22 @@
           originServerName = "docs.ridewithmin.com";
         };
       };
+
+      ingress."api.jamye.ridewithmin.com" = {
+        service = "https://localhost:443";
+        originRequest = {
+          httpHostHeader = "api.jamye.ridewithmin.com";
+          originServerName = "api.jamye.ridewithmin.com";
+        };
+      };
+
+      ingress."media.jamye.ridewithmin.com" = {
+        service = "https://localhost:443";
+        originRequest = {
+          httpHostHeader = "media.jamye.ridewithmin.com";
+          originServerName = "media.jamye.ridewithmin.com";
+        };
+      };
     };
   };
 }
