@@ -124,5 +124,13 @@ in {
     virtualHosts."http://yggdrasil.tail6fc192.ts.net:3002".extraConfig = ''
       reverse_proxy http://127.0.0.1:3001
     '';
+
+    virtualHosts."api.jamye.ridewithmin.com".extraConfig = ''
+      reverse_proxy http://midgard.tail6fc192.ts.net:8080
+    '';
+
+    virtualHosts."media.jamye.ridewithmin.com".extraConfig = ''
+      reverse_proxy http://midgard.tail6fc192.ts.net:9000
+    '';
   };
 }

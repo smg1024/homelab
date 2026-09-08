@@ -27,6 +27,8 @@
     jamye-plz.url = "github:jamye-plz/jamye-plz/main";
 
     blog.url = "github:smg1024/blog/master";
+
+    jamye-server.url = "github:jamye-plz/jamye-server/main";
   };
 
   outputs = inputs @ {
