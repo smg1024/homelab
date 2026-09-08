@@ -20,6 +20,11 @@ in {
   sops.secrets."jamye-server/cleanup_access_key".sopsFile = secretFile;
   sops.secrets."jamye-server/cleanup_secret_key".sopsFile = secretFile;
 
+  sops.secrets."jamye-server/kakao_client_id".sopsFile = secretFile;
+  sops.secrets."jamye-server/kakao_client_secret".sopsFile = secretFile;
+  sops.secrets."jamye-server/google_client_id".sopsFile = secretFile;
+  sops.secrets."jamye-server/google_client_secret".sopsFile = secretFile;
+
   sops.templates."jamye-server.env" = {
     owner = "jamye-server";
     group = "jamye-server";
@@ -33,8 +38,15 @@ in {
       JAMYE_ACCESS_TOKEN_ISSUER=https://jamye-api.ridewithmin.com
       JAMYE_ACCESS_TOKEN_AUDIENCE=jamye-app
 
-      JAMYE_KAKAO_OAUTH_ENABLED=false
-      JAMYE_GOOGLE_OAUTH_ENABLED=false
+      JAMYE_KAKAO_OAUTH_ENABLED=true
+      JAMYE_KAKAO_CLIENT_ID=${config.sops.placeholder."jamye-server/kakao_client_id"}
+      JAMYE_KAKAO_CLIENT_SECRET=${config.sops.placeholder."jamye-server/kakao_client_secret"}
+      JAMYE_KAKAO_REDIRECT_URIS=https://jamye-api.ridewithmin.com/api/v1/auth/oauth/kakao/callback
+
+      JAMYE_GOOGLE_OAUTH_ENABLED=true
+      JAMYE_GOOGLE_CLIENT_ID=${config.sops.placeholder."jamye-server/google_client_id"}
+      JAMYE_GOOGLE_CLIENT_SECRET=${config.sops.placeholder."jamye-server/google_client_secret"}
+      JAMYE_GOOGLE_REDIRECT_URIS=https://jamye-api.ridewithmin.com/api/v1/auth/oauth/google/callback
     '';
   };
 
