@@ -30,7 +30,7 @@ in {
     ];
     content = ''
       JAMYE_ACCESS_TOKEN_SECRET=${config.sops.placeholder."jamye-server/access_token_secret"}
-      JAMYE_ACCESS_TOKEN_ISSUER=https://api.jamye.ridewithmin.com
+      JAMYE_ACCESS_TOKEN_ISSUER=https://jamye-api.ridewithmin.com
       JAMYE_ACCESS_TOKEN_AUDIENCE=jamye-app
 
       JAMYE_KAKAO_OAUTH_ENABLED=false
@@ -87,7 +87,7 @@ in {
     environmentFile = config.sops.templates."jamye-server.env".path;
 
     objectStorage = {
-      publicEndpoint = "https://media.jamye.ridewithmin.com";
+      publicEndpoint = "https://jamye-media.ridewithmin.com";
       bucket = "jamye-server-media";
 
       mediaCredentialsFile =

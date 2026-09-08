@@ -74,19 +74,19 @@
         };
       };
 
-      ingress."api.jamye.ridewithmin.com" = {
+      ingress."jamye-api.ridewithmin.com" = {
         service = "https://localhost:443";
         originRequest = {
-          httpHostHeader = "api.jamye.ridewithmin.com";
-          originServerName = "api.jamye.ridewithmin.com";
+          httpHostHeader = "jamye-api.ridewithmin.com";
+          originServerName = "jamye-api.ridewithmin.com";
         };
       };
 
-      ingress."media.jamye.ridewithmin.com" = {
+      ingress."jamye-media.ridewithmin.com" = {
         service = "https://localhost:443";
         originRequest = {
-          httpHostHeader = "media.jamye.ridewithmin.com";
-          originServerName = "media.jamye.ridewithmin.com";
+          httpHostHeader = "jamye-media.ridewithmin.com";
+          originServerName = "jamye-media.ridewithmin.com";
         };
       };
     };
