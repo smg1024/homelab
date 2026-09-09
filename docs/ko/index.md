@@ -13,7 +13,7 @@ icon: fontawesome/solid/house
 
 | 호스트 | 역할 | 아키텍처 | 비고 |
 | --- | --- | --- | --- |
-| `yggdrasil` | 엣지/인프라 노드: Cloudflare Tunnel, Caddy, AdGuard Home DNS, 모니터링 스택 | `x86_64-linux` | 4 GB RAM, 가볍게 유지 |
+| `yggdrasil` | 엣지/인프라 노드: Cloudflare Tunnel, Caddy, 모니터링 스택 | `x86_64-linux` | 4 GB RAM, 가볍게 유지 |
 | `midgard` | 애플리케이션 호스트: 정적 사이트, Forgejo, Vaultwarden, Homepage, Podman | `x86_64-linux` | |
 | `alfheim` | OCI ARM 애플리케이션 노드: jamye-plz | `aarch64-linux` | SSH는 tailnet 전용 |
 
@@ -39,7 +39,6 @@ docs/            # 이 문서 사이트 (Zensical)
 | `https://vault.ridewithmin.com` | Vaultwarden | 공개 (Cloudflare Tunnel) |
 | `https://jamye-plz.ridewithmin.com` | jamye-plz | 공개 (Cloudflare Tunnel) |
 | `https://status.ridewithmin.com` | Uptime Kuma 상태 페이지 | 공개 (상태 페이지 경로만) |
-| `https://adguardhome.ridewithmin.com` | AdGuard Home 대시보드 | tailnet 전용 |
 | `https://beszel.ridewithmin.com` | Beszel (메트릭 + 알림) | tailnet 전용 |
 | `https://logs.ridewithmin.com` | VictoriaLogs (로그 검색) | tailnet 전용 |
 | `https://docs.ridewithmin.com` | 이 문서 사이트 | 공개 (Cloudflare Tunnel) |

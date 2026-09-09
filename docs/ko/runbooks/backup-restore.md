@@ -26,7 +26,6 @@ icon: fontawesome/solid/box-archive
 | Forgejo 저장소 + DB | midgard | `/var/lib/forgejo` | **치명적**: 다른 곳에 push 안 된 Git 히스토리 전부 |
 | Uptime Kuma 설정/이력 | yggdrasil | `/var/lib/private/uptime-kuma` | 성가심: 체크를 손으로 재생성 |
 | Beszel 허브 DB (사용자, 시스템, 알림 설정) | yggdrasil | `/var/lib/beszel-hub` | 성가심: 알림과 알림 채널을 손으로 재설정 |
-| AdGuard Home 설정, 인증 정보, 필터 상태 | yggdrasil | `/var/lib/AdGuardHome` | 성가심: DNS 설정과 정책을 손으로 재생성 |
 | VictoriaLogs 로그 | yggdrasil | `/var/lib/victorialogs` | 수용 가능: 보존 14d 로그 |
 
 키 두 가지는 특별히 신경 써야 합니다:

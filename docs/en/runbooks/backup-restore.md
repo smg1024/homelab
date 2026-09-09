@@ -26,7 +26,6 @@ The following data exists only on the hosts:
 | Forgejo repos + DB | midgard | `/var/lib/forgejo` | **Critical**: all Git history not pushed elsewhere |
 | Uptime Kuma config/history | yggdrasil | `/var/lib/private/uptime-kuma` | Annoying: checks recreated by hand |
 | Beszel hub DB (users, systems, alert config) | yggdrasil | `/var/lib/beszel-hub` | Annoying: alerts and notifications reconfigured by hand |
-| AdGuard Home config, credentials, and filter state | yggdrasil | `/var/lib/AdGuardHome` | Annoying: DNS setup and policy recreated by hand |
 | VictoriaLogs logs | yggdrasil | `/var/lib/victorialogs` | Acceptable: 14d retention logs |
 
 Back up two kinds of keys separately:

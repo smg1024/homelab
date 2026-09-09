@@ -90,16 +90,6 @@ in {
       respond 404
     '';
 
-    virtualHosts."adguardhome.ridewithmin.com".extraConfig = ''
-      @tailnet remote_ip 100.64.0.0/10 fd7a:115c:a1e0::/48
-
-      handle @tailnet {
-        reverse_proxy http://127.0.0.1:3000
-      }
-
-      respond 404
-    '';
-
     virtualHosts."logs.ridewithmin.com".extraConfig = ''
       @tailnet remote_ip 100.64.0.0/10 fd7a:115c:a1e0::/48
 

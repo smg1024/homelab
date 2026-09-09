@@ -8,8 +8,7 @@ The homelab has three roles: `yggdrasil` is the edge and infrastructure node,
 `midgard` is the primary application node, and `alfheim` is the cloud ARM
 application node. External traffic enters through Cloudflare Tunnel → Caddy,
 with no directly exposed application ports. The Tailscale tailnet carries
-traffic between hosts. Household clients reach AdGuard Home through the
-separate private LAN.
+traffic between hosts.
 
 ```mermaid
 flowchart TD
@@ -22,14 +21,10 @@ flowchart TD
         blog["Dev with Min blog<br/>Caddy file_server"]
         docsSite["Docs site<br/>Caddy file_server"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
-        adguard["AdGuard Home<br/>192.168.0.53:53 / :3000"]
         beszelHub["Beszel hub<br/>:8090"]
         vlogs["VictoriaLogs<br/>:9428"]
         yShipper["beszel-agent / vlagent"]
     end
-
-    homeLan["Home LAN clients<br/>192.168.0.0/24"]
-    iptime["ipTIME router<br/>DHCP / NAT"]
 
     subgraph tailnet["Tailscale tailnet"]
         midgardDns["midgard.tail6fc192.ts.net"]
@@ -49,10 +44,6 @@ flowchart TD
     end
 
     internet --> cloudflare
-    iptime -->|"DHCP advertises 192.168.0.53"| homeLan
-    homeLan -->|"outbound traffic"| iptime
-    iptime -->|"NAT"| internet
-    homeLan -->|"DNS"| adguard
     cloudflare --> cloudflared
     cloudflared -->|"home/blog/git/vault/jamye-plz/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
 
@@ -62,7 +53,6 @@ flowchart TD
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
     caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
-    caddy -->|"adguardhome.ridewithmin.com<br/>tailnet only"| adguard
     caddy -->|"beszel.ridewithmin.com<br/>tailnet only"| beszelHub
     caddy -->|"logs.ridewithmin.com<br/>tailnet only"| vlogs
     caddy -->|"docs.ridewithmin.com"| docsSite
@@ -83,7 +73,7 @@ flowchart TD
 ```
 
 The [security model](security.md) explains who can cross each boundary: public
-Internet, home LAN, tailnet, and localhost.
+Internet, tailnet, and localhost.
 
 ## Shared system configuration
 

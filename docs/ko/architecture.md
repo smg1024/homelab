@@ -7,8 +7,7 @@ icon: fontawesome/solid/network-wired
 구성은 엣지/인프라 노드(`yggdrasil`), 주 애플리케이션 노드(`midgard`),
 클라우드 ARM 애플리케이션 노드(`alfheim`)로 나뉩니다. 외부 트래픽은 포트를
 직접 열지 않고 Cloudflare Tunnel → Caddy 경로로만 들어오며 호스트 간 내부
-통신은 Tailscale tailnet 안에서 이루어집니다. 가정 내 클라이언트는 별도의
-사설 LAN에서 AdGuard Home에 접근합니다.
+통신은 Tailscale tailnet 안에서 이루어집니다.
 
 ```mermaid
 flowchart TD
@@ -21,14 +20,10 @@ flowchart TD
         blog["Dev with Min 블로그<br/>Caddy file_server"]
         docsSite["문서 사이트<br/>Caddy file_server"]
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
-        adguard["AdGuard Home<br/>192.168.0.53:53 / :3000"]
         beszelHub["Beszel 허브<br/>:8090"]
         vlogs["VictoriaLogs<br/>:9428"]
         yShipper["beszel-agent / vlagent"]
     end
-
-    homeLan["홈 LAN 클라이언트<br/>192.168.0.0/24"]
-    iptime["ipTIME 공유기<br/>DHCP / NAT"]
 
     subgraph tailnet["Tailscale tailnet"]
         midgardDns["midgard.tail6fc192.ts.net"]
@@ -48,10 +43,6 @@ flowchart TD
     end
 
     internet --> cloudflare
-    iptime -->|"DHCP로 192.168.0.53 배포"| homeLan
-    homeLan -->|"아웃바운드 트래픽"| iptime
-    iptime -->|"NAT"| internet
-    homeLan -->|"DNS"| adguard
     cloudflare --> cloudflared
     cloudflared -->|"home/blog/git/vault/jamye-plz/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
 
@@ -61,7 +52,6 @@ flowchart TD
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
     caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
-    caddy -->|"adguardhome.ridewithmin.com<br/>tailnet 전용"| adguard
     caddy -->|"beszel.ridewithmin.com<br/>tailnet 전용"| beszelHub
     caddy -->|"logs.ridewithmin.com<br/>tailnet 전용"| vlogs
     caddy -->|"docs.ridewithmin.com"| docsSite
@@ -81,7 +71,7 @@ flowchart TD
     aShipper -.-> vlogs
 ```
 
-공개 인터넷, 홈 LAN, tailnet, localhost 경계별 접근 주체는
+공개 인터넷, tailnet, localhost 경계별 접근 주체는
 [보안 모델](security.md)에서 다룹니다.
 
 ## 공유 시스템 구성

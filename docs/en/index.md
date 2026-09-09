@@ -13,7 +13,7 @@ then deploy. Do not fix configuration directly on a host.
 
 | Host | Role | Architecture | Notes |
 | --- | --- | --- | --- |
-| `yggdrasil` | Edge/infra node: Cloudflare Tunnel, Caddy, AdGuard Home DNS, monitoring stack | `x86_64-linux` | 4 GB RAM, keep it lightweight |
+| `yggdrasil` | Edge/infra node: Cloudflare Tunnel, Caddy, monitoring stack | `x86_64-linux` | 4 GB RAM, keep it lightweight |
 | `midgard` | Application host: static sites, Forgejo, Vaultwarden, Homepage, Podman | `x86_64-linux` | |
 | `alfheim` | OCI ARM application node: jamye-plz | `aarch64-linux` | SSH over the tailnet only |
 
@@ -39,7 +39,6 @@ docs/            # this documentation site (Zensical)
 | `https://vault.ridewithmin.com` | Vaultwarden | Public (Cloudflare Tunnel) |
 | `https://jamye-plz.ridewithmin.com` | jamye-plz | Public (Cloudflare Tunnel) |
 | `https://status.ridewithmin.com` | Uptime Kuma status page | Public (status-page paths only) |
-| `https://adguardhome.ridewithmin.com` | AdGuard Home dashboard | Tailnet only |
 | `https://beszel.ridewithmin.com` | Beszel (metrics + alerts) | Tailnet only |
 | `https://logs.ridewithmin.com` | VictoriaLogs (log search) | Tailnet only |
 | `https://docs.ridewithmin.com` | This documentation site | Public (Cloudflare Tunnel) |
