@@ -14,7 +14,6 @@ icon: fontawesome/solid/server
 - Dev with Min 블로그와 홈랩 문서 사이트를 Caddy가 직접 서빙
   (Nix 스토어 경로를 `file_server`로 제공하며 별도 프로세스 없음)
 - Uptime Kuma 공개 상태 페이지 서빙
-- AdGuard Home으로 사설 홈 LAN의 DNS 조회 및 필터링
 - Beszel 허브: 메트릭 수집과 알림 (tailnet 제한 Caddy 라우트)
 - VictoriaLogs 로그 저장소 + 조회 UI (tailnet 제한 Caddy 라우트)
 
@@ -26,7 +25,6 @@ services/cloudflared.nix  # Cloudflare Tunnel
 services/uptime-kuma.nix
 services/victorialogs.nix
 services/beszel/hub.nix
-services/adguardhome.nix
 ```
 
 ## 로컬 포트
@@ -34,8 +32,6 @@ services/adguardhome.nix
 | 포트 | 서비스 | 바인딩 |
 | --- | --- | --- |
 | `443` | Caddy | 공개 (Tunnel 오리진) |
-| `53` TCP/UDP | AdGuard Home DNS | `192.168.0.53`에 질의하는 `192.168.0.0/24` 클라이언트 전용 |
-| `3000` | AdGuard Home HTTP 관리/초기 설정 UI | 전체 인터페이스; 직접 접근과 Caddy 프록시 접근 모두 tailnet 전용 |
 | `3001` | Uptime Kuma | localhost |
 | `8090` | Beszel 허브 | 전체 인터페이스, 신뢰된 `tailscale0` 경유만 도달 가능 |
 | `9428` | VictoriaLogs | 전체 인터페이스, 신뢰된 `tailscale0` 경유만 도달 가능 |
@@ -45,9 +41,8 @@ services/adguardhome.nix
 ## 점검
 
 ```bash
-systemctl is-active caddy cloudflared-tunnel-* uptime-kuma adguardhome
+systemctl is-active caddy cloudflared-tunnel-* uptime-kuma
 systemctl is-active beszel-hub victorialogs beszel-agent vlagent
-dig @192.168.0.53 example.com
 curl -fsS http://127.0.0.1:8090/api/health
 curl -fsS http://127.0.0.1:9428/ping
 ```

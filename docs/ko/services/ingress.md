@@ -37,7 +37,6 @@ Caddy는 공개 호스트네임별로 내부 백엔드를 선택합니다.
 | `docs.ridewithmin.com` | 로컬 `file_server` (Nix 스토어) | 이 문서 사이트, flake의 `docs` 패키지에서 빌드 |
 | `jamye-plz.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | alfheim의 jamye-plz |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | 상태 페이지 경로만 허용, 그 외 `404` |
-| `adguardhome.ridewithmin.com` | `http://127.0.0.1:3000` | tailnet 클라이언트만, 그 외 `404` |
 | `beszel.ridewithmin.com` | `http://127.0.0.1:8090` | tailnet 클라이언트만, 그 외 `404` |
 | `logs.ridewithmin.com` | `http://127.0.0.1:9428` | tailnet 클라이언트만, `/`는 VictoriaLogs 웹 UI로 리다이렉트 |
 
@@ -47,8 +46,8 @@ Caddy는 공개 호스트네임별로 내부 백엔드를 선택합니다.
 
 ## tailnet 전용 라우트 패턴
 
-AdGuard Home, Beszel, VictoriaLogs UI는 Tunnel 공개 호스트네임 목록에
-포함되지 않으며 Caddy에서 Tailscale 주소 대역으로 접근을 제한합니다.
+Beszel과 VictoriaLogs UI는 Tunnel 공개 호스트네임 목록에 포함되지 않으며
+Caddy에서 Tailscale 주소 대역으로 접근을 제한합니다.
 
 ```caddy
 @tailnet remote_ip 100.64.0.0/10 fd7a:115c:a1e0::/48

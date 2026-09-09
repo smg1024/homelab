@@ -4,17 +4,15 @@ icon: fontawesome/solid/shield-halved
 
 # Security model
 
-The security model defines four network boundaries: public Internet, the
-private home LAN, the tailnet, and localhost. Each boundary has a separate
-access policy.
+The security model defines three network boundaries: public Internet, the
+tailnet, and localhost. Each boundary has a separate access policy.
 
 ## Access tiers
 
 | Tier | Who | What they can reach |
 | --- | --- | --- |
 | **Public Internet** | anyone | Only hostnames routed through Cloudflare Tunnel: `home`, `blog`, `git`, `vault`, `jamye-plz`, `status`, `docs` |
-| **Home LAN** | devices on `192.168.0.0/24` | AdGuard Home DNS at `192.168.0.53:53` |
-| **Tailnet** | devices in the Tailscale tailnet | Everything above, plus the `adguardhome`, `beszel`, and `logs` routes, plus direct host/port access per Tailscale ACLs (the trusted `tailscale0` interface exposes e.g. AdGuard Home `:3000`, Beszel `:8090`, VictoriaLogs `:9428`, and vlagent `:9429`) |
+| **Tailnet** | devices in the Tailscale tailnet | Public services above, plus the `beszel` and `logs` routes, plus direct host/port access per Tailscale ACLs (the trusted `tailscale0` interface exposes e.g. Beszel `:8090`, VictoriaLogs `:9428`, and vlagent `:9429`) |
 | **Localhost** | processes on the host itself | Uptime Kuma bound to `127.0.0.1`; journald → vlagent hand-off on each host |
 
 ## Ingress path
@@ -24,8 +22,8 @@ tunnel to Cloudflare; requests arrive through it at local Caddy
 (`https://localhost:443`), which routes by hostname. Anything not explicitly
 routed gets `404`.
 
-Caddy serves `adguardhome.ridewithmin.com`, `beszel.ridewithmin.com`, and
-`logs.ridewithmin.com` outside Cloudflare Tunnel. It accepts these routes only
+Caddy serves `beszel.ridewithmin.com` and `logs.ridewithmin.com` outside
+Cloudflare Tunnel. It accepts these routes only
 from the Tailscale address ranges (`100.64.0.0/10`,
 `fd7a:115c:a1e0::/48`). Other clients receive `404`.
 
@@ -42,10 +40,6 @@ and its public OCI address does not answer SSH. Application and monitoring
 ports (`3000`, `3001`, `8080`, `8082`, `8090`, `8222`, `9428`, `9429`, ...)
 are never opened publicly; tailnet-internal traffic reaches them through the
 trusted `tailscale0` interface.
-
-AdGuard Home is the only service opened to the physical home LAN. Its TCP and
-UDP `:53` rules require both a source in `192.168.0.0/24` and the reserved
-destination `192.168.0.53`. The admin UI on `:3000` is not opened to the LAN.
 
 ## SSH policy
 
@@ -68,6 +62,5 @@ identity. Only hosts registered as recipients in `.sops.yaml` (plus the
   Tailscale admin console, not declared here.
 - **Cloudflare-side policies.** DNS records and any Cloudflare Access rules
   live in the Cloudflare dashboard.
-- **ipTIME router state.** DHCP reservations, advertised DNS servers, NAT, and
-  port-forwarding rules live in the router. Do not forward AdGuard Home ports
-  from the WAN.
+- **ipTIME router state.** DHCP reservations, NAT, and port-forwarding rules
+  live in the router.

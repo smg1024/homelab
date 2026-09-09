@@ -28,7 +28,7 @@ requests, and rolled out by CI/CD.
 
 | Host | Role | Notes |
 | --- | --- | --- |
-| `yggdrasil` | Edge / infrastructure | Cloudflare Tunnel, Caddy ingress, AdGuard Home DNS, monitoring, status page |
+| `yggdrasil` | Edge / infrastructure | Cloudflare Tunnel, Caddy ingress, monitoring, status page |
 | `midgard` | Application host | Static sites, Forgejo, Vaultwarden, Homepage, Podman-backed applications |
 | `alfheim` | OCI ARM node | ARM/cloud-host validation and `jamye-plz` |
 

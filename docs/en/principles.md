@@ -27,9 +27,6 @@ Hosts talk to each other over Tailscale, and tailnet membership is what makes
 a machine "inside". Operator-only surfaces such as Beszel are gated by
 tailnet address ranges, not passwords on public endpoints.
 
-The physical home LAN is a narrower exception for household DNS. Only
-AdGuard Home `:53` is opened there, with source and destination restrictions.
-
 ## Secrets never touch the store
 
 Plaintext secrets never go into `.nix` files or the Nix store. Sensitive values
