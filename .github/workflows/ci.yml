@@ -42,3 +42,8 @@ jobs:
           nix build \
             ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
             --no-link --print-out-paths
+
+      - name: Verify Jamye data restore
+        run: |
+          system=$(nix eval --raw ".#nixosConfigurations.${{ matrix.host }}.config.nixpkgs.hostPlatform.system")
+          nix build ".#checks.${system}.jamye-host-swap-restore" --no-link
