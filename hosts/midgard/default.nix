@@ -8,7 +8,13 @@
     ../../services/homepage.nix
     ../../services/forgejo.nix
     ../../services/vaultwarden.nix
-    ../../services/jamye-server.nix
+    ../../services/jamye-plz.nix
+    ../../services/jamye-host-swap.nix
+  ];
+
+  # jamye-plz uses the final OSS MinIO release, marked insecure in nixpkgs.
+  nixpkgs.config.permittedInsecurePackages = [
+    "minio-2025-10-15T17-29-55Z"
   ];
 
   networking.hostName = "midgard";

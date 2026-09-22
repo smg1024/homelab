@@ -30,6 +30,8 @@
 in {
   imports = [jamyePlzModule];
 
+  services.minio.dataDir = ["/var/lib/jamye-plz-minio/data"];
+
   sops.secrets."jamye-plz/jwt_secret" = {sopsFile = ../secrets/jamye-plz.yaml;};
   sops.secrets."jamye-plz/kakao_client_id" = {sopsFile = ../secrets/jamye-plz.yaml;};
   sops.secrets."jamye-plz/kakao_client_secret" = {sopsFile = ../secrets/jamye-plz.yaml;};

@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  pkgs,
   ...
 }: let
   secretFile = ../secrets/jamye-server.yaml;
@@ -8,6 +9,10 @@ in {
   imports = [
     inputs.jamye-server.nixosModules.default
   ];
+
+  # Keep the application's PostgreSQL major version when moving hosts.
+  services.postgresql.package = pkgs.postgresql_17;
+  services.minio.dataDir = ["/var/lib/jamye-server-minio/data"];
 
   sops.secrets."jamye-server/access_token_secret".sopsFile = secretFile;
 
@@ -94,7 +99,6 @@ in {
   services.jamye-server = {
     enable = true;
 
-    # midgard의 8080은 현재 비어 있습니다.
     listenAddress = "0.0.0.0:8080";
     environmentFile = config.sops.templates."jamye-server.env".path;
 

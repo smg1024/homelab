@@ -13,6 +13,7 @@ icon: fontawesome/solid/server
 - Homepage 대시보드 운영
 - Forgejo (Git 호스팅) 운영
 - Vaultwarden (비밀번호 관리자) 운영
+- jamye-plz 운영 (PWA, API, PostgreSQL 18, Redis, MinIO)
 - 컨테이너화된 앱을 위한 Podman 런타임 제공
 
 ## 로드하는 모듈
@@ -21,6 +22,8 @@ icon: fontawesome/solid/server
 services/homepage.nix
 services/forgejo.nix
 services/vaultwarden.nix
+services/jamye-plz.nix
+services/jamye-host-swap.nix  # 완료 표시 파일로 재실행을 막는 일회성 데이터 복원
 modules/podman.nix      # 호스트 전용 모듈
 ```
 
@@ -31,6 +34,8 @@ modules/podman.nix      # 호스트 전용 모듈
 | `8082` | Homepage | `https://home.ridewithmin.com` |
 | `3000` | Forgejo | `https://git.ridewithmin.com` |
 | `8222` | Vaultwarden | `https://vault.ridewithmin.com` |
+| `8080` | jamye-plz PWA와 API | `https://jamye-plz.ridewithmin.com` |
+| `9000` | jamye-plz MinIO | `https://minio.ridewithmin.com` |
 | `9429` | vlagent | 공개 미노출 (신뢰 인터페이스 경유 tailnet 도달 가능); journald 로그를 VictoriaLogs로 버퍼링 전송 |
 | `45876` | beszel-agent | 미개방 (에이전트가 tailnet으로 Beszel 허브에 먼저 접속) |
 

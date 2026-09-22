@@ -3,13 +3,8 @@
     ./hardware-configuration.nix
     ./disko.nix
     ../../modules/podman.nix
-    ../../services/jamye-plz.nix
-  ];
-
-  # MinIO's final OSS release is marked insecure in nixpkgs. Keep the exception
-  # scoped to alfheim and pinned to the exact package version.
-  nixpkgs.config.permittedInsecurePackages = [
-    "minio-2025-10-15T17-29-55Z"
+    ../../services/jamye-server.nix
+    ../../services/jamye-host-swap.nix
   ];
 
   networking.hostName = "alfheim";
