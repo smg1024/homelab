@@ -24,6 +24,9 @@ in {
   sops.secrets."jamye-server/kakao_client_secret".sopsFile = secretFile;
   sops.secrets."jamye-server/google_client_id".sopsFile = secretFile;
   sops.secrets."jamye-server/google_client_secret".sopsFile = secretFile;
+  sops.secrets."jamye-server/apple_team_id".sopsFile = secretFile;
+  sops.secrets."jamye-server/apple_key_id".sopsFile = secretFile;
+  sops.secrets."jamye-server/apple_private_key".sopsFile = secretFile;
 
   sops.templates."jamye-server.env" = {
     owner = "jamye-server";
@@ -47,6 +50,14 @@ in {
       JAMYE_GOOGLE_CLIENT_ID=${config.sops.placeholder."jamye-server/google_client_id"}
       JAMYE_GOOGLE_CLIENT_SECRET=${config.sops.placeholder."jamye-server/google_client_secret"}
       JAMYE_GOOGLE_REDIRECT_URIS=https://jamye-api.ridewithmin.com/api/v1/auth/oauth/google/callback
+
+      # Sign in with Apple (native iOS). The audience is the app bundle id;
+      # the .p8 key is stored in SOPS as a single-line base64 PKCS#8 body.
+      JAMYE_APPLE_SIGNIN_ENABLED=true
+      JAMYE_APPLE_AUDIENCES=dev.local.jamyeapp
+      JAMYE_APPLE_TEAM_ID=${config.sops.placeholder."jamye-server/apple_team_id"}
+      JAMYE_APPLE_KEY_ID=${config.sops.placeholder."jamye-server/apple_key_id"}
+      JAMYE_APPLE_PRIVATE_KEY=${config.sops.placeholder."jamye-server/apple_private_key"}
     '';
   };
 
