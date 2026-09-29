@@ -14,8 +14,8 @@ then deploy. Do not fix configuration directly on a host.
 | Host | Role | Architecture | Notes |
 | --- | --- | --- | --- |
 | `yggdrasil` | Edge/infra node: Cloudflare Tunnel, Caddy, monitoring stack | `x86_64-linux` | 4 GB RAM, keep it lightweight |
-| `midgard` | Application host: static sites, Forgejo, Vaultwarden, Homepage, Podman | `x86_64-linux` | |
-| `alfheim` | OCI ARM application node: jamye-plz | `aarch64-linux` | SSH over the tailnet only |
+| `midgard` | Application host: Forgejo, Vaultwarden, Homepage, jamye-plz, Podman | `x86_64-linux` | |
+| `alfheim` | OCI ARM application node: jamye-server | `aarch64-linux` | SSH over the tailnet only |
 
 ## Repository layout
 

@@ -13,6 +13,7 @@ does not expose midgard's service ports.
 - Run the Homepage dashboard
 - Run Forgejo (Git hosting)
 - Run Vaultwarden (password manager)
+- Run jamye-plz (PWA, API, PostgreSQL 18, Redis, and MinIO)
 - Provide the Podman runtime for containerized application services
 
 ## Loaded modules
@@ -21,6 +22,8 @@ does not expose midgard's service ports.
 services/homepage.nix
 services/forgejo.nix
 services/vaultwarden.nix
+services/jamye-plz.nix
+services/jamye-host-swap.nix  # one-time data import, guarded by a completion stamp
 modules/podman.nix      # host-specific module
 ```
 
@@ -31,6 +34,8 @@ modules/podman.nix      # host-specific module
 | `8082` | Homepage | `https://home.ridewithmin.com` |
 | `3000` | Forgejo | `https://git.ridewithmin.com` |
 | `8222` | Vaultwarden | `https://vault.ridewithmin.com` |
+| `8080` | jamye-plz PWA and API | `https://jamye-plz.ridewithmin.com` |
+| `9000` | jamye-plz MinIO | `https://minio.ridewithmin.com` |
 | `9429` | vlagent | No public exposure (tailnet-reachable via trusted interface); buffers journald logs to VictoriaLogs |
 | `45876` | beszel-agent | Not exposed; the agent dials the Beszel hub over the tailnet |
 

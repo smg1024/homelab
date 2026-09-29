@@ -28,6 +28,49 @@ The normal deployment path is GitHub Actions:
 
 See [CI/CD pipeline](ci-cd.md) for the workflow details.
 
+## Jamye host swap (September 2026)
+
+The swap moves jamye-plz to midgard and jamye-server to alfheim. PostgreSQL
+stays at major version 18 for jamye-plz and 17 for jamye-server. Public URLs
+and secrets stay the same; Caddy changes only the four backend addresses.
+
+**Do not merge the host-swap PR before both incoming snapshots are staged.**
+The `jamye-host-swap` unit refuses to start either app without its snapshot.
+It restores the logical PostgreSQL dump, compares every public table's row
+count, then restores MinIO, application state, and Redis before startup.
+
+1. Wait for all three PR build checks, and prebuild the reviewed system
+   closures on the destination hosts without activating them.
+2. Arrange a maintenance window. On each old host, run the checked-in snapshot
+   script as root using the operator's SSH aliases:
+
+   ```bash
+   ssh alfheim sudo bash -s -- jamye-plz < scripts/jamye-host-swap-snapshot.sh
+   ssh midgard sudo bash -s -- jamye-server < scripts/jamye-host-swap-snapshot.sh
+   ```
+
+   Each script stops its app and storage services and leaves them stopped.
+   Snapshots are root-only under `/var/lib/jamye-host-swap/2026-09-17/<app>`.
+   A failed or existing snapshot must be inspected; the script will not overwrite it.
+3. Copy each complete snapshot directory to the same path on the opposite
+   host over SSH. Preserve the root-only permissions. Verify `SHA256SUMS` and
+   `SNAPSHOT_COMPLETE` on both destinations before merging.
+4. Merge the reviewed PR and let normal GitHub Actions CD activate all hosts.
+5. Verify `RESTORE_COMPLETE` on both destinations, service health, and all four
+   public routes. Check authenticated chat/media behavior with an existing user.
+
+The original PostgreSQL clusters and `/var/lib/minio/data` remain on their
+source hosts. New MinIO paths are `/var/lib/jamye-plz-minio/data` on midgard
+and `/var/lib/jamye-server-minio/data` on alfheim. The transcription model
+cache remains on alfheim; midgard downloads it again when first needed.
+
+If staging fails before deployment, resume the source stacks after checking
+their snapshots. If a restore fails, the dependent units stay stopped; inspect
+`journalctl -u jamye-host-swap` and the per-step completion files. Never delete
+a completion file to force a restore over a live database. After cutover,
+rolling back configuration alone would lose access to new writes: stop the
+apps and plan the reverse data transfer before returning traffic to old hosts.
+
 ## Explicit manual path
 
 `just test` and `just switch` are break-glass/bootstrap commands. Run them only
