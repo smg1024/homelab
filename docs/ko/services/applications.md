@@ -5,7 +5,7 @@ icon: fontawesome/solid/cubes
 # 애플리케이션
 
 애플리케이션 서비스는 호스트별 역할에 맞춰 실행됩니다. 기존 앱 대부분은
-`midgard`에 있고 jamye-plz는 `alfheim`에서 실행됩니다. yggdrasil의 Caddy가
+jamye-plz와 함께 `midgard`에 있고 jamye-server는 `alfheim`에서 실행됩니다. yggdrasil의 Caddy가
 공개 트래픽을 tailnet으로 전달하고 정적 블로그와 문서 사이트는 직접
 서빙합니다.
 
@@ -48,17 +48,28 @@ Vaultwarden은 Bitwarden 호환 비밀번호 관리자입니다. `:8222`에서 �
 
 ## jamye-plz (`services/jamye-plz.nix`)
 
-jamye-plz는 지인 폐쇄 그룹용 full-stack 소셜 PWA입니다. `alfheim`의
+jamye-plz는 지인 폐쇄 그룹용 full-stack 소셜 PWA입니다. `midgard`의
 `:8080`에서 실행되며 `https://jamye-plz.ridewithmin.com`으로 노출됩니다.
 
 - upstream `jamye-plz` flake input에서 가져옵니다.
 - upstream `services.jamye-plz` NixOS 모듈로 활성화합니다.
 - upstream 모듈이 frontend, backend API, 로컬 PostgreSQL 데이터베이스,
-  alfheim-local Caddy를 관리합니다.
+  midgard-local Caddy를 관리합니다.
 - OAuth/JWT 비밀은 `secrets/jamye-plz.yaml`에 있고 `sops.templates`로
   `jamye-plz.env`를 렌더링합니다.
 - 공개 트래픽 경로: yggdrasil의 Cloudflare Tunnel → yggdrasil의 Caddy →
-  `alfheim.tail6fc192.ts.net:8080`의 full-stack 서비스 엔트리포인트
+  `midgard.tail6fc192.ts.net:8080`의 full-stack 서비스 엔트리포인트
+- MinIO는 `/var/lib/jamye-plz-minio/data`를 사용하며 `https://minio.ridewithmin.com`으로 노출됩니다.
+
+## jamye-server (`services/jamye-server.nix`)
+
+Rust API와 worker는 alfheim에서 로컬 PostgreSQL 17, Redis, MinIO와 함께
+실행됩니다. upstream `jamye-server` flake가 네이티브 `aarch64-linux` 패키지를 제공합니다.
+
+- API: `https://jamye-api.ridewithmin.com` → `alfheim.tail6fc192.ts.net:8080`
+- 미디어: `https://jamye-media.ridewithmin.com` → `alfheim.tail6fc192.ts.net:9000`
+- MinIO 데이터: `/var/lib/jamye-server-minio/data`
+- 비밀: `secrets/jamye-server.yaml`에서 `sops.templates`로 렌더링
 
 ## 새 앱 추가 가이드라인
 

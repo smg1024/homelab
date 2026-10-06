@@ -33,11 +33,14 @@ flowchart TD
             homepage["Homepage 대시보드<br/>:8082"]
             forgejo["Forgejo<br/>:3000"]
             vaultwarden["Vaultwarden<br/>:8222"]
+            jamyePlz["jamye-plz<br/>:8080"]
+            plzMedia["jamye-plz MinIO<br/>:9000"]
             mShipper["beszel-agent / vlagent"]
         end
 
         subgraph alfheim["alfheim: OCI ARM 애플리케이션 호스트"]
-            jamyePlz["jamye-plz<br/>:8080"]
+            jamyeServer["jamye-server<br/>:8080"]
+            serverMedia["jamye-server MinIO<br/>:9000"]
             aShipper["beszel-agent / vlagent"]
         end
     end
@@ -52,6 +55,9 @@ flowchart TD
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
     caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
+    caddy -->|"minio.ridewithmin.com"| plzMedia
+    caddy -->|"jamye-api.ridewithmin.com"| jamyeServer
+    caddy -->|"jamye-media.ridewithmin.com"| serverMedia
     caddy -->|"beszel.ridewithmin.com<br/>tailnet 전용"| beszelHub
     caddy -->|"logs.ridewithmin.com<br/>tailnet 전용"| vlogs
     caddy -->|"docs.ridewithmin.com"| docsSite
@@ -61,7 +67,10 @@ flowchart TD
     midgardDns -.-> homepage
     midgardDns -.-> forgejo
     midgardDns -.-> vaultwarden
-    alfheimDns -.-> jamyePlz
+    midgardDns -.-> jamyePlz
+    midgardDns -.-> plzMedia
+    alfheimDns -.-> jamyeServer
+    alfheimDns -.-> serverMedia
 
     yShipper --> beszelHub
     yShipper --> vlogs
