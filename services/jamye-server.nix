@@ -58,6 +58,13 @@ in {
       JAMYE_APPLE_TEAM_ID=${config.sops.placeholder."jamye-server/apple_team_id"}
       JAMYE_APPLE_KEY_ID=${config.sops.placeholder."jamye-server/apple_key_id"}
       JAMYE_APPLE_PRIVATE_KEY=${config.sops.placeholder."jamye-server/apple_private_key"}
+
+      # Avatar hosting (server task-19). Hosted avatar URLs are minted under
+      # this public API origin. Behind the proxy every client shares one
+      # public-read bucket, so the limit is raised above the 600/60s default.
+      JAMYE_AVATAR_PUBLIC_BASE_URL=https://jamye-api.ridewithmin.com
+      JAMYE_RATE_LIMIT_AVATAR_PUBLIC_READ_LIMIT=6000
+      JAMYE_RATE_LIMIT_AVATAR_PUBLIC_READ_WINDOW_SECONDS=60
     '';
   };
 
