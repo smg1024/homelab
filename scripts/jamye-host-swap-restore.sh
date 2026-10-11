@@ -19,9 +19,41 @@ test "$(cat application)" = "$app"
 sha256sum --check --quiet SHA256SUMS
 
 if [ ! -f database-restored ]; then
-  tables=$(runuser -u postgres -- psql -X -At -v ON_ERROR_STOP=1 --dbname="$database" \
-    -c "SELECT count(*) FROM pg_tables WHERE schemaname = 'public'")
-  test "$tables" = 0 || { echo "Destination database is not empty; refusing to overwrite it" >&2; exit 1; }
+  user_objects=$(runuser -u postgres -- psql -X -At -v ON_ERROR_STOP=1 --dbname="$database" <<'SQL'
+WITH user_objects AS (
+  SELECT c.oid
+  FROM pg_class AS c
+  JOIN pg_namespace AS n ON n.oid = c.relnamespace
+  WHERE n.nspname <> 'information_schema'
+    AND n.nspname !~ '^pg_'
+    AND c.relkind IN ('r', 'p', 'v', 'm', 'S', 'f')
+  UNION ALL
+  SELECT p.oid
+  FROM pg_proc AS p
+  JOIN pg_namespace AS n ON n.oid = p.pronamespace
+  WHERE n.nspname <> 'information_schema'
+    AND n.nspname !~ '^pg_'
+  UNION ALL
+  SELECT t.oid
+  FROM pg_type AS t
+  JOIN pg_namespace AS n ON n.oid = t.typnamespace
+  WHERE n.nspname <> 'information_schema'
+    AND n.nspname !~ '^pg_'
+  UNION ALL
+  SELECT n.oid
+  FROM pg_namespace AS n
+  WHERE n.nspname <> 'public'
+    AND n.nspname <> 'information_schema'
+    AND n.nspname !~ '^pg_'
+  UNION ALL
+  SELECT e.oid
+  FROM pg_extension AS e
+  WHERE e.extname <> 'plpgsql'
+)
+SELECT count(*) FROM user_objects;
+SQL
+  )
+  test "$user_objects" = 0 || { echo "Destination database contains user objects; refusing to overwrite it" >&2; exit 1; }
   runuser -u postgres -- pg_restore --exit-on-error --single-transaction \
     --no-owner --role="$app_user" --dbname="$database" < database.dump
   touch database-restored

@@ -57,6 +57,9 @@
       sha256sum database.dump table-counts.txt minio.tar app.tar redis.rdb application > SHA256SUMS
       expect_failure "nonempty database"
       psql -v ON_ERROR_STOP=1 -d "$database" -c 'DROP TABLE messages;'
+      psql -v ON_ERROR_STOP=1 -d "$database" -c 'CREATE SCHEMA stray; CREATE TABLE stray.messages (id int PRIMARY KEY);'
+      expect_failure "nonempty database outside public"
+      psql -v ON_ERROR_STOP=1 -d "$database" -c 'DROP SCHEMA stray CASCADE;'
       echo 'corruption' >> redis.rdb
       expect_failure "corrupt snapshot"
       echo 'redis fixture' > redis.rdb
