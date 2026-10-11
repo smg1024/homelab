@@ -10,7 +10,7 @@ case "$app:$(uname -n)" in
   *) echo "Unexpected application/source host" >&2; exit 1 ;;
 esac
 test "$(id -u)" = 0
-bundle="/var/lib/jamye-host-swap/2026-09-17/$app"
+bundle="/var/lib/jamye-host-swap/2026-10-11/$app"
 test ! -e "$bundle"
 install -d -m 0700 "$bundle"
 

@@ -45,6 +45,8 @@ services/jamye-host-swap.nix  # one-time data import, guarded by a completion st
 - OAuth callbacks and the token issuer use `https://jamye-api.ridewithmin.com`.
 - MinIO uses `/var/lib/jamye-server-minio/data`; public media URLs retain
   `https://jamye-media.ridewithmin.com`.
+- jamye-plz is disabled. Its PostgreSQL 18 cluster, MinIO objects, Redis data,
+  and application state remain on disk for recovery but are not started.
 
 ## Access
 

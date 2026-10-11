@@ -45,6 +45,8 @@ services/jamye-host-swap.nix  # 완료 표시 파일로 재실행을 막는 일�
 - OAuth callback과 token issuer는 `https://jamye-api.ridewithmin.com`을 사용합니다.
 - MinIO는 `/var/lib/jamye-server-minio/data`를 사용하며 공개 미디어 URL은
   `https://jamye-media.ridewithmin.com`을 유지합니다.
+- jamye-plz는 비활성화합니다. PostgreSQL 18 cluster, MinIO object, Redis와
+  애플리케이션 상태는 복구용으로 디스크에 남기되 서비스를 시작하지 않습니다.
 
 ## 접근
 

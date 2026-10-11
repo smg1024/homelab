@@ -28,48 +28,66 @@ The normal deployment path is GitHub Actions:
 
 See [CI/CD pipeline](ci-cd.md) for the workflow details.
 
-## Jamye host swap (September 2026)
+## Jamye shutdown and server host move (October 2026)
 
-The swap moves jamye-plz to midgard and jamye-server to alfheim. PostgreSQL
-stays at major version 18 for jamye-plz and 17 for jamye-server. Public URLs
-and secrets stay the same; Caddy changes only the four backend addresses.
+This change disables jamye-plz and moves jamye-server from midgard to alfheim.
+jamye-plz is archived but not restored elsewhere. jamye-server keeps
+PostgreSQL 17 and restores its database, MinIO objects, application state, and
+Redis data before its first start on alfheim.
 
-**Do not merge the host-swap PR before both incoming snapshots are staged.**
-The `jamye-host-swap` unit refuses to start either app without its snapshot.
-It restores the logical PostgreSQL dump, compares every public table's row
-count, then restores MinIO, application state, and Redis before startup.
+**Do not merge the host-move PR before both snapshots are complete and the
+jamye-server snapshot is staged on alfheim.** The `jamye-host-swap` unit gates
+the jamye-server target, infrastructure, migrations, API, and worker. It
+verifies checksums, restores the PostgreSQL dump in one transaction, compares
+every public table's row count, and restores the file-backed data.
 
 1. Wait for all three PR build checks, and prebuild the reviewed system
    closures on the destination hosts without activating them.
-2. Arrange a maintenance window. On each old host, run the checked-in snapshot
-   script as root using the operator's SSH aliases:
+2. Arrange a maintenance window. Create a cold archive of jamye-plz on
+   alfheim, then snapshot jamye-server on midgard:
 
    ```bash
    ssh alfheim sudo bash -s -- jamye-plz < scripts/jamye-host-swap-snapshot.sh
    ssh midgard sudo bash -s -- jamye-server < scripts/jamye-host-swap-snapshot.sh
    ```
 
-   Each script stops its app and storage services and leaves them stopped.
-   Snapshots are root-only under `/var/lib/jamye-host-swap/2026-09-17/<app>`.
-   A failed or existing snapshot must be inspected; the script will not overwrite it.
-3. Copy each complete snapshot directory to the same path on the opposite
-   host over SSH. Preserve the root-only permissions. Verify `SHA256SUMS` and
-   `SNAPSHOT_COMPLETE` on both destinations before merging.
+   Both source stacks remain stopped. The root-only snapshots are stored under
+   `/var/lib/jamye-host-swap/2026-10-11/<app>`. The script refuses to overwrite
+   an existing or partial snapshot.
+3. Copy the jamye-server snapshot to the same path on alfheim. Copy the
+   jamye-plz archive to midgard for off-node recovery, then verify both copies:
+
+   ```bash
+   ssh midgard sudo tar -C /var/lib/jamye-host-swap/2026-10-11 -cf - jamye-server \
+     | ssh alfheim sudo tar -C /var/lib/jamye-host-swap/2026-10-11 -xf -
+   ssh alfheim sudo tar -C /var/lib/jamye-host-swap/2026-10-11 -cf - jamye-plz \
+     | ssh midgard sudo tar -C /var/lib/jamye-host-swap/2026-10-11 -xf -
+   ssh alfheim "sudo sh -c 'cd /var/lib/jamye-host-swap/2026-10-11/jamye-server && sha256sum --check --quiet SHA256SUMS && test -f SNAPSHOT_COMPLETE'"
+   ssh midgard "sudo sh -c 'cd /var/lib/jamye-host-swap/2026-10-11/jamye-plz && sha256sum --check --quiet SHA256SUMS && test -f SNAPSHOT_COMPLETE'"
+   ```
+
 4. Merge the reviewed PR and let normal GitHub Actions CD activate all hosts.
-5. Verify `RESTORE_COMPLETE` on both destinations, service health, and all four
-   public routes. Check authenticated chat/media behavior with an existing user.
+   alfheim restores jamye-server automatically before starting it. No automatic
+   restore consumes the jamye-plz archive.
+5. Verify the alfheim `RESTORE_COMPLETE` marker, deployment jobs, service
+   health, the API and media routes, and authenticated application behavior.
+   Confirm that `jamye-plz.ridewithmin.com` and `minio.ridewithmin.com` return
+   HTTP `503`.
 
-The original PostgreSQL clusters and `/var/lib/minio/data` remain on their
-source hosts. New MinIO paths are `/var/lib/jamye-plz-minio/data` on midgard
-and `/var/lib/jamye-server-minio/data` on alfheim. The transcription model
-cache remains on alfheim; midgard downloads it again when first needed.
+The original jamye-server data remains on midgard. The inactive jamye-plz
+PostgreSQL 18 cluster, `/var/lib/minio/data`, Redis data, and application state
+remain on alfheim; the verified archive copy on midgard provides off-node
+recovery. jamye-server MinIO is restored to
+`/var/lib/jamye-server-minio/data`, so it does not overwrite the retained
+jamye-plz objects.
 
-If staging fails before deployment, resume the source stacks after checking
-their snapshots. If a restore fails, the dependent units stay stopped; inspect
-`journalctl -u jamye-host-swap` and the per-step completion files. Never delete
-a completion file to force a restore over a live database. After cutover,
-rolling back configuration alone would lose access to new writes: stop the
-apps and plan the reverse data transfer before returning traffic to old hosts.
+If staging fails before deployment, resume the source stacks after inspecting
+their snapshots. If restoration fails, jamye-server units remain stopped;
+inspect `journalctl -u jamye-host-swap` and the per-step completion files.
+Never delete a completion file to force a restore over a live database. After
+cutover, a configuration-only rollback would omit new writes made on alfheim;
+stop jamye-server and plan a reverse data transfer before returning traffic to
+midgard.
 
 ## Explicit manual path
 

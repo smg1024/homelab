@@ -22,6 +22,7 @@ flowchart TD
         kuma["Uptime Kuma<br/>127.0.0.1:3001"]
         beszelHub["Beszel 허브<br/>:8090"]
         vlogs["VictoriaLogs<br/>:9428"]
+        plzUnavailable["jamye-plz 비활성<br/>HTTP 503"]
         yShipper["beszel-agent / vlagent"]
     end
 
@@ -33,8 +34,6 @@ flowchart TD
             homepage["Homepage 대시보드<br/>:8082"]
             forgejo["Forgejo<br/>:3000"]
             vaultwarden["Vaultwarden<br/>:8222"]
-            jamyePlz["jamye-plz<br/>:8080"]
-            plzMedia["jamye-plz MinIO<br/>:9000"]
             mShipper["beszel-agent / vlagent"]
         end
 
@@ -47,15 +46,14 @@ flowchart TD
 
     internet --> cloudflare
     cloudflare --> cloudflared
-    cloudflared -->|"home/blog/git/vault/jamye-plz/status/docs.ridewithmin.com<br/>https://localhost:443"| caddy
+    cloudflared -->|"공개 ridewithmin.com 호스트명<br/>https://localhost:443"| caddy
 
     caddy -->|"status.ridewithmin.com"| kuma
     caddy -->|"home.ridewithmin.com"| homepage
     caddy -->|"blog.ridewithmin.com"| blog
     caddy -->|"git.ridewithmin.com"| forgejo
     caddy -->|"vault.ridewithmin.com"| vaultwarden
-    caddy -->|"jamye-plz.ridewithmin.com"| jamyePlz
-    caddy -->|"minio.ridewithmin.com"| plzMedia
+    caddy -->|"jamye-plz / minio.ridewithmin.com"| plzUnavailable
     caddy -->|"jamye-api.ridewithmin.com"| jamyeServer
     caddy -->|"jamye-media.ridewithmin.com"| serverMedia
     caddy -->|"beszel.ridewithmin.com<br/>tailnet 전용"| beszelHub
@@ -67,8 +65,6 @@ flowchart TD
     midgardDns -.-> homepage
     midgardDns -.-> forgejo
     midgardDns -.-> vaultwarden
-    midgardDns -.-> jamyePlz
-    midgardDns -.-> plzMedia
     alfheimDns -.-> jamyeServer
     alfheimDns -.-> serverMedia
 

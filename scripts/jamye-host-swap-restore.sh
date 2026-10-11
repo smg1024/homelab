@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
-# Invoked by the declared systemd unit, after PostgreSQL role/database setup
-# and before MinIO, Redis, migrations, or the application's public listener.
+# Invoked on alfheim by the declared systemd unit, after PostgreSQL role and
+# database setup and before jamye-server infrastructure or application units.
 set -euo pipefail
 umask 077
 
-app=${JAMYE_SWAP_APP:?Missing application}
-case "$app:$(uname -n)" in
-  jamye-plz:midgard) database=jamye; app_user=jamye ;;
-  jamye-server:alfheim) database=jamye-server; app_user=jamye-server ;;
-  *) echo "Unexpected application/destination host" >&2; exit 1 ;;
-esac
-bundle="/var/lib/jamye-host-swap/2026-09-17/$app"
+app=jamye-server
+database=jamye-server
+app_user=jamye-server
+test "$(uname -n)" = alfheim || {
+  echo "Unexpected destination host" >&2
+  exit 1
+}
+bundle="/var/lib/jamye-host-swap/2026-10-11/$app"
 test -f "$bundle/RESTORE_COMPLETE" && exit 0
 test -f "$bundle/SNAPSHOT_COMPLETE"
 cd "$bundle"

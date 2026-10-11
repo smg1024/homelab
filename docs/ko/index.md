@@ -14,7 +14,7 @@ icon: fontawesome/solid/house
 | 호스트 | 역할 | 아키텍처 | 비고 |
 | --- | --- | --- | --- |
 | `yggdrasil` | 엣지/인프라 노드: Cloudflare Tunnel, Caddy, 모니터링 스택 | `x86_64-linux` | 4 GB RAM, 가볍게 유지 |
-| `midgard` | 애플리케이션 호스트: Forgejo, Vaultwarden, Homepage, jamye-plz, Podman | `x86_64-linux` | |
+| `midgard` | 애플리케이션 호스트: Forgejo, Vaultwarden, Homepage, Podman | `x86_64-linux` | |
 | `alfheim` | OCI ARM 애플리케이션 노드: jamye-server | `aarch64-linux` | SSH는 tailnet 전용 |
 
 ## 저장소 레이아웃
@@ -37,7 +37,10 @@ docs/            # 이 문서 사이트 (Zensical)
 | `https://blog.ridewithmin.com` | Dev with Min 블로그 | 공개 (Cloudflare Tunnel) |
 | `https://git.ridewithmin.com` | Forgejo | 공개 (Cloudflare Tunnel) |
 | `https://vault.ridewithmin.com` | Vaultwarden | 공개 (Cloudflare Tunnel) |
-| `https://jamye-plz.ridewithmin.com` | jamye-plz | 공개 (Cloudflare Tunnel) |
+| `https://jamye-plz.ridewithmin.com` | jamye-plz (비활성) | 공개 `503` (Cloudflare Tunnel) |
+| `https://minio.ridewithmin.com` | jamye-plz 미디어 (비활성) | 공개 `503` (Cloudflare Tunnel) |
+| `https://jamye-api.ridewithmin.com` | jamye-server API | 공개 (Cloudflare Tunnel) |
+| `https://jamye-media.ridewithmin.com` | jamye-server 미디어 | 공개 (Cloudflare Tunnel) |
 | `https://status.ridewithmin.com` | Uptime Kuma 상태 페이지 | 공개 (상태 페이지 경로만) |
 | `https://beszel.ridewithmin.com` | Beszel (메트릭 + 알림) | tailnet 전용 |
 | `https://logs.ridewithmin.com` | VictoriaLogs (로그 검색) | tailnet 전용 |

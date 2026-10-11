@@ -18,8 +18,11 @@ Tunnel은 다음 공개 호스트네임을 yggdrasil의 로컬 Caddy(`https://lo
 - `git.ridewithmin.com`
 - `vault.ridewithmin.com`
 - `jamye-plz.ridewithmin.com`
+- `minio.ridewithmin.com`
 - `status.ridewithmin.com`
 - `docs.ridewithmin.com`
+- `jamye-api.ridewithmin.com`
+- `jamye-media.ridewithmin.com`
 
 일치하는 규칙이 없는 요청에는 `http_status:404`를 반환합니다. Tunnel 자격 증명은
 `cloudflare/cloudflared_tunnel_credentials` SOPS 비밀입니다.
@@ -35,7 +38,10 @@ Caddy는 공개 호스트네임별로 내부 백엔드를 선택합니다.
 | `git.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:3000` | |
 | `vault.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8222` | |
 | `docs.ridewithmin.com` | 로컬 `file_server` (Nix 스토어) | 이 문서 사이트, flake의 `docs` 패키지에서 빌드 |
-| `jamye-plz.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | alfheim의 jamye-plz |
+| `jamye-plz.ridewithmin.com` | 로컬 응답 | jamye-plz 비활성 기간에 `503` |
+| `minio.ridewithmin.com` | 로컬 응답 | jamye-plz 비활성 기간에 `503` |
+| `jamye-api.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | jamye-server API |
+| `jamye-media.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:9000` | jamye-server MinIO |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | 상태 페이지 경로만 허용, 그 외 `404` |
 | `beszel.ridewithmin.com` | `http://127.0.0.1:8090` | tailnet 클라이언트만, 그 외 `404` |
 | `logs.ridewithmin.com` | `http://127.0.0.1:9428` | tailnet 클라이언트만, `/`는 VictoriaLogs 웹 UI로 리다이렉트 |

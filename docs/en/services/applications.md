@@ -5,9 +5,9 @@ icon: fontawesome/solid/cubes
 # Applications
 
 Application services run on host-specific nodes. Most existing applications
-run on `midgard`, including jamye-plz, while jamye-server runs on `alfheim`. Caddy on yggdrasil
+run on `midgard`, while jamye-server runs on `alfheim`. Caddy on yggdrasil
 forwards public traffic over the tailnet and serves the static blog and docs
-sites locally.
+sites locally. jamye-plz is currently disabled.
 
 ## Homepage (`services/homepage.nix`)
 
@@ -46,18 +46,10 @@ Vaultwarden is a Bitwarden-compatible password manager. It runs on `:8222` at
 
 ## jamye-plz (`services/jamye-plz.nix`)
 
-jamye-plz is a closed-group, full-stack social PWA. It runs on `midgard` at
-`:8080` and is available at `https://jamye-plz.ridewithmin.com`.
-
-- Imported from the upstream `jamye-plz` flake input
-- Enabled through the upstream `services.jamye-plz` NixOS module
-- The upstream module manages the frontend, backend API, local PostgreSQL
-  database, and midgard-local Caddy
-- OAuth and JWT secrets are stored in `secrets/jamye-plz.yaml` and rendered
-  into `jamye-plz.env` through `sops.templates`
-- Public traffic path: Cloudflare Tunnel on yggdrasil → Caddy on yggdrasil →
-  the full-stack service entrypoint at `midgard.tail6fc192.ts.net:8080`
-- MinIO uses `/var/lib/jamye-plz-minio/data`, exposed at `https://minio.ridewithmin.com`
+jamye-plz is disabled and is not imported by any host. Its source module,
+encrypted secrets, and retained alfheim data remain available for a future
+recovery. `jamye-plz.ridewithmin.com` and `minio.ridewithmin.com` return HTTP
+`503` while the service is closed.
 
 ## jamye-server (`services/jamye-server.nix`)
 

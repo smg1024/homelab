@@ -18,8 +18,11 @@ name are set to match each public hostname.
 - `git.ridewithmin.com`
 - `vault.ridewithmin.com`
 - `jamye-plz.ridewithmin.com`
+- `minio.ridewithmin.com`
 - `status.ridewithmin.com`
 - `docs.ridewithmin.com`
+- `jamye-api.ridewithmin.com`
+- `jamye-media.ridewithmin.com`
 
 Unmatched requests fall through to `http_status:404`. The tunnel credential
 is the `cloudflare/cloudflared_tunnel_credentials` SOPS secret.
@@ -35,7 +38,10 @@ Caddy selects the internal backend by request hostname.
 | `git.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:3000` | |
 | `vault.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8222` | |
 | `docs.ridewithmin.com` | local `file_server` from the Nix store | This docs site, built from the flake's `docs` package |
-| `jamye-plz.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | jamye-plz on alfheim |
+| `jamye-plz.ridewithmin.com` | local response | `503` while jamye-plz is disabled |
+| `minio.ridewithmin.com` | local response | `503` while jamye-plz is disabled |
+| `jamye-api.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:8080` | jamye-server API |
+| `jamye-media.ridewithmin.com` | `http://alfheim.tail6fc192.ts.net:9000` | jamye-server MinIO |
 | `status.ridewithmin.com` | `http://127.0.0.1:3001` | status-page paths only, `404` otherwise |
 | `beszel.ridewithmin.com` | `http://127.0.0.1:8090` | tailnet clients only, `404` otherwise |
 | `logs.ridewithmin.com` | `http://127.0.0.1:9428` | tailnet clients only, `/` redirects to the VictoriaLogs web UI |

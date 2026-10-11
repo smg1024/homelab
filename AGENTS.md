@@ -28,7 +28,7 @@ the agent should keep in mind.
 
 - **yggdrasil** — edge/infra node: Cloudflare Tunnel, Caddy ingress, Beszel hub,
   VictoriaLogs, Uptime Kuma. Keep it lightweight (4 GB RAM).
-- **midgard** — application host: Forgejo, Vaultwarden, Homepage, jamye-plz, Podman.
+- **midgard** — application host: Forgejo, Vaultwarden, Homepage, Podman.
 - **alfheim** — OCI ARM VM running jamye-server. SSH only over the tailnet.
 
 ## Conventions

@@ -14,7 +14,7 @@ then deploy. Do not fix configuration directly on a host.
 | Host | Role | Architecture | Notes |
 | --- | --- | --- | --- |
 | `yggdrasil` | Edge/infra node: Cloudflare Tunnel, Caddy, monitoring stack | `x86_64-linux` | 4 GB RAM, keep it lightweight |
-| `midgard` | Application host: Forgejo, Vaultwarden, Homepage, jamye-plz, Podman | `x86_64-linux` | |
+| `midgard` | Application host: Forgejo, Vaultwarden, Homepage, Podman | `x86_64-linux` | |
 | `alfheim` | OCI ARM application node: jamye-server | `aarch64-linux` | SSH over the tailnet only |
 
 ## Repository layout
@@ -37,7 +37,10 @@ docs/            # this documentation site (Zensical)
 | `https://blog.ridewithmin.com` | Dev with Min blog | Public (Cloudflare Tunnel) |
 | `https://git.ridewithmin.com` | Forgejo | Public (Cloudflare Tunnel) |
 | `https://vault.ridewithmin.com` | Vaultwarden | Public (Cloudflare Tunnel) |
-| `https://jamye-plz.ridewithmin.com` | jamye-plz | Public (Cloudflare Tunnel) |
+| `https://jamye-plz.ridewithmin.com` | jamye-plz (disabled) | Public `503` (Cloudflare Tunnel) |
+| `https://minio.ridewithmin.com` | jamye-plz media (disabled) | Public `503` (Cloudflare Tunnel) |
+| `https://jamye-api.ridewithmin.com` | jamye-server API | Public (Cloudflare Tunnel) |
+| `https://jamye-media.ridewithmin.com` | jamye-server media | Public (Cloudflare Tunnel) |
 | `https://status.ridewithmin.com` | Uptime Kuma status page | Public (status-page paths only) |
 | `https://beszel.ridewithmin.com` | Beszel (metrics + alerts) | Tailnet only |
 | `https://logs.ridewithmin.com` | VictoriaLogs (log search) | Tailnet only |

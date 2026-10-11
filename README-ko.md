@@ -28,7 +28,7 @@ Actions로 배포합니다.
 | 호스트 | 역할 | 메모 |
 | --- | --- | --- |
 | `yggdrasil` | Edge / infrastructure | Cloudflare Tunnel, Caddy ingress, monitoring, status page |
-| `midgard` | Application host | Forgejo, Vaultwarden, Homepage, `jamye-plz`, Podman 기반 애플리케이션 |
+| `midgard` | Application host | Forgejo, Vaultwarden, Homepage, Podman 기반 애플리케이션 |
 | `alfheim` | OCI ARM node | ARM/cloud-host 검증과 `jamye-server` |
 
 ## 아키텍처
