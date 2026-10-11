@@ -2,9 +2,9 @@ name: Deploy
 
 # Push-based CD. On merge to main, a runner joins the tailnet ephemerally and
 # runs `nixos-rebuild switch` against each node. build-host == target-host ==
-# the node, so each host builds itself (no arch matrix here, no cache needed) —
-# the runner only evaluates the flake and orchestrates. This mirrors the
-# Justfile `_rebuild` recipe.
+# the node, so each host builds itself. The runner still evaluates the flake,
+# so it must match the target architecture when evaluation imports native
+# derivations. This mirrors the Justfile `_rebuild` recipe.
 #
 # After each switch, `nix store diff-closures` records what changed on the node —
 # in the job log and on the run summary page. On failure the step aborts before
@@ -23,11 +23,17 @@ concurrency:
 jobs:
   switch:
     name: switch ${{ matrix.host }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        host: [yggdrasil, midgard, alfheim]
+        include:
+          - host: yggdrasil
+            os: ubuntu-latest
+          - host: midgard
+            os: ubuntu-latest
+          - host: alfheim
+            os: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v6
 
