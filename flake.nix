@@ -110,6 +110,10 @@
       docs = pkgs.callPackage ./docs/package.nix {};
     });
 
+    checks = forAllSystems (pkgs: {
+      jamye-host-swap-restore = import ./tests/jamye-host-swap.nix {inherit pkgs;};
+    });
+
     devShells = forAllSystems (pkgs: {
       docs = pkgs.callPackage ./docs/shell.nix {};
     });

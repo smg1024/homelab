@@ -69,11 +69,11 @@ in {
     '';
 
     virtualHosts."jamye-plz.ridewithmin.com".extraConfig = ''
-      reverse_proxy http://alfheim.tail6fc192.ts.net:8080
+      respond "jamye-plz is temporarily unavailable" 503
     '';
 
     virtualHosts."minio.ridewithmin.com".extraConfig = ''
-      reverse_proxy http://alfheim.tail6fc192.ts.net:9000
+      respond "jamye-plz object storage is temporarily unavailable" 503
     '';
 
     virtualHosts."status.ridewithmin.com".extraConfig = ''
@@ -116,11 +116,11 @@ in {
     '';
 
     virtualHosts."jamye-api.ridewithmin.com".extraConfig = ''
-      reverse_proxy http://midgard.tail6fc192.ts.net:8080
+      reverse_proxy http://alfheim.tail6fc192.ts.net:8080
     '';
 
     virtualHosts."jamye-media.ridewithmin.com".extraConfig = ''
-      reverse_proxy http://midgard.tail6fc192.ts.net:9000
+      reverse_proxy http://alfheim.tail6fc192.ts.net:9000
     '';
   };
 }

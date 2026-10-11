@@ -5,9 +5,9 @@ icon: fontawesome/solid/cubes
 # Applications
 
 Application services run on host-specific nodes. Most existing applications
-run on `midgard`, while jamye-plz runs on `alfheim`. Caddy on yggdrasil
+run on `midgard`, while jamye-server runs on `alfheim`. Caddy on yggdrasil
 forwards public traffic over the tailnet and serves the static blog and docs
-sites locally.
+sites locally. jamye-plz is currently disabled.
 
 ## Homepage (`services/homepage.nix`)
 
@@ -46,17 +46,20 @@ Vaultwarden is a Bitwarden-compatible password manager. It runs on `:8222` at
 
 ## jamye-plz (`services/jamye-plz.nix`)
 
-jamye-plz is a closed-group, full-stack social PWA. It runs on `alfheim` at
-`:8080` and is available at `https://jamye-plz.ridewithmin.com`.
+jamye-plz is disabled and is not imported by any host. Its source module,
+encrypted secrets, and retained alfheim data remain available for a future
+recovery. `jamye-plz.ridewithmin.com` and `minio.ridewithmin.com` return HTTP
+`503` while the service is closed.
 
-- Imported from the upstream `jamye-plz` flake input
-- Enabled through the upstream `services.jamye-plz` NixOS module
-- The upstream module manages the frontend, backend API, local PostgreSQL
-  database, and alfheim-local Caddy
-- OAuth and JWT secrets are stored in `secrets/jamye-plz.yaml` and rendered
-  into `jamye-plz.env` through `sops.templates`
-- Public traffic path: Cloudflare Tunnel on yggdrasil → Caddy on yggdrasil →
-  the full-stack service entrypoint at `alfheim.tail6fc192.ts.net:8080`
+## jamye-server (`services/jamye-server.nix`)
+
+The Rust API and worker run on alfheim, with local PostgreSQL 17, Redis, and
+MinIO. The upstream `jamye-server` flake supplies native `aarch64-linux` packages.
+
+- API: `https://jamye-api.ridewithmin.com` → `alfheim.tail6fc192.ts.net:8080`
+- Media: `https://jamye-media.ridewithmin.com` → `alfheim.tail6fc192.ts.net:9000`
+- MinIO data: `/var/lib/jamye-server-minio/data`
+- Secrets: `secrets/jamye-server.yaml`, rendered through `sops.templates`
 
 ## Guidelines for adding a new app
 

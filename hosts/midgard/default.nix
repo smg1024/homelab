@@ -8,7 +8,6 @@
     ../../services/homepage.nix
     ../../services/forgejo.nix
     ../../services/vaultwarden.nix
-    ../../services/jamye-server.nix
   ];
 
   networking.hostName = "midgard";
