@@ -32,6 +32,10 @@ in {
     globalConfig = ''
       email smg981024@gmail.com
       acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+      servers {
+        trusted_proxies static 127.0.0.1/8 ::1/128
+        client_ip_headers CF-Connecting-IP
+      }
     '';
 
     virtualHosts."home.ridewithmin.com".extraConfig = ''
@@ -116,7 +120,9 @@ in {
     '';
 
     virtualHosts."jamye-api.ridewithmin.com".extraConfig = ''
-      reverse_proxy http://alfheim.tail6fc192.ts.net:8080
+      reverse_proxy http://alfheim.tail6fc192.ts.net:8080 {
+        header_up X-Forwarded-For {client_ip}
+      }
     '';
 
     virtualHosts."jamye-media.ridewithmin.com".extraConfig = ''

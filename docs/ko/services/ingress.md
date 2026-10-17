@@ -31,6 +31,11 @@ Tunnel은 다음 공개 호스트네임을 yggdrasil의 로컬 Caddy(`https://lo
 
 Caddy는 공개 호스트네임별로 내부 백엔드를 선택합니다.
 
+Caddy는 Cloudflare Tunnel이 사용하는 루프백 피어를 신뢰하고
+`CF-Connecting-IP`에서 클라이언트 IP를 읽습니다. jamye-api에는 이 IP를
+단일 값의 `X-Forwarded-For`로 전달합니다. 직접 접속하는 tailnet 피어는
+이 헤더를 제공할 수 있는 신뢰 대상으로 취급하지 않습니다.
+
 | 호스트네임 | 백엔드 | 비고 |
 | --- | --- | --- |
 | `home.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8082` | |
