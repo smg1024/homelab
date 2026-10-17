@@ -31,6 +31,10 @@ is the `cloudflare/cloudflared_tunnel_credentials` SOPS secret.
 
 Caddy selects the internal backend by request hostname.
 
+Caddy trusts the loopback peer used by Cloudflare Tunnel and reads the client
+IP from `CF-Connecting-IP`. For jamye-api, it forwards that IP as a single
+`X-Forwarded-For` value. Direct tailnet peers are not trusted to supply it.
+
 | Hostname | Backend | Notes |
 | --- | --- | --- |
 | `home.ridewithmin.com` | `http://midgard.tail6fc192.ts.net:8082` | |
