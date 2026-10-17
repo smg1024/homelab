@@ -51,6 +51,10 @@ in {
       JAMYE_ACCESS_TOKEN_ISSUER=https://jamye-api.ridewithmin.com
       JAMYE_ACCESS_TOKEN_AUDIENCE=jamye-app
 
+      # Caddy on yggdrasil is the only proxy whose single-value X-Forwarded-For
+      # the API trusts; Caddy sets it from CF-Connecting-IP (services/ingress.nix).
+      JAMYE_TRUSTED_PROXIES=100.121.86.93
+
       JAMYE_KAKAO_OAUTH_ENABLED=true
       JAMYE_KAKAO_CLIENT_ID=${config.sops.placeholder."jamye-server/kakao_client_id"}
       JAMYE_KAKAO_CLIENT_SECRET=${config.sops.placeholder."jamye-server/kakao_client_secret"}
@@ -72,8 +76,8 @@ in {
       JAMYE_APPLE_PRIVATE_KEY=${config.sops.placeholder."jamye-server/apple_private_key"}
 
       # Avatar hosting (server task-19). Hosted avatar URLs are minted under
-      # this public API origin. Behind the proxy every client shares one
-      # public-read bucket, so the limit is raised above the 600/60s default.
+      # this public API origin. The raised limit predates per-client keys and
+      # is kept for now, to revisit later.
       JAMYE_AVATAR_PUBLIC_BASE_URL=https://jamye-api.ridewithmin.com
       JAMYE_RATE_LIMIT_AVATAR_PUBLIC_READ_LIMIT=6000
       JAMYE_RATE_LIMIT_AVATAR_PUBLIC_READ_WINDOW_SECONDS=60
