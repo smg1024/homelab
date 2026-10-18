@@ -172,11 +172,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1792331709,
-        "narHash": "sha256-jul5qHyL1OkfwGq/zgWmoNRVbZ7CUNWGz5pAMZ1kcpE=",
+        "lastModified": 1792334679,
+        "narHash": "sha256-xE6LqFhms3MnBkk/O6CtKRNGHGDD8mK2SYhGNWfZp0I=",
         "owner": "jamye-plz",
         "repo": "jamye-server",
-        "rev": "baadd8b39fa6ccad59bb16ea1ece3caabaecaa86",
+        "rev": "9a5f04da4b17afbb900187172b3e18393a6eebd7",
         "type": "github"
       },
       "original": {
