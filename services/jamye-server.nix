@@ -82,10 +82,14 @@ in {
       JAMYE_RATE_LIMIT_AVATAR_PUBLIC_READ_LIMIT=6000
       JAMYE_RATE_LIMIT_AVATAR_PUBLIC_READ_WINDOW_SECONDS=60
 
-      # Universal links (server task-20a): both iOS apps. Android app links
-      # keep the server's development defaults until the production upload
-      # key fingerprint exists.
+      # Universal links (server task-20a): both iOS apps.
       JAMYE_APP_LINKS_AASA_APP_IDS=6ZH8V43A7D.dev.local.jamyeapp,6ZH8V43A7D.com.ridewithmin.jamyeapp
+      # Android app links: the production package only (assetlinks takes one
+      # package), signed by the Play App Signing key (Play installs) and the
+      # EAS upload key (direct installs of the uploaded bundle). Both are
+      # public certificate fingerprints.
+      JAMYE_APP_LINKS_ANDROID_PACKAGE=com.ridewithmin.jamyeapp
+      JAMYE_APP_LINKS_ANDROID_SHA256_CERT_FINGERPRINTS=49:41:D9:82:E0:A9:9E:25:78:27:4F:53:90:57:D4:89:11:86:3E:09:A3:96:87:19:B4:EF:51:84:63:FC:8D:87,48:AE:FB:79:97:23:FF:79:C8:07:13:CF:70:A4:E0:14:C2:54:C1:79:27:B2:A3:A7:B1:A0:96:02:47:6E:1B:48
 
       # Public legal pages /privacy, /terms, /account-deletion, /support
       # (server task-20a).
