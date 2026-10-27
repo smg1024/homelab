@@ -2,7 +2,15 @@
   description = "Homelab NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    den.url = "github:denful/den/main";
+    import-tree.url = "github:denful/import-tree/main";
+
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts/main";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     disko = {
       url = "github:nix-community/disko";
@@ -10,7 +18,7 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-26.05";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -31,91 +39,8 @@
     jamye-server.url = "github:jamye-plz/jamye-server/main";
   };
 
-  outputs = inputs @ {
-    nixpkgs,
-    disko,
-    home-manager,
-    sops-nix,
-    ...
-  }: let
-    systems = [
-      "x86_64-linux"
-      "aarch64-linux"
-      "x86_64-darwin"
-      "aarch64-darwin"
-    ];
-
-    forAllSystems = fn:
-      nixpkgs.lib.genAttrs systems (
-        system: fn nixpkgs.legacyPackages.${system}
-      );
-
-    mkHost = {
-      hostModule,
-      system ? "x86_64-linux",
-    }:
-      nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit inputs;
-        };
-
-        modules = [
-          ./modules/base.nix
-          ./modules/gc.nix
-          ./modules/swap.nix
-          ./modules/users.nix
-          ./modules/ssh.nix
-          ./modules/tailscale.nix
-          ./modules/secrets.nix
-          ./services/log-shipper.nix
-          ./services/beszel/agent.nix
-
-          disko.nixosModules.disko
-          sops-nix.nixosModules.sops
-          home-manager.nixosModules.home-manager
-
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = {
-              inherit inputs;
-            };
-            home-manager.users.poby = {
-              imports = [
-                ./home/poby/base.nix
-                ./home/poby/ops.nix
-              ];
-            };
-          }
-
-          hostModule
-        ];
-      };
-  in {
-    nixosConfigurations = {
-      yggdrasil = mkHost {
-        hostModule = ./hosts/yggdrasil;
-      };
-      midgard = mkHost {
-        hostModule = ./hosts/midgard;
-      };
-      alfheim = mkHost {
-        hostModule = ./hosts/alfheim;
-        system = "aarch64-linux";
-      };
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+      imports = [(inputs.import-tree ./modules)];
     };
-
-    packages = forAllSystems (pkgs: {
-      docs = pkgs.callPackage ./docs/package.nix {};
-    });
-
-    checks = forAllSystems (pkgs: {
-      jamye-host-swap-restore = import ./tests/jamye-host-swap.nix {inherit pkgs;};
-    });
-
-    devShells = forAllSystems (pkgs: {
-      docs = pkgs.callPackage ./docs/shell.nix {};
-    });
-  };
 }

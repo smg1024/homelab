@@ -33,9 +33,11 @@ Actions로 배포합니다.
 
 ## 아키텍처
 
-`flake.nix`는 NixOS 26.05를 고정하고 호스트별 `nixosConfiguration`을 노출합니다.
-공통 시스템 동작은 `modules/`에서 오고, 서비스 정의는 `services/`에 있으며, 각
-호스트는 `hosts/<host>/`에서 hardware config와 호스트 전용 모듈을 연결합니다.
+flake는 `nixos-unstable`을 추적하며 정확한 revision은 `flake.lock`에 고정합니다.
+[Den](https://den.denful.dev/)은 `modules/hosts/<host>.nix`의 명시적인 aspect
+includes로 호스트별 `nixosConfiguration`을 구성합니다. 공통 시스템 설정,
+서비스, 운영자 환경은 `modules/aspects/`에 둡니다. Home Manager는 각 NixOS
+구성과 함께 활성화됩니다.
 
 외부 사용자는 다음 경로로 공개 서비스에 접근합니다.
 
@@ -51,10 +53,10 @@ Internet -> Cloudflare -> yggdrasil의 cloudflared -> Caddy -> service backend
 | 경로 | 용도 |
 | --- | --- |
 | `flake.nix` / `flake.lock` | Nix flake 입력과 호스트 출력 |
-| `hosts/` | 호스트별 NixOS 설정, hardware config, disk layout |
-| `modules/` | 모든 호스트가 공유하는 NixOS 모듈 |
-| `services/` | 서비스 모듈과 ingress/monitoring 설정 |
-| `home/` | `poby` 운영자 계정용 Home Manager profile |
+| `modules/den.nix` | Den 통합과 지원 시스템 |
+| `modules/hosts/` | 호스트 aspect와 `_` 디렉토리에서 명시적으로 import하는 hardware/Disko 모듈 |
+| `modules/aspects/` | 공통 시스템·서비스 aspect와 `poby`의 통합 Home Manager 설정 |
+| `modules/outputs.nix` | 문서 패키지·개발 셸, 복원·MinIO 호환성 검사, formatter |
 | `secrets/` | `sops-nix`로 암호화한 비밀 |
 | `docs/` | 영어/한국어 문서 사이트 source |
 

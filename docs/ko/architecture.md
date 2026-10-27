@@ -81,19 +81,31 @@ flowchart TD
 
 ## 공유 시스템 구성
 
-모든 호스트는 `flake.nix`에서 공통 모듈을 로드합니다.
+`flake.nix`는 flake-parts와 import-tree로 Den 모듈을 로드합니다.
+`modules/hosts/`의 각 호스트는 `den.aspects.homelab-base`와 필요한 서비스
+aspect를 선택합니다. 공통 aspect는 아래 시스템 설정을 포함하고, `poby`
+사용자 선언은 해당 계정과 home aspect를 선택합니다.
+
+`_` 디렉토리의 일반 모듈은 자동 탐색에서 제외하고 명시적으로 import합니다.
+aspect 정의만으로 서비스가 활성화되지는 않습니다. 루트 nixpkgs 입력은
+`nixos-unstable`을 추적하며 revision은 `flake.lock`에 고정합니다.
+
+이 unstable revision은 모든 호스트의 initrd에서 systemd를 사용합니다.
+기존 `system.stateVersion` 값과 디스크 레이아웃은 유지합니다. 도구용 출력은
+`x86_64-linux`, `aarch64-linux`, `aarch64-darwin`을 지원합니다. upstream
+nixpkgs에서 지원을 종료한 `x86_64-darwin`은 제외합니다.
 
 | 모듈 | 내용 |
 | --- | --- |
-| `modules/base.nix` | flakes/`nix-command`, systemd-boot, NetworkManager, 방화벽 |
-| `modules/gc.nix` | 주간 Nix GC + 스토어 자동 최적화 |
-| `modules/swap.nix` | zram 스왑 (별도 스왑 파티션 없음) |
-| `modules/users.nix` | 운영자 `poby` (`wheel`, passwordless sudo) |
-| `modules/ssh.nix` | OpenSSH, 패스워드/루트 로그인 비활성 |
-| `modules/tailscale.nix` | Tailscale |
-| `modules/secrets.nix` | sops-nix 기본 설정 |
-| `services/log-shipper.nix` | 모든 호스트의 journald → VictoriaLogs 전송 (journal-upload + vlagent) |
-| `services/beszel/agent.nix` | 모든 호스트의 Beszel 메트릭 에이전트 |
+| `modules/aspects/base.nix` | flakes/`nix-command`, systemd-boot, NetworkManager, 방화벽 |
+| `modules/aspects/gc.nix` | 주간 Nix GC + 스토어 자동 최적화 |
+| `modules/aspects/swap.nix` | zram 스왑 (별도 스왑 파티션 없음) |
+| `modules/aspects/poby.nix` | 운영자 `poby` (`wheel`, passwordless sudo) |
+| `modules/aspects/ssh.nix` | OpenSSH, 패스워드/루트 로그인 비활성 |
+| `modules/aspects/tailscale.nix` | Tailscale |
+| `modules/aspects/secrets.nix` | sops-nix 기본 설정 |
+| `modules/aspects/log-shipper.nix` | 모든 호스트의 journald → VictoriaLogs 전송 (journal-upload + vlagent) |
+| `modules/aspects/beszel-agent.nix` | 모든 호스트의 Beszel 메트릭 에이전트 |
 
 ## 스토리지
 
@@ -108,8 +120,9 @@ GPT 파티션 테이블
 
 ## 사용자 환경
 
-Home Manager는 NixOS 모듈로 활성화되며 호스트 switch 시 함께 적용됩니다.
-`poby` 운영자 환경 전용이므로 장기 실행 서비스에는 사용하지 않습니다.
-공유 프로필(`home/poby/base.nix`, `ops.nix`)에는 셸/Git/tmux 설정과
-`age`·`sops`·`just` 같은 운영 도구가 들어가고 호스트별 프로필이 각 호스트에
-맞는 별칭을 더합니다.
+각 호스트가 `users.poby.classes = ["homeManager"]`를 선언하면 Den이
+Home Manager를 NixOS에 통합하고 호스트 switch 시 함께 적용합니다.
+운영자 환경만 관리하며 `modules/aspects/poby.nix`에 계정, 셸/Git/tmux 설정,
+`age`·`sops`·`just` 같은 운영 도구를 둡니다. 호스트 aspect는
+`provides.poby.homeManager`로 별칭을 추가합니다. Midgard는
+`provides.poby.includes`로 Hermes aspect도 포함합니다.

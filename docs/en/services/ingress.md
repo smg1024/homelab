@@ -7,7 +7,7 @@ icon: fontawesome/solid/door-open
 All external traffic enters through Cloudflare Tunnel instead of directly
 exposed ports. Both `cloudflared` and Caddy run on `yggdrasil`.
 
-## Cloudflare Tunnel (`services/cloudflared.nix`)
+## Cloudflare Tunnel (`modules/aspects/cloudflared.nix`)
 
 The tunnel sends the following public hostnames to local Caddy on yggdrasil
 (`https://localhost:443`). The request `Host` header and TLS origin server
@@ -27,7 +27,7 @@ name are set to match each public hostname.
 Unmatched requests fall through to `http_status:404`. The tunnel credential
 is the `cloudflare/cloudflared_tunnel_credentials` SOPS secret.
 
-## Caddy (`services/ingress.nix`)
+## Caddy (`modules/aspects/ingress.nix`)
 
 Caddy selects the internal backend by request hostname.
 
@@ -71,9 +71,9 @@ respond 404
 
 ## Exposing a new service {#expose-a-service}
 
-1. Add `virtualHosts."<name>.ridewithmin.com"` to `services/ingress.nix`.
+1. Add `virtualHosts."<name>.ridewithmin.com"` to `modules/aspects/ingress.nix`.
 2. For a public service, add the same hostname to the `ingress` block in
-   `services/cloudflared.nix` (skip for tailnet-only routes).
+   `modules/aspects/cloudflared.nix` (skip for tailnet-only routes).
 3. Add a DNS record in Cloudflare (public: Tunnel CNAME, tailnet-only:
    yggdrasil's tailnet address). Public tunnel routes can be registered with:
 

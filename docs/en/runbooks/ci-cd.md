@@ -29,6 +29,9 @@ merge to main ──▶ CD: join tailnet → nixos-rebuild switch on every host
 
 - One job per host builds
   `nixosConfigurations.<host>.config.system.build.toplevel`.
+- Each job also runs `checks.<system>.jamye-host-swap-restore` and
+  `checks.<system>.minio-compat` to verify restore safeguards and the scoped
+  MinIO compatibility module.
 - It only builds: no activation, no tailnet, no secrets. A config that
   fails to evaluate or compile fails here, before it can reach a host.
 - `yggdrasil` and `midgard` build on `ubuntu-latest`; `alfheim` builds on a
@@ -80,7 +83,7 @@ including the failing build's log tail, in the job log.
 | --- | --- | --- |
 | `DEPLOY_SSH_KEY` | GitHub Actions secret | Private key the runner uses to SSH in as `poby` |
 | `TS_OAUTH_CLIENT_ID` / `TS_OAUTH_SECRET` | GitHub Actions secrets | Tailscale OAuth client that mints ephemeral `tag:ci` nodes |
-| Deploy public key | `modules/users.nix` → `poby` authorized keys | Authorizes the runner on every host |
+| Deploy public key | `modules/aspects/poby.nix` → `poby` authorized keys | Authorizes the runner on every host |
 | `tag:ci` + ACL | Tailscale admin | Declares the tag and grants `tag:ci` access to the hosts on port 22 |
 
 The deploy key is just another entry in `poby`'s `authorizedKeys`, and `poby`

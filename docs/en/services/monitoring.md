@@ -11,11 +11,11 @@ Uptime Kuma checks public endpoints and serves the status page.
 
 | Module | Role | Binding |
 | --- | --- | --- |
-| `services/beszel/hub.nix` | Beszel hub: metrics UI, history, alerts | `0.0.0.0:8090` (tailnet only via trusted interface) |
-| `services/beszel/agent.nix` | Beszel agent: per-host metrics source (all hosts) | outbound WebSocket to the hub |
-| `services/victorialogs.nix` | VictoriaLogs log store + query UI, `14d` retention | `:9428` (tailnet only via trusted interface) |
-| `services/log-shipper.nix` | journald → VictoriaLogs shipping (all hosts) | vlagent on `:9429` (tailnet-reachable via trusted interface; fed via localhost) |
-| `services/uptime-kuma.nix` | public endpoint checks + status page | `127.0.0.1:3001` |
+| `modules/aspects/beszel-hub.nix` | Beszel hub: metrics UI, history, alerts | `0.0.0.0:8090` (tailnet only via trusted interface) |
+| `modules/aspects/beszel-agent.nix` | Beszel agent: per-host metrics source (all hosts) | outbound WebSocket to the hub |
+| `modules/aspects/victorialogs.nix` | VictoriaLogs log store + query UI, `14d` retention | `:9428` (tailnet only via trusted interface) |
+| `modules/aspects/log-shipper.nix` | journald → VictoriaLogs shipping (all hosts) | vlagent on `:9429` (tailnet-reachable via trusted interface; fed via localhost) |
+| `modules/aspects/uptime-kuma.nix` | public endpoint checks + status page | `127.0.0.1:3001` |
 
 ## Metrics flow
 

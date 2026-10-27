@@ -29,7 +29,7 @@ docs/
 
 - The `packages.<system>.docs` flake output builds both languages with
   `zensical build --strict` and places Korean under the `ko/` subdirectory.
-- The `docs.ridewithmin.com` virtual host in `services/ingress.nix` serves the
+- The `docs.ridewithmin.com` virtual host in `modules/aspects/ingress.nix` serves the
   built package with Caddy `file_server` on yggdrasil. Cloudflare Tunnel carries
   public requests to Caddy.
 

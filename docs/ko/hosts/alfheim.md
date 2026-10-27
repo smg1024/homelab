@@ -17,12 +17,14 @@ Oracle Cloud Infrastructure ARM VM입니다 (`aarch64-linux`). 홈랩에서 처�
 `jamye-api.ridewithmin.com`을 tailnet의
 `alfheim.tail6fc192.ts.net:8080`으로 프록시합니다.
 
-## 호스트 전용으로 로드하는 모듈
+## 선택한 호스트 aspect
+
+`modules/hosts/alfheim.nix`는 공통 `homelab-base`와 아래 aspect를 선택합니다.
 
 ```text
-modules/podman.nix
-services/jamye-server.nix
-services/jamye-host-swap.nix  # 완료 표시 파일로 재실행을 막는 일회성 데이터 복원
+modules/aspects/podman.nix
+modules/aspects/jamye-server.nix
+modules/aspects/jamye-host-swap.nix  # 완료 표시 파일로 재실행을 막는 일회성 데이터 복원
 ```
 
 ## 서비스 포트
@@ -38,13 +40,21 @@ services/jamye-host-swap.nix  # 완료 표시 파일로 재실행을 막는 일�
 
 - 애플리케이션 코드는 `jamye-server` flake input에서 오며 현재 `flake.lock`에
   고정되어 있습니다.
-- `services/jamye-server.nix`가 upstream NixOS 모듈을 import하고
+- `modules/aspects/jamye-server.nix`가 upstream NixOS 모듈을 import하고
   `services.jamye-server`를 활성화합니다.
 - upstream 모듈이 API, worker, 로컬 PostgreSQL 17, Redis, MinIO를 실행합니다.
 - 비밀은 `secrets/jamye-server.yaml`에 있고 `sops.templates`로 렌더링합니다.
 - OAuth callback과 token issuer는 `https://jamye-api.ridewithmin.com`을 사용합니다.
 - MinIO는 `/var/lib/jamye-server-minio/data`를 사용하며 공개 미디어 URL은
   `https://jamye-media.ridewithmin.com`을 유지합니다.
+- unstable에서 MinIO가 제거되어 `jamye-server.inputs.nixpkgs`의 NixOS
+  모듈을 import합니다. 애플리케이션의 기존 MinIO 패키지와 같은 pin을
+  사용하며 MinIO 제거 검사만 우회합니다. 다른 제거된 옵션의 검사는
+  유지합니다. MinIO의 upstream 유지보수가 종료되었으므로 애플리케이션의
+  객체 저장소를 이전할 때까지 기존 서비스를 유지하는 호환 설정입니다.
+- Jamye의 bucket과 identity 설정에는 아직 `minio-client`가 필요합니다.
+  이 aspect는 유지보수 종료로 unstable에서 insecure로 표시한
+  `2025-08-13T08-35-41Z` 버전만 허용합니다. 예외는 alfheim에만 적용됩니다.
 - jamye-plz는 비활성화합니다. PostgreSQL 18 cluster, MinIO object, Redis와
   애플리케이션 상태는 복구용으로 디스크에 남기되 서비스를 시작하지 않습니다.
 

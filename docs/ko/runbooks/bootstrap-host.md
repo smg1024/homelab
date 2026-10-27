@@ -49,7 +49,7 @@ icon: fontawesome/solid/hard-drive
     `/dev/sda`나 `/dev/nvme0n1`이 아니라 `ata-Samsung_SSD_860_EVO_...`,
     `nvme-...` 같은 경로를 사용합니다.
 
-- [ ] 그 경로를 `hosts/<host>/disko.nix`의 `device`에 설정합니다. 이 파일은
+- [ ] 그 경로를 `modules/hosts/_<host>/disko.nix`의 `device`에 설정합니다. 이 파일은
       단일 디스크 GPT 레이아웃을 만듭니다. 512M EFI 파티션이 `/boot`(vfat),
       나머지가 `/`(ext4)입니다.
 
@@ -57,31 +57,34 @@ icon: fontawesome/solid/hard-drive
 
     ```bash
     ssh root@<INSTALLER_IP> 'nixos-generate-config --show-hardware-config' \
-      > hosts/<host>/hardware-configuration.nix
+      > modules/hosts/_<host>/hardware-configuration.nix
     ```
 
     `not-detected.nix` import, 커널 모듈 항목, `nixpkgs.hostPlatform`, CPU
     microcode 항목은 남깁니다. `fileSystems."/"`, `fileSystems."/boot"`,
     `swapDevices`는 제거합니다. `/`와 `/boot`는 `disko`가, 스왑은
-    `modules/swap.nix`의 zram이 담당합니다. 이 항목들은 보통 `disko`와 충돌하는
+    `modules/aspects/swap.nix`의 zram이 담당합니다. 이 항목들은 보통 `disko`와 충돌하는
     설치 환경의 값입니다.
 
-- [ ] `hosts/<host>/default.nix`의 `imports`를 활성화(주석 해제)합니다.
+- [ ] `modules/hosts/<host>.nix`에서 `den.hosts.<system>.<host>`와
+      `users.poby.classes = ["homeManager"]`를 선언합니다. 호스트 aspect에
+      `den.aspects.homelab-base`를 포함하고 NixOS class 안에서 하드웨어 파일을
+      import합니다.
 
     ```nix
-    imports = [
-      ./hardware-configuration.nix
-      ./disko.nix
+    den.aspects.<host>.nixos.imports = [
+      ./_<host>/hardware-configuration.nix
+      ./_<host>/disko.nix
     ];
     ```
 
 - [ ] 설치 전에 변경 사항을 검토합니다. 파싱 검사로 문법 오류를 미리 잡습니다.
 
     ```bash
-    git diff -- hosts/<host>
-    nix-instantiate --parse hosts/<host>/default.nix >/dev/null
-    nix-instantiate --parse hosts/<host>/disko.nix >/dev/null
-    nix-instantiate --parse hosts/<host>/hardware-configuration.nix >/dev/null
+    git diff -- modules/hosts/<host>.nix modules/hosts/_<host>
+    nix-instantiate --parse modules/hosts/<host>.nix >/dev/null
+    nix-instantiate --parse modules/hosts/_<host>/disko.nix >/dev/null
+    nix-instantiate --parse modules/hosts/_<host>/hardware-configuration.nix >/dev/null
     ```
 
 ## 설치
@@ -115,7 +118,8 @@ USB를 제거하고 내부 디스크로 부팅한 뒤:
 - [ ] tailnet 합류: `sudo tailscale up`, `tailscale status`로 확인
 - [ ] 호스트가 sops 수신자라면: 호스트 키가 바뀐 경우 비밀을 재암호화해
       `secrets/*.yaml`을 복호화하도록 합니다 ([비밀 관리](secrets.md))
-- [ ] `hosts/<host>/` 변경과 `flake.lock`, 재암호화한 `secrets/*.yaml` 커밋
+- [ ] 호스트 aspect와 `modules/hosts/_<host>/`, `flake.lock`, 재암호화한
+      `secrets/*.yaml` 변경을 커밋합니다.
 - [ ] 이후 변경은 PR을 열어 CI/CD에 맡깁니다
       ([배포와 롤백](deploy.md) 참고). 병합하면 CD가 배포되므로 재암호화를
       먼저 커밋한 뒤에 진행해야 호스트가 비밀을 복호화할 수 있습니다.

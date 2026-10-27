@@ -17,12 +17,14 @@ Public traffic still enters through yggdrasil. Caddy on yggdrasil proxies
 `jamye-api.ridewithmin.com` to `alfheim.tail6fc192.ts.net:8080` over the
 tailnet.
 
-## Loaded host-specific modules
+## Selected host aspects
+
+`modules/hosts/alfheim.nix` selects the shared `homelab-base` aspect and:
 
 ```text
-modules/podman.nix
-services/jamye-server.nix
-services/jamye-host-swap.nix  # one-time data import, guarded by a completion stamp
+modules/aspects/podman.nix
+modules/aspects/jamye-server.nix
+modules/aspects/jamye-host-swap.nix  # one-time data import, guarded by a completion stamp
 ```
 
 ## Service ports
@@ -38,13 +40,21 @@ services/jamye-host-swap.nix  # one-time data import, guarded by a completion st
 
 - Upstream application code comes from the `jamye-server` flake input, currently
   pinned in `flake.lock`.
-- `services/jamye-server.nix` imports the upstream NixOS module and enables
+- `modules/aspects/jamye-server.nix` imports the upstream NixOS module and enables
   `services.jamye-server`.
 - The upstream module runs the API, worker, local PostgreSQL 17, Redis, and MinIO.
 - Secrets live in `secrets/jamye-server.yaml` and are rendered with `sops.templates`.
 - OAuth callbacks and the token issuer use `https://jamye-api.ridewithmin.com`.
 - MinIO uses `/var/lib/jamye-server-minio/data`; public media URLs retain
   `https://jamye-media.ridewithmin.com`.
+- Unstable removed MinIO. The aspect imports its NixOS module from
+  `jamye-server.inputs.nixpkgs`, matching the application's existing MinIO
+  package pin. Only the MinIO removal guard is bypassed; other removed-option
+  checks remain active. MinIO is abandoned upstream, so this preserves the
+  existing service until the application migrates its object storage.
+- Jamye's bucket and identity setup still requires `minio-client`. The aspect
+  permits only version `2025-08-13T08-35-41Z`, which unstable marks insecure
+  because it is abandoned. This exception applies only to alfheim.
 - jamye-plz is disabled. Its PostgreSQL 18 cluster, MinIO objects, Redis data,
   and application state remain on disk for recovery but are not started.
 

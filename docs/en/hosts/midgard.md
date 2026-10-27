@@ -15,13 +15,15 @@ does not expose midgard's service ports.
 - Run Vaultwarden (password manager)
 - Provide the Podman runtime for containerized application services
 
-## Loaded modules
+## Selected host aspects
+
+`modules/hosts/midgard.nix` selects the shared `homelab-base` aspect and:
 
 ```text
-services/homepage.nix
-services/forgejo.nix
-services/vaultwarden.nix
-modules/podman.nix      # host-specific module
+modules/aspects/homepage.nix
+modules/aspects/forgejo.nix
+modules/aspects/vaultwarden.nix
+modules/aspects/podman.nix
 ```
 
 ## Service ports
@@ -36,7 +38,7 @@ modules/podman.nix      # host-specific module
 
 ## Container runtime
 
-Only midgard enables Podman (`modules/podman.nix`).
+Midgard and alfheim select the Podman aspect (`modules/aspects/podman.nix`).
 
 - `virtualisation.oci-containers.backend = "podman"`
 - weekly auto-prune (`podman-prune.timer`)
@@ -51,6 +53,6 @@ operator workflows.
 ## Hermes Agent
 
 Hermes Agent is part of `poby`'s Home Manager environment
-(`home/poby/hermes-agent.nix`), not a NixOS system service. Runtime state and
+(`modules/aspects/hermes-agent.nix`), not a NixOS system service. Runtime state and
 credentials remain mutable under `/home/poby/.hermes` until the setup is
 stable enough to move into declarative Nix configuration.

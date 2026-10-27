@@ -18,11 +18,11 @@ icon: fontawesome/solid/circle-plus
 === "NixOS 모듈"
 
     nixpkgs에서 패키지가 잘 유지된다면 이쪽을 우선합니다.
-    `services/<name>.nix` 생성:
+    `modules/aspects/<name>.nix` 생성:
 
     ```nix
-    {...}: {
-      services.<name> = {
+    {
+      den.aspects.my-service.nixos.services.<name> = {
         enable = true;
         # localhost 또는 tailnet에서 닿는 포트에 바인딩,
         # 방화벽은 절대 열지 않음
@@ -36,8 +36,8 @@ icon: fontawesome/solid/circle-plus
     활성화되어 있을 때 사용합니다 (**태그 고정**):
 
     ```nix
-    {...}: {
-      virtualisation.oci-containers.containers.<name> = {
+    {
+      den.aspects.my-service.nixos.virtualisation.oci-containers.containers.<name> = {
         image = "ghcr.io/org/app:1.2.3";  # :latest 금지
         ports = ["127.0.0.1:8090:8080"];
       };
@@ -46,14 +46,15 @@ icon: fontawesome/solid/circle-plus
 
 ## 체크리스트
 
-- [ ] `services/<name>.nix`로 모듈 생성
-- [ ] 연결: 호스트 전용이면 `hosts/<host>/default.nix`의 imports, 공유면
-      `flake.nix` 모듈 목록
+- [ ] `modules/aspects/<name>.nix`에 aspect를 정의합니다.
+- [ ] `modules/hosts/<host>.nix`의 호스트 aspect `includes`에
+      `den.aspects.my-service`를 추가합니다. 모든 호스트에서 사용하면
+      `homelab-base.includes`에 추가합니다. 자동 탐색만으로 활성화되지는 않습니다.
 - [ ] 비밀이 있다면: sops로 `secrets/*.yaml`에 추가하고
       `sops.secrets."..."` 선언 ([비밀 관리](secrets.md) 참고)
 - [ ] 노출이 필요하다면:
-    - [ ] `services/ingress.nix`에 Caddy virtualHost 추가
-    - [ ] 공개 서비스 → `services/cloudflared.nix` ingress에 호스트네임 추가;
+    - [ ] `modules/aspects/ingress.nix`에 Caddy virtualHost 추가
+    - [ ] 공개 서비스 → `modules/aspects/cloudflared.nix` ingress에 호스트네임 추가;
           tailnet 전용 → 대신 `@tailnet` 매처 패턴 사용
     - [ ] Cloudflare에 DNS 레코드 (공개: Tunnel CNAME, tailnet 전용:
           yggdrasil의 tailnet 주소). 공개 Tunnel route는 다음 명령으로 등록:
