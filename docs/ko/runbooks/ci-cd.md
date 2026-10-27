@@ -7,19 +7,19 @@ icon: fontawesome/solid/robot
 GitHub Actions가 모든 변경을 빌드하고 `main`에 반영되면 호스트에 자동으로
 배포합니다. 이 경로가 기본 검증과 배포 흐름입니다. [수동 `just`
 워크플로](deploy.md)는 명시적 요청이 있을 때 쓰는 비상 수단(break-glass)으로
-남습니다. 파이프라인은 같은 `nixos-rebuild`를 무인으로 실행할 뿐입니다.
+남습니다. CD는 GitHub 러너에서 빌드하고, 수동 경로는 대상 호스트에서 빌드합니다.
 
 - **CI**는 어떤 호스트도 건드리지 않는 일회용 러너에서 모든 호스트가
   *빌드되는지* 검증합니다.
-- **CD**는 tailnet에 합류해 명시적 수동 경로와 같은 `nixos-rebuild switch`를
-  실행해 병합된 변경을 배포합니다.
+- **CD**는 네이티브 러너에서 병합된 설정을 빌드하고 tailnet을 통해 각 대상에
+  `nixos-rebuild switch`를 실행합니다.
 
 ## 흐름
 
 ```text
-PR / 푸시 ──▶ CI: 각 호스트의 시스템 클로저 빌드   (빌드만, 호스트는 건드리지 않음)
+PR ──▶ CI: 각 호스트의 시스템 클로저 빌드   (빌드만, 호스트는 건드리지 않음)
                  └─ 필수 체크가 병합을 막는 게이트
-main에 병합 ──▶ CD: tailnet 합류 → 모든 호스트에서 nixos-rebuild switch
+main에 병합 ──▶ CD: 네이티브 러너에서 빌드 → 클로저 전송 → 모든 호스트 switch
 ```
 
 ## CI 빌드 체크
@@ -50,22 +50,24 @@ main에 병합 ──▶ CD: tailnet 합류 → 모든 호스트에서 nixos-reb
 
 1. Tailscale OAuth 클라이언트로 `tag:ci` 태그가 붙은 **임시(ephemeral)** 노드로
    tailnet에 합류하고 대상 노드에 연결될 때까지 기다립니다.
-2. 배포 키를 불러와 해당 호스트에서 다음 명령을 실행합니다.
+2. 배포 키를 불러와 러너에서 다음 명령으로 대상 호스트에 배포합니다.
 
     ```text
     nixos-rebuild switch
       --no-reexec
       --flake .#<host>
-      --build-host <host>      # 노드 자신
       --target-host <host>     # 노드 자신
+      --use-substitutes
       --sudo
     ```
 
-`--build-host`와 `--target-host`가 모두 해당 노드이므로 **각 호스트가 스스로를
-빌드합니다**. 명시적 수동 경로와 같은 방식입니다. 러너는 flake를 평가하고
-오케스트레이션만 하므로 아키텍처 교차 빌드 문제가 없고(`alfheim`은 자신의
-`aarch64` 클로저를 직접 컴파일) 유지할 바이너리 캐시도 없습니다. `concurrency`
-그룹이 배포를 직렬화해 두 병합이 서로 경쟁하지 않습니다.
+`--build-host`를 생략하므로 러너가 클로저를 로컬에서 평가하고 빌드합니다.
+매트릭스는 `yggdrasil`과 `midgard`에 `ubuntu-latest`, `alfheim`에
+`ubuntu-24.04-arm`을 사용합니다. 운영 호스트의 메모리를 빌드에 소모하지 않도록
+하는 구성입니다. `--use-substitutes`를 통해 각 대상은 설정된 바이너리 캐시에서
+받을 수 있는 경로를 먼저 내려받고, 나머지 경로만 러너에서 SSH로 전송받습니다.
+별도 바이너리 캐시는 필요하지 않습니다. `concurrency` 그룹이 배포를 직렬화해
+두 병합이 서로 경쟁하지 않습니다.
 
 모든 병합에서 세 호스트가 전부 switch되지만 영향이 없는 호스트는 같은 세대를
 다시 활성화할 뿐이라 금세 끝나는 무동작(no-op)입니다.
@@ -97,7 +99,8 @@ switch 후에는 `nix store diff-closures`가 노드의 이전 시스템 클로�
 ## 일상 운영
 
 1. PR을 엽니다. CI가 세 호스트를 모두 빌드합니다.
-2. 체크가 초록색이면 병합합니다. CD가 몇 분 안에 모든 호스트를 switch합니다.
+2. 체크가 초록색이면 병합합니다. CD가 빌드와 전송을 마친 뒤 모든 호스트를
+   switch합니다. 소요 시간은 새로 빌드할 항목과 전송량에 따라 달라집니다.
 3. 저장소의 Actions 탭에서 실행을 따라가거나 다음으로 확인합니다.
 
     ```bash

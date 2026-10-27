@@ -7,20 +7,21 @@ icon: fontawesome/solid/robot
 GitHub Actions builds every change and, once it lands on `main`, deploys it to
 the hosts automatically. This is the default validation and deployment path.
 The manual [`just` workflow](deploy.md) stays as the explicit-request
-break-glass path. The pipeline runs the same `nixos-rebuild`, just unattended.
+break-glass path. CD builds on GitHub runners; the manual path builds on the
+target host.
 
 CI and CD have separate jobs:
 
 - CI proves every host *builds* on a throwaway runner that touches no host.
-- CD rolls merged changes out, joining the tailnet and running the same
-  `nixos-rebuild switch` used by the explicit manual path.
+- CD joins the tailnet, builds merged configurations on native runners, and
+  runs `nixos-rebuild switch` against each target.
 
 ## Flow
 
 ```text
-PR / push ──▶ CI: build each host's system closure   (build only, no host touched)
+PR ──▶ CI: build each host's system closure   (build only, no host touched)
                  └─ required checks gate the merge
-merge to main ──▶ CD: join tailnet → nixos-rebuild switch on every host
+merge to main ──▶ CD: build on native runners → copy closures → switch every host
 ```
 
 ## CI: build check
@@ -57,16 +58,18 @@ Each host is handled by a job that:
     nixos-rebuild switch
       --no-reexec
       --flake .#<host>
-      --build-host <host>      # the node itself
       --target-host <host>     # the node itself
+      --use-substitutes
       --sudo
     ```
 
-Because `--build-host` and `--target-host` are both the node, each host builds
-itself, matching the explicit manual path. The runner only evaluates the flake
-and orchestrates, so there is no cross-architecture build problem
-(`alfheim` compiles its own `aarch64` closure) and no binary cache to maintain. A
-`concurrency` group serializes deploys so two merges never race.
+With `--build-host` omitted, the runner evaluates and builds the closure locally.
+The matrix uses `ubuntu-latest` for `yggdrasil` and `midgard`, and
+`ubuntu-24.04-arm` for `alfheim`. This keeps build memory pressure off the live
+hosts. `--use-substitutes` lets each target fetch available paths from its
+configured binary caches before the runner copies the remaining paths over SSH.
+No custom binary cache is required. A `concurrency` group serializes deploys so
+two merges never race.
 
 All three hosts are switched on every merge; an unaffected host simply
 re-activates the same generation, which is a fast no-op.
@@ -98,8 +101,8 @@ no extra host-side setup is required.
 ## Day to day
 
 1. Open a PR. CI builds all three hosts.
-2. Merge once the checks are green. CD switches every host within a couple of
-   minutes.
+2. Merge once the checks are green. CD builds, transfers, and switches every
+   host; duration depends on the missing builds and transfer size.
 3. Follow a run from the repository's Actions tab, or:
 
     ```bash

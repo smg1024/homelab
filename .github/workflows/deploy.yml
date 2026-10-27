@@ -1,10 +1,9 @@
 name: Deploy
 
 # Push-based CD. On merge to main, a runner joins the tailnet ephemerally and
-# runs `nixos-rebuild switch` against each node. build-host == target-host ==
-# the node, so each host builds itself. The runner still evaluates the flake,
-# so it must match the target architecture when evaluation imports native
-# derivations. This mirrors the Justfile `_rebuild` recipe.
+# builds each closure locally before switching its target node. Native runners
+# match each target architecture and keep build memory pressure off the hosts.
+# Targets can substitute cached paths before the runner copies the remainder.
 #
 # After each switch, `nix store diff-closures` records what changed on the node —
 # in the job log and on the run summary page. On failure the step aborts before
@@ -74,8 +73,8 @@ jobs:
             switch \
             --no-reexec \
             --flake ".#${{ matrix.host }}" \
-            --build-host "$target" \
             --target-host "$target" \
+            --use-substitutes \
             --sudo
 
           after=$(ssh "$target" readlink -f /run/current-system)

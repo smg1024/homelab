@@ -68,8 +68,9 @@ Normal changes go through GitHub Actions CI/CD, never a direct host edit:
 1. Edit the repo on a branch and open a PR.
 2. CI builds every host (`yggdrasil`, `midgard`, `alfheim`); merge only once the
    required `build …` checks are green.
-3. CD switches all three hosts on merge to `main`, running the same
-   `nixos-rebuild switch` on each.
+3. CD builds each closure on a GitHub runner matching the host architecture,
+   then switches all three hosts on merge to `main`. Builds stay off the live
+   hosts; `--use-substitutes` lets targets fetch cached paths before transfer.
 
 Validate locally before opening the PR (CI is the authoritative check):
 
