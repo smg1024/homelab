@@ -31,6 +31,9 @@
     services.postgresql.package = pkgs.postgresql_17;
     services.minio.dataDir = ["/var/lib/jamye-server-minio/data"];
 
+    # mc resolves its default home before MC_CONFIG_DIR; avoid NSS during activation.
+    systemd.services.jamye-server-minio-identities.environment.HOME = "/run/jamye-server-mc";
+
     sops.secrets."jamye-server/access_token_secret".sopsFile = secretFile;
 
     sops.secrets."jamye-server/minio_root_user".sopsFile = secretFile;
