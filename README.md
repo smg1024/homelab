@@ -34,10 +34,11 @@ requests, and rolled out by CI/CD.
 
 ## Architecture
 
-`flake.nix` pins NixOS 26.05 and exposes one `nixosConfiguration` per host.
-Shared system behavior comes from `modules/`; service definitions live under
-`services/`; each host wires in its hardware and host-specific modules from
-`hosts/<host>/`.
+The flake tracks `nixos-unstable`, with exact revisions pinned in `flake.lock`.
+[Den](https://den.denful.dev/) composes one `nixosConfiguration` per host from
+explicit aspect includes in `modules/hosts/<host>.nix`. Shared system behavior,
+services, and the operator environment live in `modules/aspects/`. Home Manager
+activates with each NixOS configuration.
 
 External users reach public services through:
 
@@ -53,10 +54,10 @@ Application ports are not opened directly to the public Internet.
 | Path | Purpose |
 | --- | --- |
 | `flake.nix` / `flake.lock` | Nix flake inputs and host outputs |
-| `hosts/` | Per-host NixOS configuration, hardware config, and disk layout |
-| `modules/` | Shared NixOS modules used across hosts |
-| `services/` | Service modules and ingress/monitoring configuration |
-| `home/` | Home Manager profile for the `poby` operator account |
+| `modules/den.nix` | Den integration and supported systems |
+| `modules/hosts/` | Host aspects and explicitly imported hardware/Disko modules under `_` directories |
+| `modules/aspects/` | Shared system and service aspects, plus `poby`'s integrated Home Manager configuration |
+| `modules/outputs.nix` | Documentation package/shell, restore and MinIO checks, formatter |
 | `secrets/` | `sops-nix` encrypted secrets |
 | `docs/` | English and Korean documentation site source |
 

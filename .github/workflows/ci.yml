@@ -43,7 +43,8 @@ jobs:
             ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
             --no-link --print-out-paths
 
-      - name: Verify Jamye data restore
+      - name: Verify Jamye data restore and MinIO compatibility
         run: |
           system=$(nix eval --raw ".#nixosConfigurations.${{ matrix.host }}.config.nixpkgs.hostPlatform.system")
-          nix build ".#checks.${system}.jamye-host-swap-restore" --no-link
+          nix build ".#checks.${system}.jamye-host-swap-restore" \
+            ".#checks.${system}.minio-compat" --no-link

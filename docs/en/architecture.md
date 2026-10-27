@@ -82,19 +82,31 @@ Internet, tailnet, and localhost.
 
 ## Shared system configuration
 
-All hosts load the same common modules through `flake.nix`.
+`flake.nix` uses flake-parts and import-tree to load the Den modules. Each host
+in `modules/hosts/` selects `den.aspects.homelab-base` and its service aspects.
+The shared aspect includes the following system configuration; declaring the
+`poby` user also selects its account and home aspect.
+
+Files under `_` directories are ordinary modules, excluded from automatic
+discovery and imported explicitly. Defining an aspect does not enable it.
+The root nixpkgs input tracks `nixos-unstable`; `flake.lock` pins its revision.
+
+This unstable revision uses systemd in the initrd on all hosts. Existing
+`system.stateVersion` values and disk layouts stay unchanged. Tooling outputs
+support `x86_64-linux`, `aarch64-linux`, and `aarch64-darwin`; upstream nixpkgs
+has dropped `x86_64-darwin` support.
 
 | Module | Purpose |
 | --- | --- |
-| `modules/base.nix` | flakes/`nix-command`, systemd-boot, NetworkManager, firewall |
-| `modules/gc.nix` | weekly Nix GC + automatic store optimisation |
-| `modules/swap.nix` | zram swap (no separate swap partition) |
-| `modules/users.nix` | operator `poby` (`wheel`, passwordless sudo) |
-| `modules/ssh.nix` | OpenSSH, password/root login disabled |
-| `modules/tailscale.nix` | Tailscale |
-| `modules/secrets.nix` | sops-nix base configuration |
-| `services/log-shipper.nix` | journald → VictoriaLogs shipping on every host (journal-upload + vlagent) |
-| `services/beszel/agent.nix` | Beszel metrics agent on every host |
+| `modules/aspects/base.nix` | flakes/`nix-command`, systemd-boot, NetworkManager, firewall |
+| `modules/aspects/gc.nix` | weekly Nix GC + automatic store optimisation |
+| `modules/aspects/swap.nix` | zram swap (no separate swap partition) |
+| `modules/aspects/poby.nix` | operator `poby` (`wheel`, passwordless sudo) |
+| `modules/aspects/ssh.nix` | OpenSSH, password/root login disabled |
+| `modules/aspects/tailscale.nix` | Tailscale |
+| `modules/aspects/secrets.nix` | sops-nix base configuration |
+| `modules/aspects/log-shipper.nix` | journald → VictoriaLogs shipping on every host (journal-upload + vlagent) |
+| `modules/aspects/beszel-agent.nix` | Beszel metrics agent on every host |
 
 ## Storage
 
@@ -109,8 +121,9 @@ remaining disk             -> /, ext4
 
 ## User environment
 
-The NixOS module enables Home Manager and applies it during each host switch.
-It configures only the `poby` operator environment, not long-running services.
-The shared profiles (`home/poby/base.nix`, `ops.nix`) contain shell, Git, and
-tmux configuration plus operator tools such as `age`, `sops`, and `just`.
-Per-host profiles add host-specific aliases.
+Each host declares `users.poby.classes = ["homeManager"]`, so Den integrates
+Home Manager into NixOS and applies it during each host switch. It configures
+only the operator environment. `modules/aspects/poby.nix` contains the account,
+shell, Git, tmux, and operator tools such as `age`, `sops`, and `just`.
+Host aspects use `provides.poby.homeManager` for local aliases. Midgard also
+includes the Hermes aspect through `provides.poby.includes`.

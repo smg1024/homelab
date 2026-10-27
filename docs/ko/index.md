@@ -20,13 +20,14 @@ icon: fontawesome/solid/house
 ## 저장소 레이아웃
 
 ```text
-flake.nix        # nixos-26.05 고정, nixosConfigurations 3개 + docs 패키지
-modules/         # 모든 호스트가 공유하는 시스템 모듈
-services/        # 서비스 모듈 (ingress, 모니터링, forgejo, ...)
-hosts/<host>/    # 호스트별 default.nix + hardware + disko
-home/poby/       # poby 운영자용 Home Manager 프로필
-secrets/         # sops-nix 암호화 YAML
-docs/            # 이 문서 사이트 (Zensical)
+flake.nix               # nixos-unstable, Den, flake-parts, import-tree
+modules/den.nix          # Den 통합과 지원 시스템
+modules/hosts/           # 호스트 선언과 명시적인 aspect includes
+modules/hosts/_<host>/   # 일반 hardware/Disko 모듈
+modules/aspects/         # 시스템·서비스·운영자 설정
+modules/outputs.nix      # 문서 패키지·개발 셸, 복원·MinIO 호환성 검사, formatter
+secrets/                 # sops-nix 암호화 YAML
+docs/                    # 이 문서 사이트 (Zensical)
 ```
 
 ## 서비스 URL

@@ -70,7 +70,7 @@ jobs:
           target="poby@${{ matrix.host }}.tail6fc192.ts.net"
           before=$(ssh "$target" readlink -f /run/current-system)
 
-          nix run github:NixOS/nixpkgs/nixos-26.05#nixos-rebuild -- \
+          nix run github:NixOS/nixpkgs/nixos-unstable#nixos-rebuild -- \
             switch \
             --no-reexec \
             --flake ".#${{ matrix.host }}" \

@@ -15,13 +15,15 @@ icon: fontawesome/solid/server
 - Vaultwarden (비밀번호 관리자) 운영
 - 컨테이너화된 앱을 위한 Podman 런타임 제공
 
-## 로드하는 모듈
+## 선택한 호스트 aspect
+
+`modules/hosts/midgard.nix`는 공통 `homelab-base`와 아래 aspect를 선택합니다.
 
 ```text
-services/homepage.nix
-services/forgejo.nix
-services/vaultwarden.nix
-modules/podman.nix      # 호스트 전용 모듈
+modules/aspects/homepage.nix
+modules/aspects/forgejo.nix
+modules/aspects/vaultwarden.nix
+modules/aspects/podman.nix
 ```
 
 ## 서비스 포트
@@ -36,7 +38,7 @@ modules/podman.nix      # 호스트 전용 모듈
 
 ## 컨테이너 런타임
 
-Podman은 midgard에만 활성화됩니다 (`modules/podman.nix`).
+Midgard와 alfheim은 Podman aspect를 선택합니다 (`modules/aspects/podman.nix`).
 
 - `virtualisation.oci-containers.backend = "podman"`
 - 주간 자동 prune (`podman-prune.timer`)
@@ -50,6 +52,6 @@ Podman은 midgard에만 활성화됩니다 (`modules/podman.nix`).
 ## Hermes Agent
 
 Hermes Agent는 시스템 서비스가 아니라 `poby`의 Home Manager 환경
-(`home/poby/hermes-agent.nix`)으로 설치됩니다. 런타임 상태와 자격 증명은
+(`modules/aspects/hermes-agent.nix`)으로 설치됩니다. 런타임 상태와 자격 증명은
 `/home/poby/.hermes` 아래에 변경 가능한 상태로 둡니다. 구성이 안정화되면
 선언적 Nix 구성으로 승격할 예정입니다.

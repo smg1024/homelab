@@ -19,11 +19,11 @@ Choose the host and packaging format before writing configuration:
 === "NixOS module"
 
     Prefer this when nixpkgs packages the service well. Create
-    `services/<name>.nix`:
+    `modules/aspects/<name>.nix`:
 
     ```nix
-    {...}: {
-      services.<name> = {
+    {
+      den.aspects.my-service.nixos.services.<name> = {
         enable = true;
         # bind to localhost or a tailnet-reachable port,
         # never open the firewall
@@ -37,8 +37,8 @@ Choose the host and packaging format before writing configuration:
     Podman enabled (**pinned tag**):
 
     ```nix
-    {...}: {
-      virtualisation.oci-containers.containers.<name> = {
+    {
+      den.aspects.my-service.nixos.virtualisation.oci-containers.containers.<name> = {
         image = "ghcr.io/org/app:1.2.3";  # never :latest
         ports = ["127.0.0.1:8090:8080"];
       };
@@ -47,14 +47,15 @@ Choose the host and packaging format before writing configuration:
 
 ## Checklist
 
-- [ ] Create the module under `services/<name>.nix`
-- [ ] Wire it in: `hosts/<host>/default.nix` imports (host-specific) or
-      `flake.nix` modules list (shared)
+- [ ] Define the aspect under `modules/aspects/<name>.nix`
+- [ ] Add `den.aspects.my-service` to the host aspect's `includes` in
+      `modules/hosts/<host>.nix`, or to `homelab-base.includes` for every host.
+      Automatic discovery alone does not enable the service.
 - [ ] Secrets, if any: add to `secrets/*.yaml` via sops, declare
       `sops.secrets."..."` (see [Secrets](secrets.md))
 - [ ] Exposure, if needed:
-    - [ ] Caddy virtualHost in `services/ingress.nix`
-    - [ ] Public service → hostname in `services/cloudflared.nix` ingress;
+    - [ ] Caddy virtualHost in `modules/aspects/ingress.nix`
+    - [ ] Public service → hostname in `modules/aspects/cloudflared.nix` ingress;
           tailnet-only → `@tailnet` matcher pattern instead
     - [ ] DNS record in Cloudflare (public: Tunnel CNAME, tailnet-only:
           yggdrasil's tailnet address). For public tunnel routes:

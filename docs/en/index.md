@@ -20,13 +20,14 @@ then deploy. Do not fix configuration directly on a host.
 ## Repository layout
 
 ```text
-flake.nix        # pins nixos-26.05, 3 nixosConfigurations + docs package
-modules/         # system modules shared by every host
-services/        # service modules (ingress, monitoring, forgejo, ...)
-hosts/<host>/    # per-host default.nix + hardware + disko
-home/poby/       # Home Manager profiles for the poby operator
-secrets/         # sops-nix encrypted YAML
-docs/            # this documentation site (Zensical)
+flake.nix               # nixos-unstable, Den, flake-parts, import-tree
+modules/den.nix          # Den integration and supported systems
+modules/hosts/           # host declarations and explicit aspect includes
+modules/hosts/_<host>/   # ordinary hardware and Disko modules
+modules/aspects/         # system, service, and operator configuration
+modules/outputs.nix      # docs package/shell, restore and MinIO checks, formatter
+secrets/                 # sops-nix encrypted YAML
+docs/                    # this documentation site (Zensical)
 ```
 
 ## Service URLs

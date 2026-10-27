@@ -9,32 +9,32 @@ run on `midgard`, while jamye-server runs on `alfheim`. Caddy on yggdrasil
 forwards public traffic over the tailnet and serves the static blog and docs
 sites locally. jamye-plz is currently disabled.
 
-## Homepage (`services/homepage.nix`)
+## Homepage (`modules/aspects/homepage.nix`)
 
 Homepage is the homelab dashboard. It runs on `:8082` and is available at
 `https://home.ridewithmin.com`.
 
-## Dev with Min blog (`services/ingress.nix`)
+## Dev with Min blog (`modules/aspects/ingress.nix`)
 
 The Dev with Min blog is a static Astro site built from the `blog` flake input.
 Caddy on yggdrasil serves it directly from the Nix store with `file_server` at
 `https://blog.ridewithmin.com`; it has no dedicated service process.
 
-## Docs site (`services/ingress.nix`)
+## Docs site (`modules/aspects/ingress.nix`)
 
 The homelab documentation is a static site built from this flake's `docs`
 package. Caddy on yggdrasil serves it directly from the Nix store with
 `file_server` at `https://docs.ridewithmin.com`. See the
 [docs site runbook](../runbooks/docs-site.md) for the editing workflow.
 
-## Forgejo (`services/forgejo.nix`)
+## Forgejo (`modules/aspects/forgejo.nix`)
 
 Forgejo provides Git hosting on `:3000` at `https://git.ridewithmin.com`.
 
 - Public registration disabled
 - Forgejo SSH disabled (push/pull over HTTPS only)
 
-## Vaultwarden (`services/vaultwarden.nix`)
+## Vaultwarden (`modules/aspects/vaultwarden.nix`)
 
 Vaultwarden is a Bitwarden-compatible password manager. It runs on `:8222` at
 `https://vault.ridewithmin.com`.
@@ -44,14 +44,14 @@ Vaultwarden is a Bitwarden-compatible password manager. It runs on `:8222` at
 - The admin token is rendered into the `vaultwarden.env` template from the
   `vaultwarden/admin_token` SOPS secret
 
-## jamye-plz (`services/jamye-plz.nix`)
+## jamye-plz (`modules/aspects/jamye-plz.nix`)
 
-jamye-plz is disabled and is not imported by any host. Its source module,
+jamye-plz is disabled and its aspect is not selected by any host. Its source module,
 encrypted secrets, and retained alfheim data remain available for a future
 recovery. `jamye-plz.ridewithmin.com` and `minio.ridewithmin.com` return HTTP
 `503` while the service is closed.
 
-## jamye-server (`services/jamye-server.nix`)
+## jamye-server (`modules/aspects/jamye-server.nix`)
 
 The Rust API and worker run on alfheim, with local PostgreSQL 17, Redis, and
 MinIO. The upstream `jamye-server` flake supplies native `aarch64-linux` packages.
@@ -67,7 +67,8 @@ MinIO. The upstream `jamye-server` flake supplies native `aarch64-linux` package
   OCI containers only on hosts where Podman is deliberately enabled and
   upstream packages better as a container.
 - Always pin image tags, never `latest`.
-- Add a new shared service as a module under `services/` and wire it into
-  `flake.nix` (shared) or `hosts/<host>/default.nix` (host-specific).
+- Define a service aspect under `modules/aspects/` and select it through
+  `homelab-base.includes` (shared) or a host aspect's `includes` in
+  `modules/hosts/<host>.nix` (host-specific).
 - Internal service ports are not opened on the firewall. To expose a service,
   follow the [ingress procedure](ingress.md#expose-a-service).

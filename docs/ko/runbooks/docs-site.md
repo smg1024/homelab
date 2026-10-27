@@ -29,7 +29,7 @@ docs/
 
 - flake output `packages.<system>.docs`: 두 언어 모두 `zensical build --strict`로
   빌드, 한국어는 `ko/` 하위 디렉토리에 생성
-- 서빙: `services/ingress.nix`의 `docs.ridewithmin.com` vhost가 yggdrasil의
+- 서빙: `modules/aspects/ingress.nix`의 `docs.ridewithmin.com` vhost가 yggdrasil의
   Caddy `file_server`로 빌드된 패키지를 직접 서빙, Cloudflare Tunnel로
   공개
 

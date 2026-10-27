@@ -13,15 +13,16 @@ the agent should keep in mind.
 
 ## Layout
 
-- `flake.nix` — pins `nixos-26.05`, exposes `nixosConfigurations`: `yggdrasil`,
-  `midgard`, `alfheim` (alfheim is `aarch64-linux`).
-- `modules/` — shared system modules loaded on every host (base, gc, swap,
-  users, ssh, tailscale, secrets).
-- `services/` — service modules (ingress, cloudflared, beszel, victorialogs,
-  log-shipper, forgejo, vaultwarden, homepage, uptime-kuma).
-- `hosts/<host>/` — `default.nix` + `hardware-configuration.nix` + `disko.nix`.
-- `home/poby/` — Home Manager profiles for the `poby` operator (not for
-  long-running services).
+- `flake.nix` — tracks `nixos-unstable`, with revisions pinned in `flake.lock`;
+  uses flake-parts, import-tree, and Den from their `main` branches.
+- `modules/den.nix` — Den integration and supported output systems.
+- `modules/hosts/<host>.nix` — Den host declarations and explicit aspect includes;
+  generates `nixosConfigurations.{yggdrasil,midgard,alfheim}` (alfheim is ARM).
+- `modules/hosts/_<host>/` — ordinary hardware and Disko modules, imported explicitly.
+- `modules/aspects/` — shared system, service, and operator aspects.
+  `homelab-base` selects common system aspects; `poby` configures the account
+  and integrated Home Manager environment.
+- `modules/outputs.nix` — documentation package/shell, restore and MinIO checks, formatter.
 - `secrets/` — `sops-nix` encrypted YAML. Policy in `.sops.yaml`.
 
 ## Host roles
@@ -29,17 +30,23 @@ the agent should keep in mind.
 - **yggdrasil** — edge/infra node: Cloudflare Tunnel, Caddy ingress, Beszel hub,
   VictoriaLogs, Uptime Kuma. Keep it lightweight (4 GB RAM).
 - **midgard** — application host: Forgejo, Vaultwarden, Homepage, Podman.
-- **alfheim** — OCI ARM VM running jamye-server. SSH only over the tailnet.
+- **alfheim** — OCI ARM VM running jamye-server, with Podman enabled.
+  SSH only over the tailnet.
 
 ## Conventions
 
 - Match the existing Nix formatting exactly (alejandra style: 2-space indent,
   trailing commas, `inputs @ { ... }`). Don't reformat unrelated code.
-- Prefer **NixOS modules** for infra; use **OCI containers** (Podman, midgard
-  only) for apps that package better upstream. **Pin image tags — never
+- Prefer **NixOS modules** for infra; use **OCI containers** on hosts that
+  enable Podman (midgard and alfheim) for apps that package better upstream. **Pin image tags — never
   `latest`.**
-- New shared service → add module under `services/`, wire it into `flake.nix`
-  (shared) or `hosts/<host>/default.nix` (host-specific).
+- Define services as `den.aspects.<name>.nixos` in `modules/aspects/` and select
+  them through a host's `includes` or `homelab-base.includes` for shared services.
+  File discovery defines an aspect; inclusion enables it. Keep `jamye-plz` unselected.
+- Route host-specific home settings through `provides.poby.homeManager` or
+  `provides.poby.includes`. Home Manager remains integrated with NixOS.
+- import-tree loads top-level Den/flake-parts modules. Keep ordinary NixOS modules
+  beneath `_` directories and import them inside a `nixos` class.
 - Internal service ports are **not** opened on the firewall. Reach midgard
   backends via the MagicDNS name `midgard.tail6fc192.ts.net`. Public traffic
   arrives only through Cloudflare Tunnel → Caddy.

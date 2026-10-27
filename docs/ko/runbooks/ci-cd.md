@@ -28,6 +28,9 @@ main에 병합 ──▶ CD: tailnet 합류 → 모든 호스트에서 nixos-reb
 
 - 호스트마다 하나의 잡이
   `nixosConfigurations.<host>.config.system.build.toplevel`을 빌드합니다.
+- 각 잡에서 `checks.<system>.jamye-host-swap-restore`와
+  `checks.<system>.minio-compat`도 실행해 복원 안전장치와 MinIO 호환 설정의
+  적용 범위를 검증합니다.
 - **빌드만 합니다**: 활성화도, tailnet 접근도, 비밀도 없습니다. 평가나 컴파일에
   실패하는 설정은 호스트에 닿기 전에 여기서 걸러집니다.
 - `yggdrasil`과 `midgard`는 `ubuntu-latest`에서, `alfheim`은 네이티브
@@ -79,7 +82,7 @@ switch 후에는 `nix store diff-closures`가 노드의 이전 시스템 클로�
 | --- | --- | --- |
 | `DEPLOY_SSH_KEY` | GitHub Actions 비밀 | 러너가 `poby`로 SSH 접속할 때 쓰는 개인 키 |
 | `TS_OAUTH_CLIENT_ID` / `TS_OAUTH_SECRET` | GitHub Actions 비밀 | 임시 `tag:ci` 노드를 발급하는 Tailscale OAuth 클라이언트 |
-| 배포 공개 키 | `modules/users.nix` → `poby` 인증 키 | 모든 호스트에서 러너를 인가 |
+| 배포 공개 키 | `modules/aspects/poby.nix` → `poby` 인증 키 | 모든 호스트에서 러너를 인가 |
 | `tag:ci` + ACL | Tailscale 관리 콘솔 | 태그 선언 및 `tag:ci`에 호스트 22번 포트 접근 허용 |
 
 배포 키는 `poby`의 `authorizedKeys`에 추가되는 항목일 뿐이고 `poby`는 이미

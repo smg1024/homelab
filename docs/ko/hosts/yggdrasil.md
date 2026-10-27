@@ -17,14 +17,16 @@ icon: fontawesome/solid/server
 - Beszel 허브: 메트릭 수집과 알림 (tailnet 제한 Caddy 라우트)
 - VictoriaLogs 로그 저장소 + 조회 UI (tailnet 제한 Caddy 라우트)
 
-## 로드하는 서비스 모듈
+## 선택한 호스트 aspect
+
+`modules/hosts/yggdrasil.nix`는 공통 `homelab-base`와 아래 aspect를 선택합니다.
 
 ```text
-services/ingress.nix      # Caddy + Cloudflare DNS 플러그인
-services/cloudflared.nix  # Cloudflare Tunnel
-services/uptime-kuma.nix
-services/victorialogs.nix
-services/beszel/hub.nix
+modules/aspects/ingress.nix      # Caddy + Cloudflare DNS 플러그인
+modules/aspects/cloudflared.nix  # Cloudflare Tunnel
+modules/aspects/uptime-kuma.nix
+modules/aspects/victorialogs.nix
+modules/aspects/beszel-hub.nix
 ```
 
 ## 로컬 포트

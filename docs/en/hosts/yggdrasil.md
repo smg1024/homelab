@@ -17,14 +17,16 @@ has 4 GB of RAM, so applications run elsewhere.
 - Run the Beszel hub for metrics and alerting (tailnet-restricted Caddy route)
 - Run the VictoriaLogs log store and query UI (tailnet-restricted Caddy route)
 
-## Loaded service modules
+## Selected host aspects
+
+`modules/hosts/yggdrasil.nix` selects the shared `homelab-base` aspect and:
 
 ```text
-services/ingress.nix      # Caddy + Cloudflare DNS plugin
-services/cloudflared.nix  # Cloudflare Tunnel
-services/uptime-kuma.nix
-services/victorialogs.nix
-services/beszel/hub.nix
+modules/aspects/ingress.nix      # Caddy + Cloudflare DNS plugin
+modules/aspects/cloudflared.nix  # Cloudflare Tunnel
+modules/aspects/uptime-kuma.nix
+modules/aspects/victorialogs.nix
+modules/aspects/beszel-hub.nix
 ```
 
 ## Local ports

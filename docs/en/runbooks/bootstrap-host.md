@@ -49,7 +49,7 @@ requests.
     Use a path like `ata-Samsung_SSD_860_EVO_...` or `nvme-...`, not
     `/dev/sda` or `/dev/nvme0n1`.
 
-- [ ] Set that path as `device` in `hosts/<host>/disko.nix`. It produces a
+- [ ] Set that path as `device` in `modules/hosts/_<host>/disko.nix`. It produces a
       single-disk GPT layout: a 512M EFI partition at `/boot` (vfat) and the
       rest as `/` (ext4).
 
@@ -58,21 +58,24 @@ requests.
 
     ```bash
     ssh root@<INSTALLER_IP> 'nixos-generate-config --show-hardware-config' \
-      > hosts/<host>/hardware-configuration.nix
+      > modules/hosts/_<host>/hardware-configuration.nix
     ```
 
     Keep the `not-detected.nix` import, the kernel module lines,
     `nixpkgs.hostPlatform`, and the CPU microcode entries. Drop
     `fileSystems."/"`, `fileSystems."/boot"`, and `swapDevices`: `disko` owns
-    `/` and `/boot`, and `modules/swap.nix` owns swap via zram. Those entries
+    `/` and `/boot`, and `modules/aspects/swap.nix` owns swap via zram. Those entries
     are usually live-environment values that would clash with `disko`.
 
-- [ ] Enable (uncomment) the `imports` in `hosts/<host>/default.nix`:
+- [ ] Declare the host under `den.hosts.<system>.<host>` in
+      `modules/hosts/<host>.nix`, with `users.poby.classes = ["homeManager"]`.
+      Include `den.aspects.homelab-base` and import the hardware files within
+      the host aspect's NixOS class:
 
     ```nix
-    imports = [
-      ./hardware-configuration.nix
-      ./disko.nix
+    den.aspects.<host>.nixos.imports = [
+      ./_<host>/hardware-configuration.nix
+      ./_<host>/disko.nix
     ];
     ```
 
@@ -80,10 +83,10 @@ requests.
       errors early:
 
     ```bash
-    git diff -- hosts/<host>
-    nix-instantiate --parse hosts/<host>/default.nix >/dev/null
-    nix-instantiate --parse hosts/<host>/disko.nix >/dev/null
-    nix-instantiate --parse hosts/<host>/hardware-configuration.nix >/dev/null
+    git diff -- modules/hosts/<host>.nix modules/hosts/_<host>
+    nix-instantiate --parse modules/hosts/<host>.nix >/dev/null
+    nix-instantiate --parse modules/hosts/_<host>/disko.nix >/dev/null
+    nix-instantiate --parse modules/hosts/_<host>/hardware-configuration.nix >/dev/null
     ```
 
 ## Install
@@ -117,7 +120,8 @@ Remove the USB and boot from the internal disk, then:
 - [ ] If the host is a sops recipient: re-key secrets if its host key changed,
       so it can decrypt `secrets/*.yaml`
       (see [Secrets](secrets.md#adding-a-new-host-as-a-recipient))
-- [ ] Commit the `hosts/<host>/` changes, `flake.lock`, and any re-keyed
+- [ ] Commit the host aspect and `modules/hosts/_<host>/` changes,
+      `flake.lock`, and any re-keyed
       `secrets/*.yaml`
 - [ ] Switch to the normal deploy model: open a PR and let CI/CD take over
       (see [Deploy & rollback](deploy.md)). Merging triggers CD, so do this only

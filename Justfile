@@ -1,4 +1,4 @@
-nixos_rebuild := "github:NixOS/nixpkgs/nixos-26.05#nixos-rebuild"
+nixos_rebuild := "github:NixOS/nixpkgs/nixos-unstable#nixos-rebuild"
 
 # List available homelab commands.
 default:

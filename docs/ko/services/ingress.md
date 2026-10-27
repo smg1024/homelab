@@ -7,7 +7,7 @@ icon: fontawesome/solid/door-open
 외부 트래픽은 직접 노출된 포트 대신 Cloudflare Tunnel을 거쳐
 들어옵니다. `cloudflared`와 Caddy 모두 `yggdrasil`에서 실행됩니다.
 
-## Cloudflare Tunnel (`services/cloudflared.nix`)
+## Cloudflare Tunnel (`modules/aspects/cloudflared.nix`)
 
 Tunnel은 다음 공개 호스트네임을 yggdrasil의 로컬 Caddy(`https://localhost:443`)로
 보냅니다. 요청의 `Host` 헤더와 TLS 오리진 서버 이름은 각 공개 호스트네임에
@@ -27,7 +27,7 @@ Tunnel은 다음 공개 호스트네임을 yggdrasil의 로컬 Caddy(`https://lo
 일치하는 규칙이 없는 요청에는 `http_status:404`를 반환합니다. Tunnel 자격 증명은
 `cloudflare/cloudflared_tunnel_credentials` SOPS 비밀입니다.
 
-## Caddy (`services/ingress.nix`)
+## Caddy (`modules/aspects/ingress.nix`)
 
 Caddy는 공개 호스트네임별로 내부 백엔드를 선택합니다.
 
@@ -72,8 +72,8 @@ respond 404
 
 ## 새 서비스 노출 절차 {#expose-a-service}
 
-1. `services/ingress.nix`에 `virtualHosts."<name>.ridewithmin.com"` 추가
-2. 공개 서비스라면 `services/cloudflared.nix`의 `ingress`에 같은 호스트네임
+1. `modules/aspects/ingress.nix`에 `virtualHosts."<name>.ridewithmin.com"` 추가
+2. 공개 서비스라면 `modules/aspects/cloudflared.nix`의 `ingress`에 같은 호스트네임
    추가 (tailnet 전용이면 생략)
 3. Cloudflare DNS에 레코드 추가 (공개: Tunnel CNAME, tailnet 전용:
    yggdrasil의 tailnet 주소). 공개 Tunnel route는 다음 명령으로 등록합니다:
