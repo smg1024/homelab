@@ -9,11 +9,14 @@
       den.aspects.jamye-host-swap
     ];
 
-    nixos = {
+    nixos = {lib, ...}: {
       imports = [
         ./_alfheim/hardware-configuration.nix
         ./_alfheim/disko.nix
       ];
+
+      nixpkgs.config.allowUnfreePredicate = pkg:
+        builtins.elem (lib.getName pkg) ["claude-code"];
 
       i18n.defaultLocale = "en_US.UTF-8";
 
@@ -24,6 +27,13 @@
       documentation.enable = false;
 
       system.stateVersion = "24.11";
+    };
+
+    provides.poby.homeManager = {pkgs, ...}: {
+      home.packages = with pkgs; [
+        claude-code
+        codex
+      ];
     };
   };
 }
