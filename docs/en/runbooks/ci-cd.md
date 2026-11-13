@@ -30,9 +30,9 @@ merge to main ──▶ CD: build on native runners → copy closures → switch
 
 - One job per host builds
   `nixosConfigurations.<host>.config.system.build.toplevel`.
-- Each job also runs `checks.<system>.jamye-host-swap-restore` and
-  `checks.<system>.minio-compat` to verify restore safeguards and the scoped
-  MinIO compatibility module.
+- Each job also runs `checks.<system>.jamye-plz-recovery` and
+  `checks.<system>.minio-compat` to keep the inactive jamye-plz module
+  evaluable and verify the scoped MinIO compatibility module.
 - It only builds: no activation, no tailnet, no secrets. A config that
   fails to evaluate or compile fails here, before it can reach a host.
 - `yggdrasil` and `midgard` build on `ubuntu-latest`; `alfheim` builds on a

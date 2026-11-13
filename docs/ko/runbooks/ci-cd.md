@@ -28,9 +28,9 @@ main에 병합 ──▶ CD: 네이티브 러너에서 빌드 → 클로저 전�
 
 - 호스트마다 하나의 잡이
   `nixosConfigurations.<host>.config.system.build.toplevel`을 빌드합니다.
-- 각 잡에서 `checks.<system>.jamye-host-swap-restore`와
-  `checks.<system>.minio-compat`도 실행해 복원 안전장치와 MinIO 호환 설정의
-  적용 범위를 검증합니다.
+- 각 잡에서 `checks.<system>.jamye-plz-recovery`와
+  `checks.<system>.minio-compat`도 실행해 비활성 jamye-plz 모듈의 평가 가능
+  상태와 MinIO 호환 설정의 적용 범위를 검증합니다.
 - **빌드만 합니다**: 활성화도, tailnet 접근도, 비밀도 없습니다. 평가나 컴파일에
   실패하는 설정은 호스트에 닿기 전에 여기서 걸러집니다.
 - `yggdrasil`과 `midgard`는 `ubuntu-latest`에서, `alfheim`은 네이티브

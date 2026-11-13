@@ -24,7 +24,6 @@ tailnet.
 ```text
 modules/aspects/podman.nix
 modules/aspects/jamye-server.nix
-modules/aspects/jamye-host-swap.nix  # one-time data import, guarded by a completion stamp
 ```
 
 ## Service ports

@@ -22,7 +22,7 @@ the agent should keep in mind.
 - `modules/aspects/` — shared system, service, and operator aspects.
   `homelab-base` selects common system aspects; `poby` configures the account
   and integrated Home Manager environment.
-- `modules/outputs.nix` — documentation package/shell, restore and MinIO checks, formatter.
+- `modules/outputs.nix` — documentation package/shell, MinIO check, formatter.
 - `secrets/` — `sops-nix` encrypted YAML. Policy in `.sops.yaml`.
 
 ## Host roles
