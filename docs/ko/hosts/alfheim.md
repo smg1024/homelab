@@ -24,7 +24,6 @@ Oracle Cloud Infrastructure ARM VM입니다 (`aarch64-linux`). 홈랩에서 처�
 ```text
 modules/aspects/podman.nix
 modules/aspects/jamye-server.nix
-modules/aspects/jamye-host-swap.nix  # 완료 표시 파일로 재실행을 막는 일회성 데이터 복원
 ```
 
 ## 서비스 포트

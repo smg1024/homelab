@@ -1,5 +1,9 @@
-{inputs, ...}: {
-  den.aspects.jamye-plz.nixos = {config, ...}: let
+{
+  inputs,
+  lib,
+  ...
+}: let
+  nixosModule = {config, ...}: let
     # Remove once the upstream module and frontend package stop using the
     # deprecated `pkgs.system`.
     patchedNixpkgs =
@@ -77,4 +81,27 @@
       };
     };
   };
+in {
+  den.aspects.jamye-plz.nixos = nixosModule;
+
+  perSystem = {pkgs, ...}:
+    lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+      checks.jamye-plz-recovery = let
+        config =
+          (inputs.nixpkgs.lib.nixosSystem {
+            system = pkgs.stdenv.hostPlatform.system;
+            modules = [
+              inputs.sops-nix.nixosModules.sops
+              nixosModule
+              {system.stateVersion = "24.11";}
+            ];
+          }).config;
+      in
+        assert config.services.jamye-plz.enable;
+        assert config.services.jamye-plz.listenPort == 8080;
+        assert config.systemd.services ? jamye-plz-backend;
+          pkgs.runCommand "jamye-plz-recovery-check" {} ''
+            touch "$out"
+          '';
+    };
 }

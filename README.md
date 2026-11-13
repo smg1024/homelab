@@ -57,7 +57,7 @@ Application ports are not opened directly to the public Internet.
 | `modules/den.nix` | Den integration and supported systems |
 | `modules/hosts/` | Host aspects and explicitly imported hardware/Disko modules under `_` directories |
 | `modules/aspects/` | Shared system and service aspects, plus `poby`'s integrated Home Manager configuration |
-| `modules/outputs.nix` | Documentation package/shell, restore and MinIO checks, formatter |
+| `modules/outputs.nix` | Documentation package/shell, MinIO check, formatter |
 | `secrets/` | `sops-nix` encrypted secrets |
 | `docs/` | English and Korean documentation site source |
 

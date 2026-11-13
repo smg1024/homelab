@@ -6,7 +6,6 @@
       den.aspects.homelab-base
       den.aspects.podman
       den.aspects.jamye-server
-      den.aspects.jamye-host-swap
     ];
 
     nixos = {lib, ...}: {

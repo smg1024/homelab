@@ -58,12 +58,6 @@
                 icon = "vaultwarden.png";
               };
             }
-            {
-              "jamye-plz" = {
-                description = "Social PWA on alfheim";
-                href = "https://jamye-plz.ridewithmin.com";
-              };
-            }
           ];
         }
         {

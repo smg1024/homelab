@@ -50,8 +50,9 @@ Vaultwarden은 Bitwarden 호환 비밀번호 관리자입니다. `:8222`에서 �
 
 jamye-plz는 비활성화되어 어떤 호스트에서도 해당 aspect를 선택하지 않습니다. 향후 복구를
 위해 소스 모듈, 암호화된 비밀, alfheim의 기존 데이터는 보존합니다.
-`jamye-plz.ridewithmin.com`과 `minio.ridewithmin.com`은 서비스 중단 기간에
-HTTP `503`을 반환합니다.
+`jamye-plz-recovery` 검사는 각 Linux 아키텍처에서 비활성 모듈을 평가합니다.
+`jamye-plz.ridewithmin.com`과 `minio.ridewithmin.com`은 서비스 중단 기간에 HTTP
+`503`을 반환합니다.
 
 ## jamye-server (`modules/aspects/jamye-server.nix`)
 

@@ -48,8 +48,9 @@ Vaultwarden is a Bitwarden-compatible password manager. It runs on `:8222` at
 
 jamye-plz is disabled and its aspect is not selected by any host. Its source module,
 encrypted secrets, and retained alfheim data remain available for a future
-recovery. `jamye-plz.ridewithmin.com` and `minio.ridewithmin.com` return HTTP
-`503` while the service is closed.
+recovery. The `jamye-plz-recovery` check evaluates the inactive module on each
+Linux architecture. `jamye-plz.ridewithmin.com` and `minio.ridewithmin.com`
+return HTTP `503` while the service is closed.
 
 ## jamye-server (`modules/aspects/jamye-server.nix`)
 

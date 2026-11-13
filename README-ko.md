@@ -56,7 +56,7 @@ Internet -> Cloudflare -> yggdrasil의 cloudflared -> Caddy -> service backend
 | `modules/den.nix` | Den 통합과 지원 시스템 |
 | `modules/hosts/` | 호스트 aspect와 `_` 디렉토리에서 명시적으로 import하는 hardware/Disko 모듈 |
 | `modules/aspects/` | 공통 시스템·서비스 aspect와 `poby`의 통합 Home Manager 설정 |
-| `modules/outputs.nix` | 문서 패키지·개발 셸, 복원·MinIO 호환성 검사, formatter |
+| `modules/outputs.nix` | 문서 패키지·개발 셸, MinIO 호환성 검사, formatter |
 | `secrets/` | `sops-nix`로 암호화한 비밀 |
 | `docs/` | 영어/한국어 문서 사이트 source |
 
